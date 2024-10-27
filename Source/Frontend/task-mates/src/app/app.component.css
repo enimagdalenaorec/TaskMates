@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 97vh;
+}
+
+p-menubar {
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.main {
+  display: flex;
+  flex-grow: 1;
+}
+
+.sidebar {
+  width: 15%;
+  flex-shrink: 0;
+  background-color: rgba(210, 239, 237, 0.5);
+}
+
+.content {
+  flex-grow: 1;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.logo {
+  width: 6em;
+  height: 3em;
+  margin-right: 15px;
+  margin-left: 10px;
+}
+
+:host ::ng-deep .p-menubar {
+  border: none;
+}
+:host ::ng-deep .p-menubar{
+  background: rgba(43, 139, 118, 0.5)
+}
+:host ::ng-deep .pi-user {
+  color: black
+}
+
+.sidebar-item:hover {
+  background-color: rgba(43, 139, 118, 0.5);
+  cursor: pointer;
+}

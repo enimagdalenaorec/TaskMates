@@ -1,0 +1,26 @@
+<div *ngIf="!isHomeOrLoginOrRegisterRoute()" class="container">
+  <p-menubar [model]="items">
+    <ng-template pTemplate="start">
+      <img src="images/logo-and-text.png" alt="logo" class="logo h-4rem w-auto" (click)="navigateTo('my-groups')" />
+    </ng-template>
+    <ng-template pTemplate="end">
+      <p (click)="navigateTo('profile')" class="pi pi-user text-2xl pt-1 pr-5 h-2rem w-auto border-round-lg"></p>
+    </ng-template>
+  </p-menubar>
+  <div class="main">
+
+    <div class="sidebar mt-2 ml-0 p-3 pl-2 pt-6 border-round-md">
+        <p (click)="navigateTo('my-groups')" class="sidebar-item text-lg border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-users pr-3"></i>Groups</p>
+        <p (click)="navigateTo('notifications')" class="sidebar-item text-lg border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-bell pr-3"></i>Notifications</p>
+        <p (click)="navigateTo('profile')" class="sidebar-item text-lg border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-user pr-3"></i>Profile</p>
+    </div>
+
+    <div class="content p-4">
+      <router-outlet />
+    </div>
+
+  </div>
+</div>
+<div *ngIf="isHomeOrLoginOrRegisterRoute()">
+  <router-outlet />
+</div>
