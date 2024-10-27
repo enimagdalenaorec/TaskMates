@@ -2,6 +2,16 @@
 
 TaskMates je web aplikacija koja korisnicima omogućuje organizaciju i praćenje kućanskih poslova unutar zajednica poput cimerstva, obitelji ili prijateljskih grupa. Aplikacija omogućuje kreiranje grupa, dodavanje zadataka, definiranje težine i rokova te praćenje izvršavanja zadataka putem Leaderboarda i raznih statistika.
 
+## **Pokretanje frontenda (Angulara)**
+- Prvo pokretanje:
+    1. Ukoliko nemate instaliran Angular treba ga globalno instalirati s naredbom: npm install -g @angular/cli
+    2. U folderu gdje je frontend (task-mates) izvrsiti naredbu: npm install  (kako biste u folder povukli sve potrebne pakete iz node modules)
+    3. U folderu gdje je frontend (task-mates) izvrsiti naredbu: ng serve
+    4. Otvorit adresu u browseru (vjerojatno localhost:4200)
+- Svako sljedeće pokretanje:
+    1. U folderu gdje je frontend (task-mates) izvrsiti naredbu: ng serve
+    2. Otvorit adresu u browseru (vjerojatno localhost:4200)
+
 ## Značajke
 
 - **Upravljanje grupama**: Kreirajte grupe (npr. "Cimerstvo" ili "Obitelj") i pozovite članove putem koda ili linka za pridruživanje.
