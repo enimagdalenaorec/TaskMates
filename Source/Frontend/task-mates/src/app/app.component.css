@@ -1,3 +1,4 @@
+
 .container {
   display: flex;
   flex-direction: column;
@@ -33,6 +34,10 @@ p-menubar {
   margin-left: 10px;
 }
 
+:host ::ng-deep h1 {
+  color:  rgba(43, 139, 118, 0.8);
+}
+
 :host ::ng-deep .p-menubar {
   border: none;
 }
@@ -41,6 +46,11 @@ p-menubar {
 }
 :host ::ng-deep .pi-user {
   color: black
+}
+
+:host ::ng-deep .p-button {
+  background-color: rgba(43, 139, 118, 0.8);
+  border: none;
 }
 
 .sidebar-item:hover {

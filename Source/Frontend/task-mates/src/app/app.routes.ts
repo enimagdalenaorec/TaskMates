@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { MyGroupsComponent } from './my-groups/my-groups.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { RegisterComponent } from './register/register.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -11,5 +12,7 @@ export const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'my-groups', component: MyGroupsComponent},
   {path: 'profile', component: ProfileComponent},
-  {path: 'notifications', component: NotificationsComponent}
+  {path: 'notifications', component: NotificationsComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: '**', redirectTo: ''}
 ];
