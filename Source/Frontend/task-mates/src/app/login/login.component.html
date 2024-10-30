@@ -1,1 +1,32 @@
-<p>login works!</p>
+<div class="background flex justify-content-center align-content-center flex-wrap h-screen flex-column">
+  <div class=" p-5 login-container w-5">
+      <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+          <div class="flex justify-content-between align-items-center">
+              <h2 class="text-left text-3xl">Login</h2>
+              <img src="images/logo-and-text.png" alt="House Swap Logo" class="logo max-h-2rem" />
+          </div>
+          <div class="flex flex-column gap-2 mb-3 form-group">
+              <label for="email">E-mail</label>
+              <input pInputText class="form-control" formControlName="Email" id="email" name="e-mail"
+                  [(ngModel)]="email" required />
+          </div>
+          <div class="flex flex-column gap-2 form-group">
+              <label for="password">Password</label>
+              <p-password class="w-full form-control" formControlName="Password" id="password" name="password"
+                  [(ngModel)]="password" [feedback]="false" required
+                  styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
+                  [inputStyle]="{'width':'100%'}" [toggleMask]="true" />
+          </div>
+          <div *ngIf="errorMessage" class="flex mt-3 text-red-500 justify-content-center">
+              {{ errorMessage }}
+          </div>
+          <div class="flex flex-column justify-content-center mt-4">
+              <div class="align-self-center">
+              <p-button class="mb-2 mr-2 align-self-center" label="Submit" type="submit"></p-button>
+              <p-button class="mb-2 align-self-center" label="Back to Home" type="submit" [routerLink]="['/home']"/>
+              </div>
+              <p class="align-self-center dont-have-account" [routerLink]="['/register']"><u>Don't have an account?</u></p>
+          </div>
+      </form>
+  </div>
+</div>
