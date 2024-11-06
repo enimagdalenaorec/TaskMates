@@ -7,8 +7,8 @@ from rest_framework.status import HTTP_200_OK
 def mock_get_tasks_by_group(request):
     return Response({
         "tasks": [
-            {"id": "1", "name": "Task1", "icon": None, "deadline": "2023-12-31", "members": [{"name": "Member1"}]},
-            {"id": "2", "name": "Task2", "icon": None, "deadline": "2023-12-31", "members": [{"name": "Member2"}]}
+            {"id": "1", "name": "Task1", "icon": None, "deadline": "2023-12-31", "members": [{"name": "Member1"}],"groupId":1},
+            {"id": "2", "name": "Task2", "icon": None, "deadline": "2023-12-31", "members": [{"name": "Member2"}],"groupId":1}
         ]
     }, status=HTTP_200_OK)
 

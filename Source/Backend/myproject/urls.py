@@ -18,10 +18,10 @@ from django.urls import path, include
 from django.contrib import admin
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('apps.accounts.urls')), 
-    path('calendar/', include('apps.calendar.urls')), 
-    path('groups/', include('apps.groups.urls')), 
-    path('notifications/', include('apps.notifications.urls')), 
-    path('tasks/', include('apps.tasks.urls')), 
+    path('api/admin/', admin.site.urls),
+    path('api/accounts/', include('apps.accounts.urls')), 
+    path('api/calendar/', include('apps.calendar.urls')), 
+    path('api/groups/', include('apps.groups.urls')), 
+    path('api/notifications/', include('apps.notifications.urls')), 
+    path('api/tasks/', include('apps.tasks.urls')), 
 ]
