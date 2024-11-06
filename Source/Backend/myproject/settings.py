@@ -40,8 +40,11 @@ INSTALLED_APPS = [
     'apps.calendar',
     'apps.groups',
     'apps.notifications',
-    'apps.tasks'
+    'apps.tasks',
+    'core',
 ]
+
+AUTH_USER_MODEL = 'core.User' ##Bitno za authenticate()
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -81,6 +84,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        #za postgre:
+        #'ENGINE': 'django.db.backends.postgresql',
+        #'NAME': ,
+        #'USER': ,
+        #'PASSWORD': ,
+        #'HOST': 'localhost',
+        #'PORT': '5432',
     }
 }
 
