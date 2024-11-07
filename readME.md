@@ -12,6 +12,44 @@ TaskMates je web aplikacija koja korisnicima omogućuje organizaciju i praćenje
     1. U folderu gdje je frontend (task-mates) izvrsiti naredbu: ng serve
     2. Otvorit adresu u browseru (vjerojatno localhost:4200)
 
+## **Pokretanje Django projekta za VSC**
+
+Potrebno:
+    Python 3.x.x (najnovija verzija je 3.13.0, ali bi i starije verzije trebale biti ok)
+    Visual Studio Code
+     
+Postupak prije 1. pokretanja:
+    
+ Ako ExecutionPolicy nije RemoteSigned (to se može pogledati u poweshellu sa komandom Get-ExecutionPolicy)  potrebno ga postaviti sa
+          Set-ExecutionPolicy RemoteSigned
+ (Powershell je potrebno runnati kao admin)
+
+Nakon toga potrebno instalirati virtual environment preko powershella:
+     pip install virtualenv (ako imate pip u PATH-u) 
+      ili
+     py -m pip install virtualenv
+ (ako ne radi instalirajte noviju verziju pythona)
+
+Postupak pri pokretanju:
+
+ 1. U VSC-u otvorite folder Backend
+
+ 2. U terminalu VSC-a u direktoriju Backend runnate komandu py -m venv myenv
+    To će stvoriti virtualno okruženje
+
+ 3. Onda runnate kommandu
+     myenv/Scripts/Activate
+   Sada bi trebali biti u virtualnom okruženju (prije direktorija u terminalu će pisati (myenv) zelenim slovima)
+
+ 4. Zatim runnate pip install -r requirements.txt
+   Ovo će instalirati sve pakete koji se koriste za backend, uključujući i django
+
+Za pokrenuti django server potrebno je runnati komandu 
+  py TaskMatesBackend/manage.py runserver
+Sa Ctrl+C se gasi server
+## Upute pri pushanju na github:
+ prije pushanja potrebno runnati pip freeze > requirements.txt, myenv folder se ne uploada na github.
+
 ## Značajke
 
 - **Upravljanje grupama**: Kreirajte grupe (npr. "Cimerstvo" ili "Obitelj") i pozovite članove putem koda ili linka za pridruživanje.
