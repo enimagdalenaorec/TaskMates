@@ -41,3 +41,7 @@ def home(request):
 def logout_view(request):
     logout(request)
     return redirect("/")
+
+@api_view(['GET'])
+def google_login(request):
+    return redirect("https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=564641218259-mnod8begp6q5b2tilo68qkegdcg73iiu.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Faccounts%2Fgoogle%2Flogin%2Fcallback%2F&scope=profile%20email&response_type=code&state=erMbwcLOXBTvTGk9&access_type=online&service=lso&o2v=2&ddm=1&flowName=GeneralOAuthFlow")

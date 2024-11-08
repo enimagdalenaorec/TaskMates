@@ -6,5 +6,6 @@ urlpatterns = [
     path('login', views.mock_login, name='mock_login'),
     path('',views.home),
     path('logout',views.logout_view),
+    path('googleLogin', views.google_login, name='google_login')
     
 ]
