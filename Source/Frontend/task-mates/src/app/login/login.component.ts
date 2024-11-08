@@ -7,6 +7,7 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,7 @@ export class LoginComponent {
   errorMessage: string | undefined;
   loginForm!: FormGroup;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -33,5 +34,39 @@ export class LoginComponent {
   onSubmit() {
     this.errorMessage = undefined;
     // Call API to login
+
   }
+
+  // signInWithGoogle() {
+  //   this.http.get<{ url: string }>('http://localhost:8000/api/accounts/google/login').subscribe(
+  //     response => {
+  //       const googleSignInWindow = window.open(response.url, '_blank', 'width=500,height=600');
+  //       const interval = setInterval(() => {
+  //         if (googleSignInWindow && googleSignInWindow.closed) {
+  //           clearInterval(interval);
+  //           // Handle the token returned by the backend
+  //           this.handleGoogleSignIn();
+  //         }
+  //       }, 1000);
+  //     },
+  //     error => {
+  //       this.errorMessage = 'Failed to initiate Google sign-in process.';
+  //     }
+  //   );
+  // }
+
+  // handleGoogleSignIn() {
+  //   // Call the backend to get the token after Google sign-in
+  //   this.http.get<{ token: string }>('/api/auth/google/callback').subscribe(
+  //     response => {
+  //       const token = response.token;
+  //       // Handle the token (e.g., save it, navigate to another page, etc.)
+  //       console.log('Google sign-in token:', token);
+  //       this.router.navigate(['/my-groups']);
+  //     },
+  //     error => {
+  //       this.errorMessage = 'Failed to complete Google sign-in process.';
+  //     }
+  //   );
+  // }
 }
