@@ -1,4 +1,5 @@
-__pycache__/
+/myenv
+/client_secret_*.json__pycache__/
 *.py[cod]
 .env
 myenv/
