@@ -1,1 +1,30 @@
-<p>my-groups works!</p>
+<div class="p-grid p-align-center p-mb-4">
+    <div class="p-d-flex">
+        <button pButton icon="pi pi-bars" class="p-button-rounded p-button-text"></button>
+        <input pInputText [(ngModel)]="searchQuery" placeholder="Hinted search text" class="p-ml-2 search-input" />
+        <button pButton icon="pi pi-search" class="p-ml-2"></button>
+        <button pButton label="Join" class="p-ml-2 join-button"></button>
+      </div>
+      
+      <!-- Right side: Create New Group Button -->
+      <button pButton label="Create new group" class="p-button-secondary create-group-button"></button>
+    </div>
+    <!-- Grid of Cards -->
+<div class="p-grid p-nogutter group-card-grid">
+     <div *ngFor="let group of groups" class="p-col-12 p-md-4 p-lg-3">
+      <p-card class="group-card">
+        <ng-template pTemplate="header">
+          <img src="" alt="Group" class="group-image" />
+        </ng-template>
+        <div class="p-text-bold group-name">{{ group.name }}</div>
+        <div class="icon-container">
+          <i *ngIf="group.hasNotification" class="pi pi-info-circle notification-icon"></i>
+          <i *ngIf="group.hasChat" class="pi pi-comments chat-icon"></i>
+        </div>
+      </p-card>
+    </div>
+    
+
+
+</div>
+
