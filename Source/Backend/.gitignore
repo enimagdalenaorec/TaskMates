@@ -1,2 +1,5 @@
 /myenv
-/client_secret_*.json
+/client_secret_*.json__pycache__/
+*.py[cod]
+.env
+myenv/
