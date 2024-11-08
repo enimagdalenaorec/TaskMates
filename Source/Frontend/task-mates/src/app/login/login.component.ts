@@ -8,11 +8,12 @@ import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, InputTextModule, PasswordModule, ButtonModule, RouterModule, NgIf],
+  imports: [FormsModule, ReactiveFormsModule, InputTextModule, PasswordModule, ButtonModule, RouterModule, NgIf, HttpClientModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -33,7 +34,15 @@ export class LoginComponent {
 
   onSubmit() {
     this.errorMessage = undefined;
-    // Call API to login
+    /*'http://localhost:8000/api/accounts/googleLogin' */
+    this.http.get('http://localhost:8000/api/accounts/googleLogin').subscribe(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.log(error);
+      }
+    );
 
   }
 
