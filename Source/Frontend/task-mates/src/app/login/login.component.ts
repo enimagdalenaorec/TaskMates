@@ -35,14 +35,15 @@ export class LoginComponent {
   onSubmit() {
     this.errorMessage = undefined;
     /*'http://localhost:8000/api/accounts/googleLogin' */
-    this.http.get('http://localhost:8000/api/accounts/googleLogin').subscribe(
-      response => {
-        console.log(response);
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    window.location.href = 'http://localhost:8000/api/accounts/googleLogin/';
+    // this.http.get('http://localhost:8000/api/accounts/googleLogin/').subscribe(
+    //   response => {
+    //     console.log(response);
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // );
 
   }
 
