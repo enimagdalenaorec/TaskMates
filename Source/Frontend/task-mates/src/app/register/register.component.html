@@ -1,0 +1,34 @@
+<div class="background flex justify-content-center align-content-center flex-wrap h-screen flex-column">
+  <div class="border-1 border-purple-100 p-5 login-container w-5">
+      <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+          <div class="flex justify-content-between align-items-center">
+              <h2 class="text-left text-3xl">Create an account</h2>
+              <img src="images/logo-and-text.png" alt="Monri Logo" class="logo max-h-2rem" />
+          </div>
+          <div class="flex flex-column gap-2 mb-3 form-group">
+              <label for="email">E-mail</label>
+              <input pInputText class="form-control" formControlName="Email" id="email" name="email"
+                  [(ngModel)]="email" required />
+          </div>
+          <div class="flex flex-column gap-2 form-group">
+              <label for="password">Password</label>
+              <p-password class="w-full form-control mb-2" formControlName="Password" id="password" name="password"
+                  [(ngModel)]="password" [feedback]="false" required
+                  styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
+                  [inputStyle]="{'width':'100%'}" [toggleMask]="true" />
+              <label for="repeatPassword">Repeat Password</label>
+              <p-password class="w-full form-control" formControlName="RepeatPassword" id="repeatPassword"
+                  name="repeatPassword" [(ngModel)]="repeatPassword" [feedback]="false" required
+                  styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
+                  [inputStyle]="{'width':'100%'}" [toggleMask]="true" />
+          </div>
+          <div *ngIf="errorMessage" class="flex mt-3 text-red-500 justify-content-center">
+              {{ errorMessage }}
+          </div>
+          <div class="flex flex-column justify-content-center mt-4">
+              <p-button class="mb-2 align-self-center" label="Submit" type="submit"></p-button>
+              <p class="align-self-center has-account" [routerLink]="['/login']"><u>Already have an account?</u></p>
+          </div>
+      </form>
+  </div>
+</div>
