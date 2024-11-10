@@ -4,6 +4,9 @@ import { LoginComponent } from './login/login.component';
 import { MyGroupsComponent } from './my-groups/my-groups.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { CreateGroupComponent } from './create-group/create-group.component';
+import { AddTaskComponent } from './add-task/add-task.component';
+import { GroupComponent } from './group/group.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -11,5 +14,9 @@ export const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'my-groups', component: MyGroupsComponent},
   {path: 'profile', component: ProfileComponent},
-  {path: 'notifications', component: NotificationsComponent}
+  {path: 'notifications', component: NotificationsComponent},
+  {path: 'create-group', component: CreateGroupComponent},
+  {path: 'add-task', component: AddTaskComponent},
+  {path: 'group/:id', component: GroupComponent},
+  {path: '**', redirectTo: ''},
 ];
