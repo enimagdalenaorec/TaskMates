@@ -34,15 +34,16 @@ export class LoginComponent {
 
   onSubmit() {
     this.errorMessage = undefined;
-    /*'http://localhost:8000/api/accounts/googleLogin' */
-    this.http.get('http://localhost:8000/api/accounts/googleLogin').subscribe(
-      response => {
-        console.log(response);
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    // /*'http://localhost:8000/api/accounts/googleLogin' */
+    // this.http.get('http://localhost:8000/api/accounts/googleLogin').subscribe(
+    //   response => {
+    //     console.log(response);
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // );
+    window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=564641218259-mnod8begp6q5b2tilo68qkegdcg73iiu.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Faccounts%2Fgoogle%2Flogin%2Fcallback%2F&scope=email%20profile&response_type=code&state=adZTWVmttHZBTy3J&access_type=online&service=lso&o2v=2&ddm=1&flowName=GeneralOAuthFlow';
 
   }
 
