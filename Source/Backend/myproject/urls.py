@@ -25,5 +25,4 @@ urlpatterns = [
     path('api/notifications/', include('apps.notifications.urls')), 
     path('api/tasks/', include('apps.tasks.urls')), 
     path('accounts/',include("allauth.urls")), 
-    path('',include("apps.accounts.urls"))
 ]

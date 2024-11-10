@@ -16,11 +16,15 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
 
 CORS_ALLOW_HEADERS = [
     "Authorization",
     "Content-Type",
     "X-CSRFToken",
+    "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Methods",
 ]
 
 # Quick-start development settings - unsuitable for production
@@ -58,6 +62,8 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
 AUTH_USER_MODEL = 'core.User' ##Bitno za authenticate()
 
 SOCIALACCOUNT_PROVIDERS={
@@ -71,9 +77,9 @@ SOCIALACCOUNT_PROVIDERS={
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -164,6 +170,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS=("django.contrib.auth.backends.ModelBackend","allauth.account.auth_backends.AuthenticationBackend")
 
-# LOGIN_REDIRECT_URL="http://localhost:4200/my-groups"
-LOGIN_REDIRECT_URL="http://localhost:8000/"
-LOGOUT_REDIRECT_URL="http://localhost:4200/"
+LOGIN_REDIRECT_URL="http://localhost:4200/my-groups"
+LOGOUT_REDIRECT_URL="http://localhost:4200/my-groups"
