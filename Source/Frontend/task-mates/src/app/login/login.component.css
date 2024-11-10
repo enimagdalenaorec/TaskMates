@@ -29,3 +29,8 @@
   .dont-have-account:hover {
     cursor: pointer;
   }
+
+  .back-to-home {
+    background-color: rgb(148, 148, 148);
+    border: none;
+  }
