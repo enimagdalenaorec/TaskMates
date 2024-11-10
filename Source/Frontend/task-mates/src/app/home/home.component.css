@@ -36,6 +36,22 @@ body, html {
   opacity: 0.8;
 }
 
+@media (max-width: 1945px) {
+  .image {
+    min-width: 100%;
+    min-height: 100%;
+  }
+}
+
+@media (max-width: 1097px) {
+  .image {
+    display: none;
+  }
+  .content-section {
+    width: 100%;
+  }
+}
+
 h1 {
   font-size: 2rem;
   padding-bottom: 1rem;

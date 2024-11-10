@@ -22,6 +22,16 @@
     opacity: 1;
   }
 
+  @media screen and (max-width: 624px) {
+    .logo {
+      display: none;
+    }
+    .bigger-login-text {
+      display: none;
+    }
+
+  }
+
   .dont-have-account {
     color:  rgba(43, 139, 118, 0.8);
   }
