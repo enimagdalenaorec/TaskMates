@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/groups/', include('apps.groups.urls')), 
     path('api/notifications/', include('apps.notifications.urls')), 
     path('api/tasks/', include('apps.tasks.urls')), 
+    path('accounts/',include("allauth.urls")), 
 ]

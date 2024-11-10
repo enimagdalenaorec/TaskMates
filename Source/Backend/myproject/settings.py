@@ -15,6 +15,17 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
+
+CORS_ALLOW_HEADERS = [
+    "Authorization",
+    "Content-Type",
+    "X-CSRFToken",
+    "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Methods",
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -27,7 +38,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+SITE_ID=3
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,16 +48,36 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'apps.calendar',
     'apps.groups',
     'apps.notifications',
     'apps.tasks',
     'core',
+    'apps.accounts',
+    'corsheaders'
 ]
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 AUTH_USER_MODEL = 'core.User' ##Bitno za authenticate()
 
+SOCIALACCOUNT_PROVIDERS={
+    "google":{
+        "SCOPE":[
+            "profile","email"
+        ],
+        "AUTH_PARAMS":{"access_type":"online"}
+    }
+}
+
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,6 +85,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
@@ -135,3 +167,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS=("django.contrib.auth.backends.ModelBackend","allauth.account.auth_backends.AuthenticationBackend")
+
+LOGIN_REDIRECT_URL="http://localhost:4200/my-groups"
+LOGOUT_REDIRECT_URL="http://localhost:4200/my-groups"

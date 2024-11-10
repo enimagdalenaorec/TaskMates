@@ -1,1 +1,18 @@
-<p>home works!</p>
+<div class="flex p-d-flex p-h-screen p-flex-nowrap home-container">
+  <!-- Left side: Description with buttons -->
+  <div class="flex p-flex justify-content-center align-items-center content-section">
+    <div class="text-container text-gray-600">
+      <h1 class="text-7xl mb-2 align-self-start text-left" style="font-weight: 900;">Welcome to TaskMates!</h1>
+      <p class="mb-2 align-self-start text-left text-lg font-medium">Start managing tasks effortlessly.<br> Stay on top of your projects, collaborate with teammates,<br> and boost productivity.</p>
+      <div class="p-d-flex mt-3 p-gap-2 align-self-start text-left">
+        <button pButton label="Login" class="p-button-primary mr-4 p-button-lg" (click)="navigateTo('login')"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right side: Image -->
+  <div class="p-flex p-jc-center p-ai-center image-section p-col-12 p-md-6">
+    <img src="images/home.jpg" alt="App Overview" class="image" />
+  </div>
+</div>
+
