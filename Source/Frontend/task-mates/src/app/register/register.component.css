@@ -1,0 +1,30 @@
+.background {
+  background-image: url('/images/login-register-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.login-container {
+  background-color: rgb(244, 244, 244);
+}
+
+.logo {
+  opacity: 1;
+}
+
+.has-account {
+  color:  rgba(43, 139, 118, 0.8);
+}
+
+.has-account:hover {
+  cursor: pointer;
+}

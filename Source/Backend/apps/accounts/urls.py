@@ -6,5 +6,7 @@ urlpatterns = [
     path('login', views.mock_login, name='mock_login'),
     path('',views.home),
     path('logout',views.logout_view),
-    
+    path('googleLogin/', views.homere, name='homere'),
+    path('redirect', views.red, name='red')
+   
 ]
