@@ -7,8 +7,9 @@ from rest_framework.status import HTTP_200_OK
 def mock_get_groups(request):
     return Response({
         "groups": [
-            {"name": "Group1", "image": "base64image1", "id": "1"},
-            {"name": "Group2", "image": "base64image2", "id": "2"},
+            {"name": "Group1", "image": "base64image1", "id": "1", "expiringSoonCount": "1", "unreadMessagesCount": "4"},
+            {"name": "Group2", "image": "base64image2", "id": "2", "expiringSoonCount": "0", "unreadMessagesCount": "0"},
+            {"name": "Group3", "image": "base64image3", "id": "3", "expiringSoonCount": "0", "unreadMessagesCount": "2"},
         ]
     }, status=HTTP_200_OK)
 
