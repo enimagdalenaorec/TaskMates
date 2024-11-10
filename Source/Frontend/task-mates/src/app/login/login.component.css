@@ -1,0 +1,46 @@
+.background {
+    background-image: url('/images/login-register-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .login-container {
+    /* background-color: #f9f7fb; */
+    background-color: rgb(244, 244, 244);
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);;
+  }
+
+  .logo {
+    opacity: 1;
+  }
+
+  @media screen and (max-width: 624px) {
+    .logo {
+      display: none;
+    }
+    .bigger-login-text {
+      display: none;
+    }
+
+  }
+
+  .dont-have-account {
+    color:  rgba(43, 139, 118, 0.8);
+  }
+
+  .dont-have-account:hover {
+    cursor: pointer;
+  }
+
+  .back-to-home {
+    background-color: rgb(148, 148, 148);
+    border: none;
+  }

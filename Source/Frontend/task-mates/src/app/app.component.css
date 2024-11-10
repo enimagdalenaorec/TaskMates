@@ -1,3 +1,4 @@
+
 .container {
   display: flex;
   flex-direction: column;
@@ -20,6 +21,7 @@ p-menubar {
   background-color: rgba(210, 239, 237, 0.5);
 }
 
+
 .content {
   flex-grow: 1;
   overflow-y: auto;
@@ -33,6 +35,10 @@ p-menubar {
   margin-left: 10px;
 }
 
+:host ::ng-deep h1 {
+  color:  rgba(43, 139, 118, 0.8);
+}
+
 :host ::ng-deep .p-menubar {
   border: none;
 }
@@ -43,7 +49,62 @@ p-menubar {
   color: black
 }
 
-.sidebar-item:hover {
+:host ::ng-deep .p-button {
   background-color: rgba(43, 139, 118, 0.5);
+  border: none;
+}
+
+.sidebar-item:hover {
+  background-color: rgba(132, 174, 166, 0.5);
   cursor: pointer;
+}
+
+.sidebar-item.active{
+  background-color: rgba(132, 174, 166, 0.5);
+}
+
+.hamburger-menu {
+  position: relative;
+  top: 10px;
+  left: 10px;
+  z-index: 999;
+}
+
+.hamburger-button {
+  background-color: transparent;
+  border: none;
+  font-size: 30px;
+  color: #333;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.hamburger-button:hover {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+
+@media screen and (max-width: 1024px) {
+  /* Sidebar as an overlay */
+  .sidebar {
+    width: 250px;  /* Fixed width for the sidebar */
+    left: -250px;  /* Initially hidden */
+  }
+
+  /* Show sidebar */
+  .sidebar.show {
+    left: 0; /* Slide sidebar in */
+  }
+
+  /* Hamburger menu visible */
+  .hamburger-menu {
+    display: block;
+  }
+
+  /* Main content stays in place */
+  .main-content {
+    margin-left: 0;
+  }
 }
