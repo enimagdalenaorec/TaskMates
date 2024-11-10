@@ -8,26 +8,26 @@
           class="p-ml-2"
         />
         <div class="flex gap-3">
-         <button pButton icon="pi pi-search" class="p-ml-2"></button>
-         <button pButton label="Join" class="p-ml-2 p-button-outlined" (click)="joinGroup()"></button>
+         <button pButton icon="pi pi-search" class="ml-1"></button>
+         <button pButton label="Join" class="p-ml-2 p-button-outlined white-text" (click)="joinGroup()"></button>
         </div>
       </div>
 
-      
-        <button pButton label="Create new group" class="p-button-secondary" (click)="navigateToCreateGroup()"></button>
-    
+
+        <button pButton label="Create new group" class="p-button-secondary white-text" (click)="navigateToCreateGroup()"></button>
+
     </div>
-  
+
     <!-- Group Cards Grid -->
     <div class="grid gap-3">
       <div *ngFor="let group of groups" class="col p-md-4 p-lg-3 p-p-2 ">
-        <p-card class="border-round-sm" 
-                header="{{ group.name }}" 
+        <p-card class="border-round-sm"
+                header="{{ group.name }}"
                 (click)="navigateToGroup(group.id)">
           <ng-template pTemplate="header">
             <img
               *ngIf="group.image"
-              [src]="cardImagePath"  
+              [src]="cardImagePath"
               alt="{{ group.name }}"
               class="group-image opacity-70 border-round-sm"
             />
@@ -35,13 +35,13 @@
              <!-- Notification and Message Badges -->
       <div class="card-header-badges">
         <!-- Bell Badge (For expiring soon) -->
-        <i *ngIf="group.expiringSoonCount > 0" class="pi pi-bell text-3xl badge-icon" 
+        <i *ngIf="group.expiringSoonCount > 0" class="pi pi-bell text-3xl badge-icon"
             pBadge value="{{ group.expiringSoonCount }}"
             styleClass="badge">
         </i>
 
         <!-- Message Badge (For unread messages) -->
-        <i *ngIf="group.unreadMessagesCount > 0" class="pi pi-comment text-3xl badge-icon" 
+        <i *ngIf="group.unreadMessagesCount > 0" class="pi pi-comment text-3xl badge-icon"
            pBadge value="{{ group.unreadMessagesCount }}"
            styleClass="badge">
         </i>
@@ -53,4 +53,3 @@
       </div>
     </div>
   </div>
-  

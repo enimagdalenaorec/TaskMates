@@ -50,17 +50,17 @@ p-menubar {
 }
 
 :host ::ng-deep .p-button {
-  background-color: rgba(43, 139, 118, 0.8);
+  background-color: rgba(43, 139, 118, 0.5);
   border: none;
 }
 
 .sidebar-item:hover {
-  background-color: rgba(43, 139, 118, 0.5);
+  background-color: rgba(132, 174, 166, 0.5);
   cursor: pointer;
 }
 
 .sidebar-item.active{
-  background-color: rgba(43, 139, 118, 0.5);
+  background-color: rgba(132, 174, 166, 0.5);
 }
 
 .hamburger-menu {
