@@ -1,6 +1,6 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, HostListener} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Router } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
@@ -8,11 +8,13 @@ import { MenuItem } from 'primeng/api';
 import { SidebarModule } from 'primeng/sidebar';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgIf, MenubarModule, ButtonModule, SidebarModule, NotificationsComponent, ProfileComponent],
+  imports: [RouterOutlet, NgIf, MenubarModule, ButtonModule, SidebarModule, NotificationsComponent, ProfileComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -21,12 +23,39 @@ export class AppComponent implements OnInit {
   items: MenuItem[] | undefined;
   sidebarVisible: boolean = true;
 
-  constructor(private router: Router) {
+  isMobileOrTablet: boolean = false; // To track mobile or tablet screen size
+  isHamburgerMenuVisible: boolean = false; // To control hamburger menu visibility
+  isProfileIconClicked: boolean = false;
+
+
+  constructor(private router: Router, 
+    private breakpointObserver: BreakpointObserver 
+  ) {
   }
 
   ngOnInit(): void {
     this.items = [
     ];
+
+    // Subscribe to screen size changes (mobile, tablet, and desktop)
+    this.breakpointObserver.observe([
+      Breakpoints.XSmall,  // Mobile
+      Breakpoints.Small,   // Small tablets
+      Breakpoints.Medium,  // Medium devices, tablets, small laptops
+      Breakpoints.Large    // Desktops
+    ]).subscribe(result => {
+      // Update the flag based on screen size (mobile or tablet = true)
+      this.isMobileOrTablet = result.breakpoints[Breakpoints.XSmall] || result.breakpoints[Breakpoints.Small] || result.breakpoints[Breakpoints.Medium];
+      
+      // If on mobile or tablet, switch to hamburger menu
+      if (this.isMobileOrTablet) {
+        this.sidebarVisible = false;
+        this.isHamburgerMenuVisible = true;
+      } else {
+        this.sidebarVisible = true;
+        this.isHamburgerMenuVisible = false;
+      }
+    });
   }
 
   isHomeOrLoginOrRegisterRoute() {
@@ -35,5 +64,21 @@ export class AppComponent implements OnInit {
 
   navigateTo(path: string) {
     this.router.navigate([path]);
+
+    if (this.isMobileOrTablet) {
+      this.toggleSidebar();
+    }
   }
+  isActive(path: string): boolean {
+    return this.router.url.includes(path);
+  }
+  
+
+    // Toggle the sidebar on mobile view
+  toggleSidebar() {
+    if (this.isProfileIconClicked != true) {
+    this.sidebarVisible = !this.sidebarVisible;
+    }
+  }
+
 }
