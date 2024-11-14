@@ -115,18 +115,9 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',         # Specify the PostgreSQL backend
-        'NAME': 'taskmatesbaza',                           # Database name
-        'USER': 'taskmatesbaza_user',                      # Username
-        'PASSWORD': 'jEVvayAf0WpjNptEJCvvRx1rzou7pG6O',    # Password
-        'HOST': 'dpg-csqv74aj1k6c73c3savg-a',              # Hostname
-        'PORT': '5432',   
-        'OPTIONS': {
-            'sslmode': 'require',
-        },                                 # Port
+    'default': dj_database_url.parse('postgresql://taskmatesbaza_user:jEVvayAf0WpjNptEJCvvRx1rzou7pG6O@dpg-csqv74aj1k6c73c3savg-a.frankfurt-postgres.render.com/taskmatesbaza')                        # Port
     }
-}
+
 
 
 #za postgre na renderu
