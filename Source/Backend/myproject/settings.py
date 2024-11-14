@@ -19,6 +19,8 @@ import mimetypes
 mimetypes.add_type("text/css", ".css", True)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+
 CSRF_TRUSTED_ORIGINS = ['https://taskmatesbackend-pd5h.onrender.com']
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
