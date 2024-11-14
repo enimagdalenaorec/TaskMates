@@ -19,6 +19,7 @@ import mimetypes
 mimetypes.add_type("text/css", ".css", True)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+CSRF_TRUSTED_ORIGINS = ['https://taskmatesbackend-pd5h.onrender.com']
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
 
@@ -78,6 +79,22 @@ SOCIALACCOUNT_PROVIDERS={
         ],
         "AUTH_PARAMS":{"access_type":"online"}
     }
+}
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'allauth': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }
 
 
