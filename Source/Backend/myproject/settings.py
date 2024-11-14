@@ -174,5 +174,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS=("django.contrib.auth.backends.ModelBackend","allauth.account.auth_backends.AuthenticationBackend")
 
-LOGIN_REDIRECT_URL="http://localhost:4200/my-groups"
-LOGOUT_REDIRECT_URL="http://localhost:4200/my-groups"
+LOGIN_REDIRECT_URL="https://taskmatesbackend-pd5h.onrender.com/my-groups"
+LOGOUT_REDIRECT_URL="https://taskmatesbackend-pd5h.onrender.com/my-groups"
