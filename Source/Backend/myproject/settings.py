@@ -14,6 +14,9 @@ from pathlib import Path
 import os
 import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 CORS_ALLOW_ALL_ORIGINS = True
