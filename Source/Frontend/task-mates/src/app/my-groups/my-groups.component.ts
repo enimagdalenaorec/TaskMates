@@ -22,7 +22,7 @@ export class MyGroupsComponent {
   cardImagePath = "images/group_images/picture1.jpg";
   searchQuery='';
   groups: any[] = [];  
-  apiUrl = 'http://djangoTaskMates.onredner.com/api/groups/'; //TT Django API endpoint za render
+  apiUrl = 'https://taskmatesbackend-pd5h.onrender.com/api/groups/'; //TT Django API endpoint za render
 
   constructor(private http: HttpClient, private router: Router) {}
 
