@@ -35,7 +35,7 @@ export class LoginComponent {
   onSubmit() {
     this.errorMessage = undefined;
     /*'http://localhost:8000/api/accounts/googleLogin' */
-    window.location.href = 'http://localhost:8000/api/accounts/googleLogin/';
+    window.location.href = 'http://djangoTaskMates.onrender.com/api/accounts/googleLogin/';
     // this.http.get('http://localhost:8000/api/accounts/googleLogin/').subscribe(
     //   response => {
     //     console.log(response);
