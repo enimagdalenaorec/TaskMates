@@ -44,7 +44,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost','taskmatesbackend-pd5h.onrender.com','angulartaskmates.onrender.com']
 
-SITE_ID=2
+SITE_ID=4
 # Application definition
 
 INSTALLED_APPS = [
