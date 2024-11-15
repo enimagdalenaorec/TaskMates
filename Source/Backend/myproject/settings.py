@@ -11,10 +11,17 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+
+CSRF_TRUSTED_ORIGINS = ['https://taskmatesbackend-pd5h.onrender.com']
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
 
@@ -31,14 +38,15 @@ CORS_ALLOW_HEADERS = [
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kyd!0nh_+y+u8*g8s(ts7dm2*kbkb@h@#)j(9_wdt+g)&7sprv'
+
+SECRET_KEY = "7944f252bbee40c82023495a8a899d48"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','taskmatesbackend-pd5h.onrender.com','angulartaskmates.onrender.com','taskmates-gjhi.onrender.com']
 
-SITE_ID=3
+SITE_ID=4
 # Application definition
 
 INSTALLED_APPS = [
@@ -74,11 +82,28 @@ SOCIALACCOUNT_PROVIDERS={
         "AUTH_PARAMS":{"access_type":"online"}
     }
 }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'allauth': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -87,6 +112,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
+
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 ROOT_URLCONF = 'myproject.urls'
 
@@ -113,18 +145,13 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        #za postgre:
-        #'ENGINE': 'django.db.backends.postgresql',
-        #'NAME': ,
-        #'USER': ,
-        #'PASSWORD': ,
-        #'HOST': 'localhost',
-        #'PORT': '5432',
+    'default': dj_database_url.parse('postgresql://taskmatesbaza_user:jEVvayAf0WpjNptEJCvvRx1rzou7pG6O@dpg-csqv74aj1k6c73c3savg-a.frankfurt-postgres.render.com/taskmatesbaza')                        # Port
     }
-}
+
+
+
+#za postgre na renderu
+
 
 
 # Password validation
@@ -163,6 +190,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -170,5 +199,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS=("django.contrib.auth.backends.ModelBackend","allauth.account.auth_backends.AuthenticationBackend")
 
-LOGIN_REDIRECT_URL="http://localhost:4200/my-groups"
-LOGOUT_REDIRECT_URL="http://localhost:4200/my-groups"
+LOGIN_REDIRECT_URL="https://taskmates-gjhi.onrender.com/my-groups"
+LOGOUT_REDIRECT_URL="https://taskmates-gjhi.onrender.com/my-groups"
