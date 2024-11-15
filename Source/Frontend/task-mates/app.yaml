@@ -1,0 +1,26 @@
+runtime: nodejs18  # Use the appropriate Node.js version that matches your environment
+
+# Automatically install dependencies
+env: standard
+
+# Specify entry point for SSR (main server file in the dist folder)
+entrypoint: node dist/task-mates/server/main.js
+
+# Optional: Set environment variables
+env_variables:
+  NODE_ENV: 'production'
+
+# Specify the resources and scaling
+automatic_scaling:
+  target_cpu_utilization: 0.6
+  target_throughput_utilization: 0.75
+  min_instances: 1
+  max_instances: 5
+
+handlers:
+  - url: /(.*)
+    static_files: dist/task-mates/browser/\1
+    upload: dist/task-mates/browser/(.*)
+
+  - url: /.*
+    script: auto
