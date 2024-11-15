@@ -2,6 +2,8 @@
 
 TaskMates je web aplikacija koja korisnicima omogućuje organizaciju i praćenje kućanskih poslova unutar zajednica poput cimerstva, obitelji ili prijateljskih grupa. Aplikacija omogućuje kreiranje grupa, dodavanje zadataka, definiranje težine i rokova te praćenje izvršavanja zadataka putem Leaderboarda i raznih statistika.
 
+## **Link na deploy aplikacije:  https://taskmates-gjhi.onrender.com/home
+
 ## **Pokretanje frontenda (Angulara)**
 - Prvo pokretanje:
     1. Ukoliko nemate instaliran Angular treba ga globalno instalirati s naredbom: npm install -g @angular/cli
@@ -45,7 +47,7 @@ Postupak pri pokretanju:
    Ovo će instalirati sve pakete koji se koriste za backend, uključujući i django
 
 Za pokrenuti django server potrebno je runnati komandu 
-  py TaskMatesBackend/manage.py runserver
+  py manage.py runserver
 Sa Ctrl+C se gasi server
 ## Upute pri pushanju na github:
  prije pushanja potrebno runnati pip freeze > requirements.txt, myenv folder se ne uploada na github.
