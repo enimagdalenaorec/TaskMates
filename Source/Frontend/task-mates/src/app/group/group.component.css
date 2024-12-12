@@ -10,7 +10,7 @@
 
 .container {
   display: flex;
-  height: 90vh;
+  /* height: 85vh; */
 }
 
 .left-content {
@@ -23,12 +23,16 @@
   background-color: rgba(210, 239, 237, 0.5);
   /* color: rgb(43, 139, 118); */
   font-weight: 530;
+  height: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .groupchat {
-  height: 85%;   /*TODO: adjust when outer service arrives */
+  flex: auto;
   /* background-color: white; */
-  border: 1px solid rgb(84, 160, 155);
+  border: 4px solid rgba(84, 160, 155, 0.5);
+  height: auto;
 }
 
 :host ::ng-deep .p-tabview .p-tabview-panels {
@@ -38,4 +42,19 @@
 .tabPanel {
   /* background-color: rgb(229, 207, 179); */
   height: 76vh;
+}
+
+.task-item {
+  /* border: 4px solid rgba(210, 239, 237, 0.5); */
+  border: 4px solid rgba(164, 172, 182, 0.5);
+  display: flex;
+}
+
+.task-item-left {
+  flex: 7;
+}
+
+.task-item-right {
+  flex:3;
+  justify-items: end;
 }
