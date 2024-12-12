@@ -1,8 +1,13 @@
 # TaskMates
 
+## Opis projekta
+
+Ovaj projekt rezultat je timskog rada razvijenog u sklopu projektnog zadatka kolegija [Programsko inženjerstvo](https://www.fer.unizg.hr/predmet/proinz) na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu.
+
 TaskMates je web aplikacija koja korisnicima omogućuje organizaciju i praćenje kućanskih poslova unutar zajednica poput cimerstva, obitelji ili prijateljskih grupa. Aplikacija omogućuje kreiranje grupa, dodavanje zadataka, definiranje težine i rokova te praćenje izvršavanja zadataka putem Leaderboarda i raznih statistika.
 
-## **Link na deploy aplikacije:  https://taskmates-gjhi.onrender.com/home
+## **Link na deploy aplikacije:**
+ https://taskmates-gjhi.onrender.com/home
 
 ## **Pokretanje frontenda (Angulara)**
 - Prvo pokretanje:
@@ -107,3 +112,13 @@ Aplikacija koristi **OAuth 2.0** za autentifikaciju i autorizaciju korisnika, pr
 - **Backend**: Django
 - **Frontend**: Angular
 - **Baza podataka**: SQL
+
+## Članovi tima
+
+- Eni Magdalena Oreč
+- Ana Gašperov
+- Ena Dvojak
+- Lovre Marasović
+- Antonio Vito Šprljan
+- Sven Đukić
+- Tomislav Kušek
