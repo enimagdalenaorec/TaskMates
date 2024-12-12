@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  /* height: 100%; */
+}
+
+.container {
+  display: flex;
+  height: 90vh;
+}
+
+.left-content {
+  flex: 7;
+  /* background-color: rgb(238, 238, 204); */
+}
+
+.right-content {
+  flex: 3;
+  background-color: rgba(210, 239, 237, 0.5);
+  /* color: rgb(43, 139, 118); */
+  font-weight: 530;
+}
+
+.groupchat {
+  height: 85%;   /*TODO: adjust when outer service arrives */
+  /* background-color: white; */
+  border: 1px solid rgb(169, 162, 162);
+}

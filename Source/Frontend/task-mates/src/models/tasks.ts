@@ -10,4 +10,5 @@ export class Task {
   deadline: string = '';
   members: { name: string }[] = [];
   groupId: string = '';
+  groupName: string = '';
 }
