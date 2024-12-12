@@ -1,6 +1,27 @@
 <div class="container p-2 pr-1">
   <div class="left-content border-round-md mr-2">
+     <!-- TabMenu from primeng -->
+     <p-tabView>
+      <p-tabPanel header="Tasks">
+          <div class="tabPanel">
+            <!-- add task and filter task -->
+            <div class="flex justify-content-end align-items-center">
+              <i pTooltip="Filter by task status" tooltipPosition="bottom" class="pi pi-filter mt-2 mr-3" style="font-size: 1.5rem; color:rgba(43, 139, 118, 0.5);;"></i>
+              <p-button label="Add Task" class="mt-2 mr-2" (click)="navigate('add-task')"></p-button>
+            </div>
+            <!-- display of tasks -->
 
+          </div>
+      </p-tabPanel>
+      <p-tabPanel header="Standings">
+        <div class="tabPanel">
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="Members">
+        <div class="tabPanel">
+        </div>
+      </p-tabPanel>
+  </p-tabView>
   </div>
   <div class="right-content border-round-md">
       <p class="p-3 text-4xl">{{this.groupName}}</p>

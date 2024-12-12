@@ -4,9 +4,9 @@
   box-sizing: border-box;
 }
 
-html, body {
-  /* height: 100%; */
-}
+/* html, body {
+   height: 100%;
+} */
 
 .container {
   display: flex;
@@ -28,5 +28,14 @@ html, body {
 .groupchat {
   height: 85%;   /*TODO: adjust when outer service arrives */
   /* background-color: white; */
-  border: 1px solid rgb(169, 162, 162);
+  border: 1px solid rgb(84, 160, 155);
+}
+
+:host ::ng-deep .p-tabview .p-tabview-panels {
+  padding: 0;
+}
+
+.tabPanel {
+  /* background-color: rgb(229, 207, 179); */
+  height: 76vh;
 }

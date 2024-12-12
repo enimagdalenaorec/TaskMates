@@ -4,11 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../models/tasks';
-
+import { TabViewModule } from 'primeng/tabview';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 @Component({
   selector: 'app-group',
   standalone: true,
-  imports: [HttpClientModule, CommonModule],
+  imports: [HttpClientModule, CommonModule, TabViewModule, ButtonModule, TooltipModule],
   templateUrl: './group.component.html',
   styleUrl: './group.component.css'
 })
@@ -37,5 +39,9 @@ export class GroupComponent implements OnInit {
         console.error('Error fetching group tasks:', error);
       }
     });
+  }
+
+  navigate(location: string): void {
+    this.router.navigate([location]);
   }
 }
