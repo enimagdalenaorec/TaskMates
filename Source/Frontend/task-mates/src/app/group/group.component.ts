@@ -7,6 +7,15 @@ import { Task } from '../../models/tasks';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { interval, Subscription } from 'rxjs';
+
+
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+}
+
 @Component({
   selector: 'app-group',
   standalone: true,
@@ -19,6 +28,8 @@ export class GroupComponent implements OnInit {
   apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
   tasks: Task[] = [];
   groupName: string = '';
+
+  timeLeft: { [key: string]: TimeLeft } = {}; // Map with task ID as key and TimeLeft as value
 
   constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient) {}
 
@@ -33,12 +44,37 @@ export class GroupComponent implements OnInit {
       next: (response) => {
         this.tasks = response.tasks || [];
         this.groupName = this.tasks[0].groupName;
+        this.initializeTimeLeft();
         console.log('Group tasks:', response.tasks);
       },
       error: (error) => {
         console.error('Error fetching group tasks:', error);
       }
     });
+  }
+
+  initializeTimeLeft(): void {
+    this.tasks.forEach((task) => {
+      this.timeLeft[task.id] = this.calculateTimeLeft(task.deadline);
+    });
+  }
+
+  calculateTimeLeft(deadline: string): TimeLeft {
+    const deadlineDate = new Date(deadline);
+    const now = new Date();
+    const timeDiff = deadlineDate.getTime() - now.getTime();
+
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+    return { days, hours, minutes };
+  }
+
+  isDeadlinePassed(deadline: string): boolean {
+    const deadlineDate = new Date(deadline);
+    const now = new Date();
+    return now > deadlineDate;
   }
 
   navigate(location: string): void {
