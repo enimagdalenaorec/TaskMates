@@ -59,7 +59,16 @@
         </div>
       </p-tabPanel>
       <p-tabPanel header="Members">
-        <div class="tabPanel">
+        <div class="tabPanel membersPanel pl-3">
+          <div class="members pt-6">
+            <div *ngFor="let member of members" class="member p-3 border-round-lg mb-3">
+              <p class="text-2xl member-picture border-circle"></p>
+              <p class="ml-3 text-xl font-medium member-name">{{member.name}}</p>
+            </div>
+          </div>
+          <div class="joining pt-6">
+              <div class="mr-3"><p-button>Share Join Code/Link</p-button></div>
+          </div>
         </div>
       </p-tabPanel>
     </p-tabView>

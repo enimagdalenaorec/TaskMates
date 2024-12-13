@@ -12,6 +12,7 @@ import { ApplicationRef } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { NgZone } from '@angular/core';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { Member } from '../../models/members';
 
 interface TimeLeft {
   days: number;
@@ -35,6 +36,7 @@ export class GroupComponent implements OnInit {
   timeLeft: { [key: string]: TimeLeft } = {}; // Map with task ID as key and TimeLeft as value
   private timeUpdateSubscription: Subscription | null = null;
   filteredTasks: Task[] = [];
+  members: Member[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, private applicationRef: ApplicationRef, private ngZone: NgZone  ) {
   }
@@ -44,6 +46,7 @@ export class GroupComponent implements OnInit {
     this.groupId = this.route.snapshot.paramMap.get('id')!;
     this.fetchGroupTasksInfo();
     this.startTimerUpdates();
+    this.fetchGroupMembers();
   }
 
   ngOnDestroy(): void {
@@ -120,6 +123,18 @@ export class GroupComponent implements OnInit {
     } else {
       this.filteredTasks = [...this.tasks];
     }
+  }
+
+  fetchGroupMembers(): void {
+    this.http.post<{ members: any[] }>(this.apiUrl + '/groups/getAllMembers', { groupId: this.groupId }).subscribe({
+      next: (response) => {
+        this.members = response.members || [];
+        console.log('Group members:', response.members);
+      },
+      error: (error) => {
+        console.error('Error fetching group members:', error);
+      }
+    });
   }
 
   navigate(location: string): void {

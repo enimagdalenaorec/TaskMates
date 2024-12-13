@@ -77,3 +77,36 @@
 .finished {
   background-color: rgb(222, 232, 222);
 }
+
+.membersPanel{
+  display: flex;
+}
+
+.members {
+  flex:6;
+  /* background-color: rgba(210, 239, 237, 0.5); */
+}
+
+.joining {
+  flex:4;
+  display: flex;
+  justify-content: end;
+  /* background-color: rgba(57, 105, 102, 0.5); */
+}
+
+.member {
+  border: 2px solid rgba(164, 172, 182, 0.5);
+  display: flex;
+  justify-content: start;
+}
+
+.member-picture {
+  border: 2px solid rgba(164, 172, 182, 0.5);
+  flex:2;
+  max-width: 12%;
+  max-height: 80%;
+}
+
+.member-name {
+  flex:8;
+}

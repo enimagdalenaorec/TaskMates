@@ -31,8 +31,10 @@ def mock_create_group(request):
 def mock_get_all_members(request):
     return Response({
         "members": [
-            {"name": "Member1", "picture": "base64picture1", "userId":1},
-            {"name": "Member2", "picture": "base64picture2", "userId":2},
+            {"name": "Ana Anic", "picture": "base64picture1", "userId":1},
+            {"name": "Eni Enić", "picture": "base64picture2", "userId":2},
+            {"name": "Erna Ernić", "picture": "base64picture3", "userId":3},
+            {"name": "Pero Perić", "picture": "base64picture4", "userId":4}
         ]
     }, status=HTTP_200_OK)
 
