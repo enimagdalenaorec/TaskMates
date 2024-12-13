@@ -8,6 +8,9 @@ import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { interval, Subscription } from 'rxjs';
+import { ApplicationRef } from '@angular/core';
+import { first } from 'rxjs/operators';
+import { NgZone } from '@angular/core';
 
 
 interface TimeLeft {
@@ -28,15 +31,26 @@ export class GroupComponent implements OnInit {
   apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
   tasks: Task[] = [];
   groupName: string = '';
-
+  private timerInterval: any;
   timeLeft: { [key: string]: TimeLeft } = {}; // Map with task ID as key and TimeLeft as value
+  private timeUpdateSubscription: Subscription | null = null;
 
-  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, private applicationRef: ApplicationRef, private ngZone: NgZone  ) {
+  }
+
 
   ngOnInit(): void {
     this.groupId = this.route.snapshot.paramMap.get('id')!;
     this.fetchGroupTasksInfo();
+    this.startTimerUpdates();
   }
+
+  ngOnDestroy(): void {
+    if (this.timeUpdateSubscription) {
+      this.timeUpdateSubscription.unsubscribe();
+    }
+  }
+
 
   fetchGroupTasksInfo(): void {
     // Fetch group tasks info using the group ID
@@ -45,7 +59,7 @@ export class GroupComponent implements OnInit {
         this.tasks = response.tasks || [];
         this.groupName = this.tasks[0].groupName;
         this.initializeTimeLeft();
-        console.log('Group tasks:', response.tasks);
+        // console.log('Group tasks:', response.tasks);
       },
       error: (error) => {
         console.error('Error fetching group tasks:', error);
@@ -69,6 +83,27 @@ export class GroupComponent implements OnInit {
     const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
 
     return { days, hours, minutes };
+  }
+
+  startTimerUpdates(): void {
+    this.applicationRef.isStable.pipe(first((isStable: boolean) => isStable)).subscribe(() => {
+      // this.timeUpdateSubscription = interval(60000).subscribe(() => {
+      //      this.updateAllTimeLeft();
+      //      console.log('Timer updated');
+      //    });
+      this.ngZone.run(() => {
+        setInterval(() => {
+          this.updateAllTimeLeft();
+          console.log('Timer triggered');
+        }, 60000);
+      });
+    });
+  }
+
+  updateAllTimeLeft(): void {
+    for (const task of this.tasks) {
+      this.timeLeft[task.id] = this.calculateTimeLeft(task.deadline);
+    }
   }
 
   isDeadlinePassed(deadline: string): boolean {
