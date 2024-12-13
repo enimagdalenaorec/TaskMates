@@ -11,7 +11,7 @@ import { interval, Subscription } from 'rxjs';
 import { ApplicationRef } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { NgZone } from '@angular/core';
-
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 interface TimeLeft {
   days: number;
@@ -22,7 +22,7 @@ interface TimeLeft {
 @Component({
   selector: 'app-group',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, TabViewModule, ButtonModule, TooltipModule],
+  imports: [HttpClientModule, CommonModule, TabViewModule, ButtonModule, TooltipModule, OverlayPanelModule],
   templateUrl: './group.component.html',
   styleUrl: './group.component.css'
 })
@@ -34,6 +34,7 @@ export class GroupComponent implements OnInit {
   private timerInterval: any;
   timeLeft: { [key: string]: TimeLeft } = {}; // Map with task ID as key and TimeLeft as value
   private timeUpdateSubscription: Subscription | null = null;
+  filteredTasks: Task[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, private applicationRef: ApplicationRef, private ngZone: NgZone  ) {
   }
@@ -58,6 +59,7 @@ export class GroupComponent implements OnInit {
       next: (response) => {
         this.tasks = response.tasks || [];
         this.groupName = this.tasks[0].groupName;
+        this.filteredTasks = this.tasks; // Display all tasks initially
         this.initializeTimeLeft();
         // console.log('Group tasks:', response.tasks);
       },
@@ -94,7 +96,7 @@ export class GroupComponent implements OnInit {
       this.ngZone.run(() => {
         setInterval(() => {
           this.updateAllTimeLeft();
-          console.log('Timer triggered');
+          // console.log('Timer triggered');
         }, 60000);
       });
     });
@@ -110,6 +112,14 @@ export class GroupComponent implements OnInit {
     const deadlineDate = new Date(deadline);
     const now = new Date();
     return now > deadlineDate;
+  }
+
+  filterTasks(status: string | null): void {
+    if (status) {
+      this.filteredTasks = this.tasks.filter((task) => task.status === status.toLowerCase());
+    } else {
+      this.filteredTasks = [...this.tasks];
+    }
   }
 
   navigate(location: string): void {
