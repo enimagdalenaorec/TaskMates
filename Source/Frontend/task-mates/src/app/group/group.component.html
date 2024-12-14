@@ -61,7 +61,7 @@
       <p-tabPanel header="Members">
         <div class="tabPanel membersPanel pl-3">
           <div class="members pt-6">
-            <div *ngFor="let member of members" class="member p-3 border-round-lg mb-3">
+            <div *ngFor="let member of members" class="member h-4rem p-1 pl-3 border-round-lg mb-3 align-items-center">
               <img [src] = "member.picture" class="text-2xl member-picture border-circle"/>
               <p class="ml-3 text-xl font-medium member-name">{{member.name}}</p>
             </div>
