@@ -1,0 +1,14 @@
+.notification {
+    display: flex;
+    background-color: #f6f8f8;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(164, 172, 182, 0.5);
+}
+
+.notification-message {
+  flex: 9;
+}
+
+.notification-time {
+  flex: 1;
+}

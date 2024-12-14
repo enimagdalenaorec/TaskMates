@@ -1,1 +1,9 @@
-<p>notifications works!</p>
+<div class="notifications p-5 pt-3 w-10 h-4rem">
+  <p class="text-2xl font-semibold	">Your notifications:</p>
+  <div class="notification border-round-md p-3 pr-1 mb-3" *ngFor="let notification of notifications">
+    <span class="notification-message mr-4">{{ notification.message }}</span>
+    <i class="notification-time text-sm">
+      {{ notification.sentAt | date: 'yyyy.MM.dd' }}
+    </i>
+  </div>
+</div>
