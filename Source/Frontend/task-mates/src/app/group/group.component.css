@@ -110,3 +110,11 @@
 .member-name {
   flex:8;
 }
+
+.filter-option {
+  cursor: pointer;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon {
+  color: white;
+}

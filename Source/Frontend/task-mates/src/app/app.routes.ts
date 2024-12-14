@@ -7,6 +7,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { CreateGroupComponent } from './create-group/create-group.component';
 import { AddTaskComponent } from './add-task/add-task.component';
 import { GroupComponent } from './group/group.component';
+import { TaskComponent } from './task/task.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -18,5 +19,6 @@ export const routes: Routes = [
   {path: 'create-group', component: CreateGroupComponent},
   {path: 'add-task', component: AddTaskComponent},
   {path: 'group/:id', component: GroupComponent},
+  {path: 'task/:id', component: TaskComponent},
   {path: '**', redirectTo: ''},
 ];

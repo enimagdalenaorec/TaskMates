@@ -42,6 +42,6 @@ def mock_get_all_members(request):
 @api_view(['POST'])
 def mock_get_group_code_link(request):
     return Response({
-        "code": "sample_code",
-        "link": "https://example.com/join/sample_code"
+        "code": "ABC123",
+        "link": "https://example.com/join/ABC123"
     }, status=HTTP_200_OK)

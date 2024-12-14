@@ -13,6 +13,8 @@ import { first } from 'rxjs/operators';
 import { NgZone } from '@angular/core';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { Member } from '../../models/members';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
 
 interface TimeLeft {
   days: number;
@@ -23,7 +25,7 @@ interface TimeLeft {
 @Component({
   selector: 'app-group',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, TabViewModule, ButtonModule, TooltipModule, OverlayPanelModule],
+  imports: [HttpClientModule, CommonModule, TabViewModule, ButtonModule, TooltipModule, OverlayPanelModule, DialogModule, InputTextModule],
   templateUrl: './group.component.html',
   styleUrl: './group.component.css'
 })
@@ -37,6 +39,9 @@ export class GroupComponent implements OnInit {
   private timeUpdateSubscription: Subscription | null = null;
   filteredTasks: Task[] = [];
   members: Member[] = [];
+  visible: boolean = false;
+  groupCode: string = '';
+  groupLink: string = '';
 
   constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, private applicationRef: ApplicationRef, private ngZone: NgZone  ) {
   }
@@ -47,6 +52,7 @@ export class GroupComponent implements OnInit {
     this.fetchGroupTasksInfo();
     this.startTimerUpdates();
     this.fetchGroupMembers();
+    this.fetchGroupLinkAndCode();
   }
 
   ngOnDestroy(): void {
@@ -129,7 +135,7 @@ export class GroupComponent implements OnInit {
     this.http.post<{ members: any[] }>(this.apiUrl + '/groups/getAllMembers', { groupId: this.groupId }).subscribe({
       next: (response) => {
         this.members = response.members || [];
-        console.log('Group members:', response.members);
+        // console.log('Group members:', response.members);
       },
       error: (error) => {
         console.error('Error fetching group members:', error);
@@ -137,7 +143,33 @@ export class GroupComponent implements OnInit {
     });
   }
 
+  showDialog() {
+    this.visible = true;
+}
+
+copyToClipboard(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+        // console.log('Group code copied to clipboard');
+    });
+}
+
+fetchGroupLinkAndCode(): void {
+    this.http.post<{ code: string, link: string }>(this.apiUrl + '/groups/getGroupCodeLink', { groupId: this.groupId }).subscribe({
+      next: (response) => {
+        this.groupLink = response.link;
+        this.groupCode = response.code;
+      },
+      error: (error) => {
+        console.error('Error fetching group link and code:', error);
+      }
+    });
+}
+
   navigate(location: string): void {
     this.router.navigate([location]);
+  }
+
+  navigateToTask(taskId: string): void {
+    this.router.navigate(['/task', taskId]);
   }
 }
