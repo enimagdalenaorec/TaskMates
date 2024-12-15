@@ -19,7 +19,7 @@
               <hr>
               <p class="mt-2 filter-option" (click)="filterTasks(null)">All</p>
             </p-overlayPanel>
-            <p-button label="Add Task" class="mt-2 mr-2" (click)="navigate('add-task')"></p-button>
+            <p-button label="Add Task" class="mt-2 mr-2" (click)="navigateToAddTask()"></p-button>
           </div>
           <!-- display of tasks -->
           <div *ngFor="let task of filteredTasks" [ngClass]="{'task-failed': task.status === 'failed'}"

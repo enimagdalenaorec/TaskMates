@@ -17,7 +17,7 @@ export const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
   {path: 'notifications', component: NotificationsComponent},
   {path: 'create-group', component: CreateGroupComponent},
-  {path: 'add-task', component: AddTaskComponent},
+  {path: 'add-task/:group-id', component: AddTaskComponent},
   {path: 'group/:id', component: GroupComponent},
   {path: 'task/:id', component: TaskComponent},
   {path: '**', redirectTo: ''},

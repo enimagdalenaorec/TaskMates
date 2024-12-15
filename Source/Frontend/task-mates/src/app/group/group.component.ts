@@ -172,4 +172,8 @@ fetchGroupLinkAndCode(): void {
   navigateToTask(taskId: string): void {
     this.router.navigate(['/task', taskId]);
   }
+
+  navigateToAddTask(): void {
+    this.router.navigate(['/add-task', this.groupId]);
+  }
 }
