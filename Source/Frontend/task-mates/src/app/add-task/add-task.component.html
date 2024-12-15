@@ -1,38 +1,41 @@
 <div class="p-5 pt-2">
   <p class="mb-3 text-3xl">Add New Task</p>
-  <form class="border-round-md add-task-form w-8 p-4" [formGroup]="addTaskForm" (ngSubmit)="onSubmit()">
+  <form class="border-round-md add-task-form w-8 p-4 flex flex-column	" [formGroup]="addTaskForm" (ngSubmit)="onSubmit()">
     <div>
       <label class="text-sm" for="name">Name</label><br>
-      <input pInputText type="text" class="mt-1 mb-3" id="name" formControlName="name">
+      <input pInputText type="text" class="mt-1 mb-3 task-name" id="name" formControlName="name">
     </div>
     <div>
       <p class="text-sm mb-0 mt-0">Description</p>
-      <textarea placeholder="Enter description here" class="mt-1 mb-3" rows="3" cols="30" pInputTextarea
+      <textarea placeholder="Enter description here" class="mt-1 mb-3 task-description" rows="3" cols="30" pInputTextarea
         formControlName="description"></textarea>
     </div>
     <div>
       <p class="text-sm mb-1 mt-0">Capacity</p>
-      <p-inputNumber formControlName="capacity" [showButtons]="true" inputId="stacked" buttonLayout="horizontal"
+      <p-inputNumber inputStyleClass="task-capacity" formControlName="capacity" [showButtons]="true" inputId="stacked" buttonLayout="horizontal"
         min="1" />
     </div>
     <div>
       <div class="points">
         <p class="text-sm mb-2 mt-4 mr-3">Points (100 - 500)</p>
-        <input type="text" pInputText [value]="addTaskForm.get('points')?.value" class="w-1 h-2rem mb-2 mt-4" readonly />
+        <input type="text" pInputText [value]="addTaskForm.get('points')?.value" class="w-1 h-2rem mb-2 mt-4"
+          readonly />
       </div>
       <p-slider formControlName="points" [step]="20" styleClass="w-8" [min]="100" [max]="500" />
     </div>
     <div>
       <p class="text-sm mb-1 mt-5">Due Date</p>
-      <p-calendar
-        formControlName="deadline"
-        [iconDisplay]="'input'"
-        [showIcon]="true"
-        inputId="icondisplay"
+      <p-calendar [minDate]="today"  formControlName="deadline" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
         dateFormat="dd.mm.yy" />
     </div>
     <div>
-      <p class="text-sm mb-1 mt-3">Icon (to be displayed in calendar)</p>
+      <p class="text-sm mb-2 mt-4">Icon (to be displayed in calendar)</p>
+      <input class="w-1 text-lg emoji-preview" pInputText type="text" [value]="icon" (keydown)="handleKeydown($event)"> <span class="ml-2 text-lg cursor-pointer pi pi-arrow-down" (click) ="toggleVisability()"></span><br>
+      <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)" title="Pick your emoji"></emoji-mart>
+    </div>
+
+    <div class="mt-5 mr-3 align-self-end">
+      <button pButton type="submit" label="Submit" class="w-13" [disabled]="isFormDisabled()"></button>
     </div>
   </form>
 </div>

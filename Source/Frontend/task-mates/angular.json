@@ -31,7 +31,8 @@
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/themes/aura-light-teal/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/primeflex/primeflex.css"
+              "node_modules/primeflex/primeflex.css",
+              "node_modules/@ctrl/ngx-emoji-mart/picker.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",
