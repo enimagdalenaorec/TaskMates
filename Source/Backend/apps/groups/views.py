@@ -22,10 +22,36 @@ def mock_join_group(request):
 
 # Mock endpoint za kreiranje grupe
 @api_view(['POST'])
-def mock_create_group(request):
-    return Response({
-        "message": "success"
-    }, status=HTTP_200_OK)
+def create_group(request):
+    # Izvuci parametar 'name' iz request.data
+    group_name = request.data.get('name')
+
+    # Validacija: Provjeri je li naziv grupe poslan
+    if not group_name:
+        return Response({
+            "error": "Group name is required."
+        }, status=HTTP_400_BAD_REQUEST)
+
+    try:
+        # Kreiraj novu grupu
+        group = Group.objects.create(name=group_name)
+
+        # Vrati uspješan odgovor s podacima o grupi
+        return Response({
+            "message": "Group created successfully.",
+            "group": {
+                "id": group.id,
+                "name": group.name,
+                "join_code": group.join_code,
+                "created_at": group.created_at
+            }
+        }, status=HTTP_201_CREATED)
+
+    except Exception as e:
+        # Vrati grešku ako nešto pođe po zlu
+        return Response({
+            "error": str(e)
+        }, status=HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def mock_get_all_members(request):
