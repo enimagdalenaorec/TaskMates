@@ -1,13 +1,25 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from core.models import Task
 
-# Mock endpoint za dohvat svih zadataka korisnika za kalendar
 @api_view(['GET'])
-def mock_get_all_tasks(request):
-    return Response({
-        "tasks": [
-            {"icon": None, "name": "Task1", "id": "1"},
-            {"icon": None, "name": "Task2", "id": "2"},
-        ]
-    }, status=HTTP_200_OK)
+@permission_classes([IsAuthenticated])  # Korisnik mora biti autentificiran
+def get_all_tasks(request):
+    """
+    Dohvat svih zadataka iz baze podataka.
+    Vraća osnovne informacije o zadatku: id, ime, ikonu.
+    """
+    tasks = Task.objects.all()
+    response_data = [
+        {
+            "id": task.id,
+            "name": task.name,
+            "icon": task.icon  # Ovo može biti None ako ikona nije definirana
+        }
+        for task in tasks
+    ]
+
+    return Response({"tasks": response_data}, status=HTTP_200_OK)

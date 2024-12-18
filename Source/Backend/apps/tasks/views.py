@@ -12,9 +12,60 @@ from core.models import Task, UserTask, Group, Rating, GroupUser
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Korisnik mora biti prijavljen
+def get_task_by_id(request):
+    # Iz body-ja dohvatiti taskId
+    task_id = request.data.get('taskId')
+    if not task_id:
+        return Response({"error": "taskId is required"}, status=HTTP_400_BAD_REQUEST)
+
+    try:
+        task = Task.objects.get(id=task_id)
+    except Task.DoesNotExist:
+        return Response({"error": "Task not found"}, status=HTTP_404_NOT_FOUND)
+
+    # Dohvatiti članove koji sudjeluju u zadatku
+    user_tasks = UserTask.objects.filter(task=task)
+    members = [
+        {
+            "name": ut.user.username,
+            "picture": None  # Dodajte logiku ako korisnik ima sliku
+        }
+        for ut in user_tasks
+    ]
+
+    # Broj trenutno prijavljenih članova
+    current_capacity = user_tasks.count()
+
+    # Izračun preostalog vremena
+    now = timezone.now()
+    time_left = (task.deadline - now).total_seconds()
+    if time_left < 0:
+        time_left = 0  # Ako je rok prošao, postavite na 0
+
+    # Provjeriti je li korisnik već ocijenio zadatak
+    already_reviewed = Rating.objects.filter(task=task, sender=request.user).exists()
+
+    # Priprema odgovora
+    response_data = {
+        "groupName": task.group.name,
+        "members": members,
+        "maxCapacity": task.max_capacity,
+        "currentCapacity": current_capacity,
+        "description": task.description,
+        "points": task.points,
+        "status": task.status,
+        "timeLeft": time_left,  # Vrijeme u sekundama do roka
+        "alreadyReviewed": already_reviewed
+    }
+
+    return Response(response_data, status=HTTP_200_OK)
+
+
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_tasks_by_group(request):
-    group_id = request.data.get('groupId')
+    group_id = int(request.data.get('groupId'))
     if not group_id:
         return Response({"error": "groupId is required"}, status=HTTP_400_BAD_REQUEST)
     try:
@@ -33,14 +84,17 @@ def get_tasks_by_group(request):
         response_data.append({
             "id": task.id,
             "name": task.name,
+            "description": task.description,
+            "points": task.points,
+            "max_capacity": task.max_capacity,
+            "status": task.status,
             "icon": task.icon,
             "deadline": task.deadline.isoformat(),
             "members": members,
             "groupId": group.id,
-            "status": task.status,
-            "description": task.description,
-            "points": task.points,
-            "max_capacity": task.max_capacity
+            "groupName": group.name,  # Dodavanje naziva grupe ovdje
+            "currentCapacity": len(members),
+            "ts_deadline": task.deadline
         })
     
     return Response({"tasks": response_data}, status=HTTP_200_OK)
