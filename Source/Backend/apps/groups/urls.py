@@ -2,9 +2,9 @@ from django.urls import path
 from . import views 
 
 urlpatterns = [
-path('', views.mock_get_groups, name='mock_get_groups'), 
-path('join', views.mock_join_group, name='mock_join_group'), 
+path('', views.get_groups, name='get_groups'), 
+path('join', views.join_group, name='join_group'), 
 path('create', views.create_group, name='create_group'), 
-path('getAllMembers', views.mock_get_all_members, name='mock_get_all_members'), 
-path('getGroupCodeLink', views.mock_get_group_code_link, name='mock_get_group_code_link'), 
+path('getAllMembers', views.get_all_members, name='get_all_members'), 
+path('getGroupCodeLink', views.get_group_code, name='get_group_code'), 
 ]

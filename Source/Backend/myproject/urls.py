@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/notifications/', include('apps.notifications.urls')), 
     path('api/tasks/', include('apps.tasks.urls')), 
     path('accounts/',include("allauth.urls")), 
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
