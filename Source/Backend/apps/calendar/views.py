@@ -8,10 +8,6 @@ from core.models import Task
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])  # Korisnik mora biti autentificiran
 def get_all_tasks(request):
-    """
-    Dohvat svih zadataka iz baze podataka.
-    Vraća osnovne informacije o zadatku: id, ime, ikonu.
-    """
     tasks = Task.objects.all()
     response_data = [
         {
