@@ -49,6 +49,7 @@ def get_task_by_id(request):
     # Priprema odgovora
     response_data = {
         "groupName": task.group.name,
+        "taskName":task.name,
         "members": members,
         "maxCapacity": task.max_capacity,
         "currentCapacity": current_capacity,
