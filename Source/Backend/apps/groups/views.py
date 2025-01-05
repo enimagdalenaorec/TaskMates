@@ -24,6 +24,7 @@ def mock_join_group(request):
 @api_view(['POST'])
 def mock_create_group(request):
     return Response({
+        "id": "3",
         "message": "success"
     }, status=HTTP_200_OK)
 

@@ -30,7 +30,7 @@ export class AddTaskComponent implements OnInit {
   constructor(private route: ActivatedRoute, private http: HttpClient) {
     this.addTaskForm = new FormGroup({
       name: new FormControl('', Validators.required),
-      description: new FormControl('', Validators.required),
+      description: new FormControl(''),
       capacity: new FormControl(1, Validators.required),
       points: new FormControl(100, Validators.required),
       deadline: new FormControl(new Date(), Validators.required),

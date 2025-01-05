@@ -1,1 +1,183 @@
-<p>task works!</p>
+<div class="container py-5 pl-5 pr-8 mt-2">
+  <div class="task-name text-3xl mb-2">
+    {{ task.name }}
+  </div>
+  <hr />
+  <div class="task-section">
+    <div class="task-details mt-4">
+      <div class="points-members ">
+        <label class="points font-medium flex mt-3">Points</label>
+        <p-knob
+          class="ml-2 mt-1 flex"
+          [(ngModel)]="adjustedPoints"
+          [step]="10"
+          [min]="0"
+          [max]="500"
+          [readonly]="true"
+          [showValue]="true"
+          styleClass="custom-knob"
+          [size]="150"
+          [valueColor]="
+            task.status === 'failed' && isPerformingTask ? '#e74c3c' : '#14b8a6'
+          "
+        ></p-knob>
+        <!--      <span class="value-display timer w-4rem mt-2 ml-4">{{ adjustedPoints }}</span>
+        <p-slider
+          [(ngModel)]="adjustedPoints"
+          [step]="20" 
+          styleClass="w-8"
+          [min]="0" 
+          [max]="500"
+          [valueColor]="(task.status === 'failed' && isPerformingTask) ? '#e74c3c' : '#14b8a6'" 
+          [disabled]="true"
+          [showTicks]="true"
+          [ngClass]="{'error-points': (task.status === 'failed' && isPerformingTask)}"
+          />
+ -->
+
+        <div class="members flex gap-4 flex-col mt-3" >
+          <div>
+            <span class="font-medium block mb-2 flex">Team Members</span>
+            <ul class="list-none p-0 m-0">
+              <li
+                *ngFor="let member of task.members"
+                class="flex items-center gap-2 px-2 py-2 ml-2 hover:bg-emphasis cursor-pointer rounded-border"
+              >
+                <img
+                  [src]="member.picture"
+                  style="width: 32px; border-radius: 50%"
+                  class="flex"
+                />
+                <span class="flex my-2">{{ member.name }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+         <!-- Picture and Rating Section -->
+         <div
+         class="task-picture-section flex flex-column justify-content-center align-items-center gap-3 "
+         *ngIf="task.status === 'finished' || task.status === 'failed'"
+       >
+         <!-- Image Preview -->
+         <img
+           *ngIf="base64Image"
+           [src]="base64Image"
+           alt="Preview"
+           class="border-round shadow-2"
+           style="
+             width: 100%;
+             max-height: 200px;
+             max-width: 400px;
+             object-fit: contain;
+           "
+         />
+
+         <!-- Rating Component -->
+         <p-rating
+           [readonly]="
+             isPerformingTask ||
+             task.status === 'failed' ||
+             task.alreadyReviewed
+           "
+           [(ngModel)]="rating"
+           [cancelIcon]="false"
+           [showValue]="false"
+         >
+         </p-rating>
+
+         <p-button
+           label="Submit Review"
+           (onClick)="submitReview()"
+           [disabled]="
+             task.alreadyReviewed ||
+             isPerformingTask ||
+             task.status === 'failed'
+           "
+         >
+         </p-button>
+       </div>
+      </div>
+
+      <div class="descr-date mt-4">
+        <p-panel
+          *ngIf="task.description"
+          header="Description"
+          class="mt-3 flex"
+          >{{ task.description }}</p-panel
+        >
+
+        <div class="dueDate mt-3 ">
+          <label class="points font-medium flex">Time left</label>
+          <div class="timer w-7rem mt-2 ml-2">{{ task.timeLeft }}</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div
+      class="task-buttons p-1 flex-row gap-3 justify-content-between mt-6"
+    >
+      <!-- Join Button Section -->
+      <div class="task-join-section flex ">
+        <p-button
+          [disabled]="
+            task.status === 'failed' ||
+            task.status === 'full' ||
+            task.status === 'finished' ||
+            (task.status === 'available' && isPerformingTask)
+          "
+          (onClick)="joinTask()"
+        >
+          Join
+        </p-button>
+      </div>
+
+      <!-- Exit and Finish Buttons Section -->
+      <div class="task-under-join-section flex-column align-items-center">
+        <div
+          class="task-buttons-exit-finish gap-2 flex"
+          *ngIf="task.status === 'full' || task.status === 'available'"
+        >
+          <!-- Exit Button -->
+          <p-button
+            [disabled]="task.status === 'full' || !isPerformingTask"
+            (onClick)="exitTask()"
+          >
+            Exit
+          </p-button>
+
+          <!-- Finish Button -->
+          <p-button
+            [disabled]="task.status === 'full' || !isPerformingTask"
+            (click)="showDialog()"
+          >
+            Finish
+          </p-button>
+        </div>
+
+       
+      </div>
+    </div>
+
+    <p-dialog
+      header="Add review picture"
+      [(visible)]="visible"
+      [modal]="true"
+      [closable]="true"
+      [style]="{ width: '50%' }"
+    >
+      <div class="modal-content">
+        <p>Add a picture of your finished task:</p>
+        <input type="file" (change)="onFileSelected($event)" />
+        <div class="modal-actions">
+          <p-button
+            label="Save"
+            (click)="saveReviewPicture()"
+            [disabled]="!selectedFile"
+          ></p-button>
+          <p-button label="Cancel" (click)="visible = false"></p-button>
+        </div>
+      </div>
+    </p-dialog>
+  </div>
+</div>

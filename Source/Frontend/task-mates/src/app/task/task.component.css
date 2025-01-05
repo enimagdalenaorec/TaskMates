@@ -1,0 +1,150 @@
+.timer {
+    padding: 0.5rem;
+    border: 1px solid rgba(164, 172, 182, 0.5);
+    border-radius: 0.375rem;
+    width: 10%;
+  }
+  .members {
+    display: flex;
+    flex-direction: column; /* Force column layout */
+
+  }
+  .task-buttons{
+    display: flex;
+    flex-direction: column; /* Force column layout */
+
+  }
+.task-buttons-exit-finish{
+    display: flex;
+    gap: 2;
+}
+/* Initially, hide the scrollbar */
+.members ul {
+    overflow-y: hidden;
+    max-height: 100px; /* Limit height to enable scrolling */
+  }
+  
+  /* Show scrollbar only when hovering over the ul */
+  .members ul:hover {
+    overflow-y: auto; /* Show the scrollbar on hover */
+  }
+  
+  /* Styling the scrollbar */
+  .members ul::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+    transition: all 0.3s ease; /* Smooth transition for visibility */
+  }
+  
+  .members ul::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Track color */
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  .members ul::-webkit-scrollbar-thumb {
+    background: #afafaf; /* Track color */
+    border-radius: 10px; /* Rounded corners */
+    border: 2px solid #f0f0f0; /* Adds space between thumb and track */
+  }
+  
+  .members ul::-webkit-scrollbar-thumb:hover {
+    background: #afafaf; /* Track color */
+  }
+  .timer {
+    border: 1px solid rgba(164, 172, 182, 0.5);
+    border-radius: 0.375rem;
+  }
+   /* General Styles for Modals */
+.ui-dialog .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 1rem;
+  }
+  
+  .modal-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .ui-dialog .ui-dialog-header {
+    background-color: #2b8b76;
+    color: white;
+  }
+  
+  .ui-dialog .ui-dialog-title {
+    font-size: 1.5rem;
+  }
+  
+  .ui-dialog .ui-dialog-close {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .ui-dialog-buttonpane {
+    text-align: center;
+  }
+  
+  input[type="file"], input[type="text"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    max-width: 300px;
+  }
+
+ /*  .error-points {
+    color: #e74c3c;
+    font-weight: bold;
+  }
+   */
+   .members{
+    margin-left: 8rem;
+   }
+   .dueDate{
+    margin-left: 5rem;
+   }
+   .points-members, .descr-date {
+    display: flex;
+    flex-direction: row; /* Default for larger screens */
+}
+.task-picture-section{
+  margin-left: 5rem;
+}
+
+   @media screen and (max-width: 800px) {
+    .points-members{
+      margin: 0;
+      margin-top: 2rem;
+      flex-direction: column;
+      display: flex;
+
+    }
+    .descr-date{
+      margin: 0;
+      margin-top: 2rem;
+      flex-direction: column; 
+      display: flex;
+    }
+    .members{
+      margin-left: 0;
+     }
+     .dueDate{
+      margin-left: 0;
+     }
+     .task-picture-section{
+      margin-top: 2rem;
+    }
+
+   }
+
+  
