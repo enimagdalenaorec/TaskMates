@@ -31,7 +31,7 @@ export class ProfileComponent implements OnInit {
   apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
 
 
-  
+
   editProfilePicture() {
     this.profilePictureModalVisible = true;
   }
@@ -65,7 +65,7 @@ export class ProfileComponent implements OnInit {
   }
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private http: HttpClient,
     private messageService: MessageService
   ) { }
@@ -74,7 +74,7 @@ export class ProfileComponent implements OnInit {
     this.user.profilePicture = this.convertBase64ToImage(exampleProfilePicture);
     this.user.username = 'JohnDoe';
     this.user.email = 'johndoe@example.com';
-    
+
     // Fetch or initialize tasks
     const exampleTasks: Task[] = this.getTasks();
     const activeTaskClass = new ActiveTasks(exampleTasks); // Instantiate ActiveTasks with fetched tasks
@@ -126,19 +126,19 @@ export class ProfileComponent implements OnInit {
   navigateToTask(taskId: string): void {
     this.router.navigate(['/task', taskId]);
   }
-  
+
   // Method to calculate time left for each active task
   calculateTimeLeft(): void {
     this.activeTasks.forEach(task => {
       const now = new Date();
       const deadline = new Date(task.timeLeft);
       const timeDiff = deadline.getTime() - now.getTime();
-      
+
       if (timeDiff > 0) {
         const days = Math.floor(timeDiff / (1000 * 3600 * 24));
         const hours = Math.floor((timeDiff % (1000 * 3600 * 24)) / (1000 * 3600));
         const minutes = Math.floor((timeDiff % (1000 * 3600)) / (1000 * 60));
-        
+
         this.timeLeft[task.id] = { days, hours, minutes };
       } else {
         this.timeLeft[task.id] = { days: 0, hours: 0, minutes: 0 };
@@ -150,7 +150,7 @@ export class ProfileComponent implements OnInit {
     const body = {
       username: this.newUsername, // Assuming newUsername is a property of your component
     };
-  
+
     this.http.post<any>(this.apiUrl + '/users/change-username', body).subscribe({
       next: (response) => {
         // Handle success
@@ -197,11 +197,18 @@ export class ProfileComponent implements OnInit {
       },
     });
   }
-  
+
 
   logout(): void {
     // Clear user session or navigate to login page
-    console.log('User logged out');
+    this.http.get<any>(`${this.apiUrl}/accounts/logout`).subscribe({
+      next: () => {
+        console.log('Logged out successfully');
+      },
+      error: (error) => {
+        console.error('Logout failed', error);
+      }
+    });
     // Example: Navigate to login page
     // this.router.navigate(['/login']);
   }

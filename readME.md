@@ -45,7 +45,7 @@ Postupak pri pokretanju:
    Ovo će instalirati sve pakete koji se koriste za backend, uključujući i django
 
 Za pokrenuti django server potrebno je runnati komandu 
-  py TaskMatesBackend/manage.py runserver
+  py manage.py runserver
 Sa Ctrl+C se gasi server
 ## Upute pri pushanju na github:
  prije pushanja potrebno runnati pip freeze > requirements.txt, myenv folder se ne uploada na github.
