@@ -1,15 +1,29 @@
-from rest_framework import serializers 
-class TaskSerializer(serializers.Serializer): 
-   id = serializers.CharField() 
-   name = serializers.CharField(max_length=255) 
-   icon = serializers.CharField(allow_null=True) 
-   deadline = serializers.DateField(allow_null=True) 
-   members = serializers.ListField(child=serializers.DictField(child=serializers.CharField())) 
-class AddTaskSerializer(serializers.Serializer): 
-   name = serializers.CharField(max_length=255) 
-   icon = serializers.CharField(allow_null=True) 
-   description = serializers.CharField() 
-   maxCapacity = serializers.IntegerField() 
-   date = serializers.DateField(allow_null=True) 
-   timeOfDay = serializers.CharField(allow_null=True) 
-   points = serializers.IntegerField() 
+from rest_framework import serializers
+
+class GetTaskByIdSerializer(serializers.Serializer):
+    taskId = serializers.IntegerField(required=True)
+
+class GetTasksByGroupSerializer(serializers.Serializer):
+    groupId = serializers.IntegerField(required=True)
+
+class AddTaskSerializer(serializers.Serializer):
+    name = serializers.CharField(required=True)
+    deadline = serializers.CharField(required=True)
+    groupId = serializers.IntegerField(required=True)
+    icon = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    max_capacity = serializers.IntegerField(required=False, default=1)
+    description = serializers.CharField(required=False, allow_blank=True, default='')
+    points = serializers.IntegerField(required=False, default=100)
+
+class JoinTaskSerializer(serializers.Serializer):
+    taskId = serializers.IntegerField(required=True)
+
+class LeaveTaskSerializer(serializers.Serializer):
+    taskId = serializers.IntegerField(required=True)
+
+class FinishTaskSerializer(serializers.Serializer):
+    taskId = serializers.IntegerField(required=True)
+
+class ReviewTaskSerializer(serializers.Serializer):
+    taskId = serializers.IntegerField(required=True)
+    value = serializers.IntegerField(required=True, min_value=1, max_value=5)

@@ -17,7 +17,6 @@ def get_basic_info(request):
     }
     return Response(response, status=HTTP_200_OK)
 
-# 2. Get Active Tasks
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_active_tasks(request):
@@ -36,30 +35,40 @@ def get_active_tasks(request):
     ]
     return Response({"tasks": tasks}, status=HTTP_200_OK)
 
-# 3. Change Username
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_username(request):
+    from .serializers import ChangeUsernameSerializer  # Uvezite serializer
+
+    serializer = ChangeUsernameSerializer(data=request.data)
+    if not serializer.is_valid():
+        # Ako serializer nije validan, vraćamo grešku 400
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+    # Serializer je validiran, uzimamo podatak
+    new_username = serializer.validated_data["username"]
+
     user = request.user
-    data = request.data
-    new_username = data.get("username")
-    if not new_username:
-        return Response({"error": "Username is required"}, status=HTTP_400_BAD_REQUEST)
     user.username = new_username
     user.save()
     return Response({"message": "Username updated successfully"}, status=HTTP_200_OK)
 
-# 4. Change Profile Picture
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_profile_picture(request):
-    user = request.user
-    data = request.data
-    profile_picture = data.get("profilePicture")
-    if not profile_picture:
-        return Response({"error": "Profile picture is required"}, status=HTTP_400_BAD_REQUEST)
+    from .serializers import ChangeProfilePictureSerializer
 
-    # Pretpostavka: Obrada slike u base64 ili slično; dodaj potrebnu logiku
+    serializer = ChangeProfilePictureSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+    profile_picture = serializer.validated_data["profilePicture"]
+    user = request.user
+
+    # Ovisno o načinu čuvanja slike, ovdje može biti logika za dekodiranje base64 -> file
+    # ili izravno pohranjivanje u polje ako već imate rješenje za to
     user.profilePicture = profile_picture
     user.save()
     return Response({"message": "Profile picture updated successfully"}, status=HTTP_200_OK)

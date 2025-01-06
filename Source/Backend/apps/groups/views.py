@@ -23,13 +23,15 @@ def get_groups(request):
 
     return Response({"groups": groups_data}, status=status.HTTP_200_OK)
 
-# Mock endpoint za pridruživanje grupi
 @api_view(['POST'])
 def join_group(request):
-    code = request.data.get('code', None)
+    from .serializers import JoinGroupSerializer  # ili gdje god je serializer definiran
 
-    if not code:
-        return Response({"message": "Please provide a code."}, status=status.HTTP_400_BAD_REQUEST)
+    serializer = JoinGroupSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    code = serializer.validated_data['code']
 
     # Pokušaj pronaći grupu s datim kodom
     try:
@@ -46,18 +48,20 @@ def join_group(request):
     else:
         # Korisnik je već član grupe
         return Response({"message": "You are already a member of this group."}, status=status.HTTP_200_OK)
-    
 
-# Mock endpoint za kreiranje grupe
+
 @api_view(['POST'])
 def create_group(request):
-    name=request.data.get("name")
-    if not name:
-        return Response({
-            "error": "Group name is required."
-        }, status=status.HTTP_400_BAD_REQUEST)
+    from .serializers import CreateGroupSerializer
+
+    serializer = CreateGroupSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    name = serializer.validated_data['name']
+
     try:
-        group=Group.objects.create(name=name)
+        group = Group.objects.create(name=name)
         return Response({
             "id": group.id,
             "message": "Group created successfully."
@@ -70,24 +74,25 @@ def create_group(request):
 
 @api_view(['POST'])
 def get_all_members(request):
-    group_id = request.data.get("group_id", None)
+    from .serializers import GetAllMembersSerializer
 
-    if not group_id:
-        return Response({"message": "group_id is required."}, status=status.HTTP_400_BAD_REQUEST)
+    serializer = GetAllMembersSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    group_id = serializer.validated_data['group_id']
 
     try:
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
         return Response({"message": "Group not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Dohvaćamo sve članove grupe preko GroupUser tablice
     group_users = GroupUser.objects.filter(group=group)
 
-    # Serijalizacija članova
     members_data = [
         {
             "name": gu.user.username,
-            "picture": None,  # Ako nemate profilePicture, postavite ga kasnije ili ostavite None
+            "picture": None,  # Ako kasnije imate polje za profilePicture, ovdje ga možete dodati
             "userId": gu.user.id
         }
         for gu in group_users
@@ -95,18 +100,20 @@ def get_all_members(request):
 
     return Response({"members": members_data}, status=status.HTTP_200_OK)
 
-# Mock endpoint za dohvat koda
+
 @api_view(['POST'])
 def get_group_code(request):
-    group_id = request.data.get("group_id", None)
+    from .serializers import GetGroupCodeSerializer
 
-    if not group_id:
-        return Response({"message": "group_id is required."}, status=status.HTTP_400_BAD_REQUEST)
+    serializer = GetGroupCodeSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    group_id = serializer.validated_data['group_id']
 
     try:
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
         return Response({"message": "Group not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Vraćamo join_code grupe
     return Response({"code": str(group.join_code)}, status=status.HTTP_200_OK)

@@ -1,6 +1,13 @@
-from rest_framework import serializers 
-class GroupSerializer(serializers.Serializer): 
-   name = serializers.CharField(max_length=255) 
-   image = serializers.CharField() 
-class JoinGroupSerializer(serializers.Serializer): 
-   code = serializers.CharField(max_length=10) 
+from rest_framework import serializers
+
+class JoinGroupSerializer(serializers.Serializer):
+    code = serializers.CharField(required=True)
+
+class CreateGroupSerializer(serializers.Serializer):
+    name = serializers.CharField(required=True)
+
+class GetAllMembersSerializer(serializers.Serializer):
+    group_id = serializers.IntegerField(required=True)
+
+class GetGroupCodeSerializer(serializers.Serializer):
+    group_id = serializers.IntegerField(required=True)
