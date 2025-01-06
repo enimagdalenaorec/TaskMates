@@ -2,10 +2,11 @@ from django.urls import path
 from . import views 
 
 urlpatterns = [
-path('getTasksByGroupId', views.mock_get_tasks_by_group, name='mock_get_tasks_by_group'), 
-path('addTask', views.mock_add_task, name='mock_add_task'), 
-path('join', views.mock_join_task, name='mock_join_task'), 
-path('leave', views.mock_leave_task, name='mock_leave_task'), 
-path('finish', views.mock_finish_task, name='mock_finish_task'), 
-path('review', views.mock_review_task, name='mock_review_task'), 
+path('getTasksById', views.get_task_by_id, name='get_task_by_id'), 
+path('getTasksByGroupId', views.get_tasks_by_group, name='get_tasks_by_group'), 
+path('addTask', views.add_task, name='add_task'), 
+path('join', views.join_task, name='join_task'), 
+path('leave', views.leave_task, name='leave_task'), 
+path('finish', views.finish_task, name='finish_task'), 
+path('review', views.review_task, name='review_task'), 
 ]

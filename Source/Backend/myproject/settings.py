@@ -15,8 +15,20 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
+#CORS_ALLOW_ALL_ORIGINS = True
+
+
+
+# Session konfiguracija (ako je potrebno)
+SESSION_COOKIE_SECURE = False  # Postavi na True u produkciji
+CSRF_COOKIE_SECURE = False     # Postavi na True u produkciji
+
+# CSRF TRUSTED ORIGINS (ako koristiš HTTPS u produkciji)
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200",
+    "http://localhost:8000",
+]
+
 
 CORS_ALLOW_HEADERS = [
     "Authorization",
@@ -36,14 +48,16 @@ SECRET_KEY = 'django-insecure-kyd!0nh_+y+u8*g8s(ts7dm2*kbkb@h@#)j(9_wdt+g)&7sprv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 SITE_ID=3
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'rest_framework',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -59,7 +73,8 @@ INSTALLED_APPS = [
     'apps.tasks',
     'core',
     'apps.accounts',
-    'corsheaders'
+    'corsheaders',
+    'oauth2_provider'
 ]
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
@@ -85,8 +100,26 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-       'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware'
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    "http://localhost:8000",
+]
+
+CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',  # Prva
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+} 
+
 
 ROOT_URLCONF = 'myproject.urls'
 

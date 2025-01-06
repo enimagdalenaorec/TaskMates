@@ -6,23 +6,21 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { BadgeModule } from 'primeng/badge';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-my-groups',
   standalone: true,
   imports: [CommonModule, FormsModule, InputTextModule, ButtonModule, CardModule, BadgeModule, HttpClientModule],
   templateUrl: './my-groups.component.html',
-  styleUrl: './my-groups.component.css'
+  styleUrls: ['./my-groups.component.css']
 })
 export class MyGroupsComponent {
 
   cardImagePath = "images/group_images/picture1.jpg";
-  searchQuery='';
+  searchQuery = '';
   groups: any[] = [];  
-  apiUrl = 'http://127.0.0.1:8000/api/groups/'; // Django API endpoint
+  apiUrl = 'http://localhost:8000/api/groups/'; // Django API endpoint
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -31,7 +29,7 @@ export class MyGroupsComponent {
   }
 
   fetchGroups(): void {
-    this.http.get<{ groups: any[] }>(this.apiUrl).subscribe({
+    this.http.get<{ groups: any[] }>(this.apiUrl, { withCredentials: true }).subscribe({
       next: (response) => {
         this.groups = response.groups || []; 
       },
@@ -43,16 +41,32 @@ export class MyGroupsComponent {
 
   navigateToCreateGroup() {
     this.router.navigate(['/create-group']);
+
+    // Pozivanje API-ja za dohvat notifikacija
+    this.fetchNotifications();
+  }
+
+  fetchNotifications(): void {
+    const notificationsUrl = 'http://localhost:8000/api/groups/';
+    
+    this.http.get<{ notifications: any[] }>(notificationsUrl, { withCredentials: true }).subscribe({
+      next: (response) => {
+        console.log('Notifications:', response.notifications);
+      },
+      error: (error) => {
+        console.error('Error fetching notifications:', error);
+      }
+    });
   }
 
   joinGroup() {
     if (this.searchQuery.trim()) {
-      this.http.post(this.apiUrl + "join", { code: this.searchQuery })
+      this.http.post(this.apiUrl + "join", { code: this.searchQuery }, { withCredentials: true })
         .subscribe(
           (response) => {
             console.log('Successfully joined group:', response);
             this.fetchGroups();
-            //this.router.navigate(['/group', response.id]);  Navigate to the group page (optional)
+            //this.router.navigate(['/group', response.id]);  // Navigacija na grupu (opcionalno)
           },
           (error) => {
             console.error('Error joining group:', error);
@@ -67,5 +81,4 @@ export class MyGroupsComponent {
     // Navigate to the group page, passing in the group ID
     this.router.navigate(['/group', groupId]);
   }
-  
 }
