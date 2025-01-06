@@ -28,6 +28,7 @@ export class ProfileComponent implements OnInit {
   usernameModalVisible = false;
   newUsername = '';
   selectedFile: File | null = null;
+  previewPicture: string | null = null;
   apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
 
 
@@ -37,14 +38,16 @@ export class ProfileComponent implements OnInit {
   }
 
   // Logic for handling file selection (profile picture)
-  onFileSelected(event: any) {
+  async onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
+    this.previewPicture = await this.convertImageToBase64(this.selectedFile!); // Update the image in the modal
   }
 
   // Logic to save the new profile picture
-  saveProfilePicture() {
+  async saveProfilePicture() {
     if (this.selectedFile) {
-      this.user.profilePicture = URL.createObjectURL(this.selectedFile); // Update the image in the modal
+      this.user.profilePicture = await this.convertImageToBase64(this.selectedFile); // Update the image in the modal
+       await this.changeProfilePicture(this.user.profilePicture); // Save the new profile picture
       this.profilePictureModalVisible = false;
       // You can implement file upload logic here to save the image
     }
@@ -56,9 +59,10 @@ export class ProfileComponent implements OnInit {
   }
 
   // Logic to save the new username
-  saveUsername() {
+  async saveUsername() {
     if (this.newUsername) {
       this.user.username = this.newUsername;  // Update username
+      await this.changeUsername();
       this.usernameModalVisible = false;
       // You can save the new username to your backend here
     }
@@ -72,6 +76,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.user.profilePicture = this.convertBase64ToImage(exampleProfilePicture);
+    this.previewPicture = this.user.profilePicture; // Set the preview picture to the default profile picture
     this.user.username = 'JohnDoe';
     this.user.email = 'johndoe@example.com';
 
@@ -119,6 +124,15 @@ export class ProfileComponent implements OnInit {
     return `data:image/jpg;base64,${base64}`;
   }
 
+  convertImageToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  }
+
   // Check if the task is active (you can modify this to suit your status logic)
   isActiveTask(task: Task): boolean {
     return task.timeLeft > new Date(); // Consider tasks with a future deadline as active
@@ -151,7 +165,7 @@ export class ProfileComponent implements OnInit {
       username: this.newUsername, // Assuming newUsername is a property of your component
     };
 
-    this.http.post<any>(this.apiUrl + '/users/change-username', body).subscribe({
+    this.http.post<any>(this.apiUrl + '/profile/change-username', body).subscribe({
       next: (response) => {
         // Handle success
         this.messageService.add({
@@ -176,7 +190,7 @@ export class ProfileComponent implements OnInit {
       profilePicture: base64Image,  // Send the Base64 image string in the request body
     };
 
-    this.http.post<any>(`${this.apiUrl}/users/change-profilePicture`, body).subscribe({
+    this.http.post<any>(`${this.apiUrl}/profile/change-profile-picture`, body).subscribe({
       next: (response) => {
         // Handle success
         this.user.profilePicture = base64Image; // Update the user profile picture

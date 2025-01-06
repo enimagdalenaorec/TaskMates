@@ -1,15 +1,15 @@
 <div class="container p-5 pt-2">
     <div class="flex-container">
-    
+
       <!-- Active Tasks Section -->
       <div class="tasks-section">
         <p class="mb-3 text-3xl">Active Tasks</p>
-    
+
         <!-- No Active Tasks Fallback -->
         <div *ngIf="!activeTasks.length" class="no-tasks">
           No active tasks available.
         </div>
-    
+
         <!-- Display active tasks -->
         <div *ngFor="let task of activeTasks" class="task-item h-11rem w-30rem m-2 mb-4 border-round-md p-3 pl-4" (click)="navigateToTask(task.id)">
           <div class="task-item-left">
@@ -23,7 +23,7 @@
               </p>
             </div>
           </div>
-    
+
           <div class="task-item-right">
             <p class="task-icon">{{ task.icon }}</p>
             <div>
@@ -36,7 +36,7 @@
           </div>
         </div>
       </div>
-    
+
       <!-- Profile Section -->
       <div class="profile-section">
         <div class="profile-picture">
@@ -45,7 +45,7 @@
             <i class="pi pi-pencil"></i> <!-- Prime icon for editing -->
           </button>
         </div>
-        
+
         <div class="profile-info">
           <div class="username">
             {{ user.username }}
@@ -55,7 +55,7 @@
         </div>
           <p class="email">{{ user.email }}</p>
         </div>
-  
+
         <div class="logout-container">
           <p-button (click)="logout()">
             Log Out
@@ -68,7 +68,7 @@
  <!-- Profile Picture Edit Modal -->
 <p-dialog header="Edit Profile Picture" [(visible)]="profilePictureModalVisible" [modal]="true" [closable]="true" [style]="{'width': '50%'}">
     <div class="modal-content">
-      <img [src]="user.profilePicture" alt="Profile Picture" class="profile-img modal-img" />
+      <img [src]="previewPicture" alt="Profile Picture" class="profile-img modal-img"/>
       <p>Change your profile picture:</p>
       <input type="file" (change)="onFileSelected($event)" />
       <div class="modal-actions">
@@ -77,7 +77,7 @@
       </div>
     </div>
   </p-dialog>
-  
+
   <!-- Username Edit Modal -->
   <p-dialog header="Edit Username" [(visible)]="usernameModalVisible" [modal]="true" [closable]="true" [style]="{'width': '50%'}">
     <div class="modal-content">
@@ -89,4 +89,3 @@
       </div>
     </div>
   </p-dialog>
-  
