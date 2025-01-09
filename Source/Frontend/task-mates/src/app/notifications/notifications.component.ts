@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './notifications.component.css'
 })
 export class NotificationsComponent implements OnInit {
-  apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
+  apiUrl = 'http://localhost/api'; // Django API endpoints
   notifications: Notification[] = [];
 
   constructor(private http: HttpClient) {}

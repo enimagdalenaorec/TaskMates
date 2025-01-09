@@ -29,7 +29,7 @@ export class ProfileComponent implements OnInit {
   newUsername = '';
   selectedFile: File | null = null;
   previewPicture: string | null = null;
-  apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
+  apiUrl = 'http://localhost/api'; // Django API endpoints
 
 
 

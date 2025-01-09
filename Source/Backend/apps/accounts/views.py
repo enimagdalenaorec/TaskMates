@@ -1,24 +1,27 @@
 from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.decorators import permission_classes
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import logout
 import uuid
+from rest_framework.permissions import AllowAny
 
 
 def home(request):
     return render(request, "home.html")
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def red(request):
     return redirect('/accounts/google/login/')
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def homere(request):
-    return redirect("http://localhost:8000/api/accounts/redirect")
-
+    return redirect("http://localhost:8000/api/accounts/redirect") 
 def logout_view(request):
     logout(request)
     return redirect("/")
