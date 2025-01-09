@@ -31,7 +31,7 @@
               </div>
               <div>
                 <p class="text-lg"><span class="text-sm">Points: </span> {{task.points}} </p>
-                <p class="text-lg align-self-end">{{task.members.length}}/{{task.maxCapacity}}</p>
+                <p class="text-lg align-self-end">{{task.currentCapacity}}/{{task.max_capacity}}</p>
               </div>
             </div>
             <div class="task-item-right">
@@ -88,8 +88,8 @@
     <input pInputText class="h-2rem p-1 pl-2" type="text" [value]="groupCode" readonly />
     <i class="pi pi-copy text-xl" (click)="copyToClipboard(groupCode)"></i>
   </div>
-  <div class="flex align-items-center gap-3 mb-3">
+  <!-- <div class="flex align-items-center gap-3 mb-3">
     <input pInputText class="h-2rem p-1 pl-2" type="text" [value]="groupLink" readonly />
     <i class="pi pi-copy text-xl" (click)="copyToClipboard(groupLink)"></i>
-  </div>
+  </div> -->
 </p-dialog>

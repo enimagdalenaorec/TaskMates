@@ -17,31 +17,33 @@ export class MyHttpInterceptor implements HttpInterceptor {
       const csrfValue = csrfToken ? csrfToken.split('=')[1] : '';
 
       // Clone the request to add the authorization header and CSRF token if they exist
-      let modifiedReq = req;
+      let modifiedReq = req.clone({
+        withCredentials: true // Ensure cookies are sent with the request
+      });
 
       // Add Authorization header if token is available
       if (token) {
-        modifiedReq = req.clone({
+        modifiedReq = modifiedReq.clone({
           setHeaders: {
             Authorization: `Bearer ${token}`
           }
         });
       }
 
-      // Add CSRF token to headers if it's present
+      // Add CSRF token header if available
       if (csrfValue) {
         modifiedReq = modifiedReq.clone({
           setHeaders: {
-            'X-CSRFToken': csrfValue // Add CSRF token for Django
+            'X-CSRFToken': csrfValue
           }
         });
       }
 
-      // Proceed with the modified request
+      // Pass the modified request to the next handler
       return next.handle(modifiedReq);
-    } else {
-      // If not in a browser, just pass the request unchanged
-      return next.handle(req);
     }
+
+    // If not in a browser environment, pass the request as is
+    return next.handle(req);
   }
 }

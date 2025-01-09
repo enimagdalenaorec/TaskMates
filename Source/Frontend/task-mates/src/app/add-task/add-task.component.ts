@@ -24,7 +24,7 @@ export class AddTaskComponent implements OnInit {
   showEmojiPicker = false;
   message = '';
   icon = '';
-  apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
+  apiUrl = 'http://localhost:8000/api'; // Django API endpoints
   today: Date = new Date();
 
   constructor(private route: ActivatedRoute, private http: HttpClient) {
@@ -76,9 +76,10 @@ export class AddTaskComponent implements OnInit {
     const body = {
       name: this.addTaskForm.value.name,
       description: this.addTaskForm.value.description,
-      capacity: this.addTaskForm.value.capacity,
+      max_capacity: this.addTaskForm.value.capacity,
       points: this.addTaskForm.value.points,
-      deadline: this.addTaskForm.value.deadline.getFullYear() + '-' + this.increaseMonth(this.addTaskForm.value.deadline.getMonth()) + '-' + this.addTaskForm.value.deadline.getDate(),
+      // deadline: this.addTaskForm.value.deadline.getFullYear() + '-' + this.increaseMonth(this.addTaskForm.value.deadline.getMonth()) + '-' + this.addTaskForm.value.deadline.getDate(),
+      deadline: new Date(this.addTaskForm.value.deadline).toISOString(),
       icon: this.icon,
       groupId: this.groupId
     };

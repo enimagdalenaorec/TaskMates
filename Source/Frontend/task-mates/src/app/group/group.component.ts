@@ -31,7 +31,7 @@ interface TimeLeft {
 })
 export class GroupComponent implements OnInit {
   groupId: string = '';
-  apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
+  apiUrl = 'http://localhost:8000/api'; // Django API endpoints
   tasks: Task[] = [];
   groupName: string = '';
   private timerInterval: any;
@@ -41,7 +41,6 @@ export class GroupComponent implements OnInit {
   members: Member[] = [];
   visible: boolean = false;
   groupCode: string = '';
-  groupLink: string = '';
 
   constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, private applicationRef: ApplicationRef, private ngZone: NgZone  ) {
   }
@@ -64,7 +63,7 @@ export class GroupComponent implements OnInit {
 
   fetchGroupTasksInfo(): void {
     // Fetch group tasks info using the group ID
-    this.http.post<{ tasks: any[] }>(this.apiUrl + '/tasks/getTasksByGroupId', { group_id: this.groupId }).subscribe({
+    this.http.post<{ tasks: any[] }>(this.apiUrl + '/tasks/getTasksByGroupId', { groupId: this.groupId }).subscribe({
       next: (response) => {
         this.tasks = response.tasks || [];
         this.groupName = this.tasks[0].groupName;
@@ -80,7 +79,7 @@ export class GroupComponent implements OnInit {
 
   initializeTimeLeft(): void {
     this.tasks.forEach((task) => {
-      this.timeLeft[task.id] = this.calculateTimeLeft(task.deadline);
+      this.timeLeft[task.id] = this.calculateTimeLeft(task.ts_deadline);
     });
   }
 
@@ -113,7 +112,7 @@ export class GroupComponent implements OnInit {
 
   updateAllTimeLeft(): void {
     for (const task of this.tasks) {
-      this.timeLeft[task.id] = this.calculateTimeLeft(task.deadline);
+      this.timeLeft[task.id] = this.calculateTimeLeft(task.ts_deadline);
     }
   }
 
@@ -132,7 +131,7 @@ export class GroupComponent implements OnInit {
   }
 
   fetchGroupMembers(): void {
-    this.http.post<{ members: any[] }>(this.apiUrl + '/groups/getAllMembers', { groupId: this.groupId }).subscribe({
+    this.http.post<{ members: any[] }>(this.apiUrl + '/groups/getAllMembers', { group_id: this.groupId }).subscribe({
       next: (response) => {
         this.members = response.members || [];
         // console.log('Group members:', response.members);
@@ -154,9 +153,8 @@ copyToClipboard(text: string): void {
 }
 
 fetchGroupLinkAndCode(): void {
-    this.http.post<{ code: string, link: string }>(this.apiUrl + '/groups/getGroupCodeLink', { groupId: this.groupId }).subscribe({
+    this.http.post<{ code: string, link: string }>(this.apiUrl + '/groups/getGroupCodeLink', { group_id: this.groupId }).subscribe({
       next: (response) => {
-        this.groupLink = response.link;
         this.groupCode = response.code;
       },
       error: (error) => {

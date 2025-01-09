@@ -19,7 +19,7 @@ export class MyGroupsComponent {
 
   cardImagePath = "images/group_images/picture1.jpg";
   searchQuery = '';
-  groups: any[] = [];  
+  groups: any[] = [];
   apiUrl = 'http://localhost:8000/api/groups/'; // Django API endpoint
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -29,9 +29,9 @@ export class MyGroupsComponent {
   }
 
   fetchGroups(): void {
-    this.http.get<{ groups: any[] }>(this.apiUrl, { withCredentials: true }).subscribe({
+    this.http.get<{ groups: any[] }>(this.apiUrl).subscribe({
       next: (response) => {
-        this.groups = response.groups || []; 
+        this.groups = response.groups || [];
       },
       error: (error) => {
         console.error('Error fetching groups:', error);
@@ -41,22 +41,6 @@ export class MyGroupsComponent {
 
   navigateToCreateGroup() {
     this.router.navigate(['/create-group']);
-
-    // Pozivanje API-ja za dohvat notifikacija
-    this.fetchNotifications();
-  }
-
-  fetchNotifications(): void {
-    const notificationsUrl = 'http://localhost:8000/api/groups/';
-    
-    this.http.get<{ notifications: any[] }>(notificationsUrl, { withCredentials: true }).subscribe({
-      next: (response) => {
-        console.log('Notifications:', response.notifications);
-      },
-      error: (error) => {
-        console.error('Error fetching notifications:', error);
-      }
-    });
   }
 
   joinGroup() {

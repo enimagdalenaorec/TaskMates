@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
   styleUrl: './create-group.component.css'
 })
 export class CreateGroupComponent {
-  apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
+  apiUrl = 'http://localhost:8000/api'; // Django API endpoints
   selectedImage: any | null = null;
   group: any;
   images: any[] = [];
@@ -57,8 +57,8 @@ export class CreateGroupComponent {
     console.log('Image selected:', this.selectedImage);
 }
 
- 
-  
+
+
   convertToBase64(imageUrl: string) {
     const img = new Image();
     img.src = imageUrl;
