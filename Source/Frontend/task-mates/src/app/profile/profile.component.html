@@ -40,18 +40,18 @@
       <!-- Profile Section -->
       <div class="profile-section">
         <div class="profile-picture">
-          <img [src]="user.profilePicture" alt="Profile Picture" class="profile-img" />
           <button class="edit-icon" (click)="editProfilePicture()">
             <i class="pi pi-pencil"></i> <!-- Prime icon for editing -->
           </button>
+          <img [src]="user.profilePicture" alt="Profile Picture" class="profile-img ml-1" />
         </div>
 
         <div class="profile-info">
           <div class="username">
-            {{ user.username }}
-            <button class="edit-icon" (click)="editUsername()">
+            <button class="mr-1 edit-icon" (click)="editUsername()">
               <i class="pi pi-pencil"></i> <!-- Prime icon for editing -->
             </button>
+            {{ user.username }}
         </div>
           <p class="email">{{ user.email }}</p>
         </div>

@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-task',
@@ -27,7 +28,7 @@ export class AddTaskComponent implements OnInit {
   apiUrl = 'http://localhost:8000/api'; // Django API endpoints
   today: Date = new Date();
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {
+  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {
     this.addTaskForm = new FormGroup({
       name: new FormControl('', Validators.required),
       description: new FormControl(''),
@@ -87,14 +88,15 @@ export class AddTaskComponent implements OnInit {
     this.http.post(this.apiUrl + '/tasks/addTask', body).subscribe({
       next: (response) => {
         console.log(response);
+        this.addTaskForm.reset();
+        this.addTaskForm.patchValue({ capacity: 1, points: 100, deadline: new Date() });
+        this.icon = '';
+        this.router.navigate(['/group/' + this.groupId]);
       },
       error: (error) => {
         console.error('Error adding task:', error);
       }
     });
-    this.addTaskForm.reset();
-    this.addTaskForm.patchValue({ capacity: 1, points: 100, deadline: new Date() });
-    this.icon = '';
   }
 
   increaseMonth(number: number): number {     //not sure why i had to do this?
