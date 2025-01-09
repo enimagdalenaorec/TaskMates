@@ -101,17 +101,34 @@ class Task(models.Model):
       #setup media root
     deadline = models.DateTimeField(default=timezone.now)  # Deadline for task completion
     STATUS_CHOICES = [
-        ('not_finished', 'Not Finished'),
+        ('full', 'Full'),
+        ('available', 'Available'),
         ('finished', 'Finished'),
+        ('failed', 'Failed'),
     ]
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_finished')  # Task status
-      #ikone su WIP
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='available')
     icon = models.CharField(max_length=50, blank=True, null=True)  # Icon representation of the task
     max_capacity = models.PositiveIntegerField(default=1)  # Maximum number of users for the task
     description = models.TextField(blank=True, null=True)  # Task description
     points = models.IntegerField(default=100)  # Points associated with the task (can be negative)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, default=1) 
     
+    def update_status(self):
+        current_capacity = UserTask.objects.filter(task=self).count()
+        if self.status == 'finished' or self.status == 'failed':
+            return  # Ne mijenjamo status ako je završen ili neuspješan
+
+        if current_capacity >= self.max_capacity:
+            self.status = 'full'
+        elif current_capacity < self.max_capacity:
+            self.status = 'available'
+
+        now = timezone.now()
+        if self.deadline < now:
+            self.status = 'failed'
+
+        self.save()
+
     def save(self, *args, **kwargs):
         if self.max_capacity < 1 or self.max_capacity > 5:
             raise ValueError("Max capacity must be between 1 and 5.")

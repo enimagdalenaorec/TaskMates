@@ -23,6 +23,8 @@ def get_task_by_id(request):
     except Task.DoesNotExist:
         return Response({"error": "Task not found"}, status=HTTP_404_NOT_FOUND)
 
+    task.update_status()
+
     # 2. Dohvatiti članove koji sudjeluju
     user_tasks = UserTask.objects.filter(task=task)
     members = [
@@ -180,6 +182,7 @@ def join_task(request):
         return Response({"error": "You are already participating in this task."}, status=HTTP_400_BAD_REQUEST)
 
     UserTask.objects.create(user=request.user, task=task)
+    task.update_status()
     return Response({"message": "success"}, status=HTTP_200_OK)
 
 
@@ -205,6 +208,7 @@ def leave_task(request):
         return Response({"error": "You are not participating in this task."}, status=HTTP_400_BAD_REQUEST)
 
     user_task.delete()
+    task.update_status()
     return Response({"message": "success"}, status=HTTP_200_OK)
 
 

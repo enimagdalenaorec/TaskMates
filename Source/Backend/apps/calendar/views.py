@@ -13,7 +13,9 @@ def get_all_tasks(request):
         {
             "id": task.id,
             "name": task.name,
-            "icon": task.icon  # Ovo može biti None ako ikona nije definirana
+            "icon": task.icon,
+            "deadline":task.deadline  
+                # Ovo može biti None ako ikona nije definirana
         }
         for task in tasks
     ]
