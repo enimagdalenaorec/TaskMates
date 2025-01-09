@@ -22,7 +22,7 @@
       <div *ngFor="let group of groups" class="col p-md-4 p-lg-3 p-p-2 ">
         <p-card class="border-round-sm"
                 header="{{ group.name }}"
-                (click)="navigateToGroup(group.id)">
+                (click)="navigateToGroup(group.id, group.name)">
           <ng-template pTemplate="header">
             <img
               *ngIf="group.image"

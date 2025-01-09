@@ -48,6 +48,7 @@ export class GroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.groupId = this.route.snapshot.paramMap.get('id')!;
+    this.groupName = this.route.snapshot.paramMap.get('groupName')!;
     this.fetchGroupTasksInfo();
     this.startTimerUpdates();
     this.fetchGroupMembers();
@@ -66,7 +67,10 @@ export class GroupComponent implements OnInit {
     this.http.post<{ tasks: any[] }>(this.apiUrl + '/tasks/getTasksByGroupId', { groupId: this.groupId }).subscribe({
       next: (response) => {
         this.tasks = response.tasks || [];
-        this.groupName = this.tasks[0].groupName;
+        //if not in url tak egroupName from first task
+        if (this.groupName === '' || this.groupName === null) {
+          this.groupName = this.tasks[0].groupName;
+        }
         this.filteredTasks = this.tasks; // Display all tasks initially
         this.initializeTimeLeft();
         // console.log('Group tasks:', response.tasks);

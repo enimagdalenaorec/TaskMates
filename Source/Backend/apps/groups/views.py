@@ -61,10 +61,15 @@ def create_group(request):
     name = serializer.validated_data['name']
 
     try:
+        # Create the group
         group = Group.objects.create(name=name)
+
+        # Automatically add the user who created the group as a member
+        GroupUser.objects.create(user=request.user, group=group)
+
         return Response({
             "id": group.id,
-            "message": "Group created successfully."
+            "message": "Group created successfully, and user added as a member."
         }, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({

@@ -61,8 +61,8 @@ export class MyGroupsComponent {
     }
   }
 
-  navigateToGroup(groupId: string) {
-    // Navigate to the group page, passing in the group ID
-    this.router.navigate(['/group', groupId]);
+  navigateToGroup(groupId: string, groupName: string) {
+    const encodedGroupName = encodeURIComponent(groupName);
+    this.router.navigate(['/group', groupId, encodedGroupName]);
   }
 }
