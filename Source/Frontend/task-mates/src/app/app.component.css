@@ -19,6 +19,9 @@ p-menubar {
   width: 15%;
   flex-shrink: 0;
   background-color: rgba(210, 239, 237, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 
@@ -108,3 +111,8 @@ p-menubar {
     margin-left: 0;
   }
 }
+
+:ng-host ::ng-deep .p-calendar .p-datepicker {
+  max-width: 300px;
+}
+

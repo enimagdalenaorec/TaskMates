@@ -4,24 +4,45 @@
       <img src="images/logo-and-text.png" alt="logo" class="logo h-4rem w-auto" (click)="navigateTo('my-groups')" />
     </ng-template>
     <ng-template pTemplate="end">
-      <p (click)="isProfileIconClicked = true; navigateTo('profile'); isProfileIconClicked=false;" class="pi pi-user text-2xl pt-1 pr-5 h-2rem w-auto border-round-lg"></p>
+      <p (click)="isProfileIconClicked = true; navigateTo('profile'); isProfileIconClicked=false;"
+        class="pi pi-user text-2xl pt-1 pr-5 h-2rem w-auto border-round-lg"></p>
     </ng-template>
   </p-menubar>
   <div class="main">
 
     <div class="sidebar mt-2 ml-0 p-3 pl-2 pt-6 border-round-md" *ngIf="sidebarVisible">
-        <p (click)="navigateTo('my-groups')" [class.active]="isActive('my-groups')" class="sidebar-item border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-users pr-3"></i>Groups</p>
-        <p (click)="navigateTo('notifications')" [class.active]="isActive('notifications')" class="sidebar-item border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-bell pr-3"></i>Notifications</p>
-        <p (click)="navigateTo('profile')" [class.active]="isActive('profile')" class="sidebar-item border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-user pr-3"></i>Profile</p>
+      <div class="sidebar-menu">
+        <p (click)="navigateTo('my-groups')" [class.active]="isActive('my-groups')"
+          class="sidebar-item border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-users pr-3"></i>Groups</p>
+        <p (click)="navigateTo('notifications')" [class.active]="isActive('notifications')"
+          class="sidebar-item border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-bell pr-3"></i>Notifications</p>
+        <p (click)="navigateTo('profile')" [class.active]="isActive('profile')"
+          class="sidebar-item border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-user pr-3"></i>Profile</p>
+      </div>
+      <div class="sidebar-calendar">
+        <p-calendar [inline]="true">
+        </p-calendar>
+        <!-- <p-calendar [inline]="true" [dayTemplate]="customDayTemplate">
+        </p-calendar>
+
+        <ng-template #customDayTemplate let-date>
+          <span [ngClass]="{
+            'highlight-day': markedDates.includes(date.day)
+            }">
+            {{ date.day }}
+          </span>
+        </ng-template> -->
+
+      </div>
     </div>
 
-      <!-- Burger Menu (visible on smaller screens) -->
-  <div *ngIf="isHamburgerMenuVisible" class="hamburger-menu">
-    <!-- Hamburger button -->
-    <button class="hamburger-button" (click)="toggleSidebar()">
-      <i class="pi pi-bars"></i> <!-- PrimeIcons hamburger icon -->
-    </button>
-  </div>
+    <!-- Burger Menu (visible on smaller screens) -->
+    <div *ngIf="isHamburgerMenuVisible" class="hamburger-menu">
+      <!-- Hamburger button -->
+      <button class="hamburger-button" (click)="toggleSidebar()">
+        <i class="pi pi-bars"></i> <!-- PrimeIcons hamburger icon -->
+      </button>
+    </div>
 
     <div class="content p-0">
       <router-outlet />

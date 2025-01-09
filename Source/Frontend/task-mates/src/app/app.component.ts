@@ -9,12 +9,14 @@ import { SidebarModule } from 'primeng/sidebar';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { CalendarModule } from 'primeng/calendar';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgIf, MenubarModule, ButtonModule, SidebarModule, NotificationsComponent, ProfileComponent, CommonModule],
+  imports: [RouterOutlet, NgIf, MenubarModule, ButtonModule, SidebarModule, NotificationsComponent, ProfileComponent, CommonModule, CalendarModule, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -26,10 +28,11 @@ export class AppComponent implements OnInit {
   isMobileOrTablet: boolean = false; // To track mobile or tablet screen size
   isHamburgerMenuVisible: boolean = false; // To control hamburger menu visibility
   isProfileIconClicked: boolean = false;
+  tasksForCalendar: any[] = [];
 
 
-  constructor(private router: Router, 
-    private breakpointObserver: BreakpointObserver 
+  constructor(private router: Router,
+    private breakpointObserver: BreakpointObserver, private http: HttpClient
   ) {
   }
 
@@ -46,7 +49,7 @@ export class AppComponent implements OnInit {
     ]).subscribe(result => {
       // Update the flag based on screen size (mobile or tablet = true)
       this.isMobileOrTablet = result.breakpoints[Breakpoints.XSmall] || result.breakpoints[Breakpoints.Small] || result.breakpoints[Breakpoints.Medium];
-      
+
       // If on mobile or tablet, switch to hamburger menu
       if (this.isMobileOrTablet) {
         this.sidebarVisible = false;
@@ -55,6 +58,12 @@ export class AppComponent implements OnInit {
         this.sidebarVisible = true;
         this.isHamburgerMenuVisible = false;
       }
+    });
+
+    this.http.get('http://localhost:8000/api/calendar/get-all-tasks').subscribe((data) => {
+      this.tasksForCalendar = data as any[];
+    }, (error) => {
+      console.log(error);
     });
   }
 
@@ -72,7 +81,7 @@ export class AppComponent implements OnInit {
   isActive(path: string): boolean {
     return this.router.url.includes(path);
   }
-  
+
 
     // Toggle the sidebar on mobile view
   toggleSidebar() {
