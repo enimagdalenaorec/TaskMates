@@ -21,7 +21,7 @@ def get_basic_info(request):
 @permission_classes([IsAuthenticated])
 def get_active_tasks(request):
     user = request.user
-    active_tasks = UserTask.objects.filter(user=user, task__status='not_finished')
+    active_tasks = UserTask.objects.filter(user=user).exclude(task__status__in=['finished', 'failed'])
     tasks = [
         {
             "id": task.task.id,
@@ -29,7 +29,7 @@ def get_active_tasks(request):
             "groupName": task.task.group.name,
             "timeLeft": task.task.deadline - timezone.now(),
             "icon": task.task.icon,
-            "points": task.task.points,
+            "points": task.task.points
         }
         for task in active_tasks
     ]

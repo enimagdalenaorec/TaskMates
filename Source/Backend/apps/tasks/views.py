@@ -79,12 +79,16 @@ def get_tasks_by_group(request):
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
         return Response({"error": "Group not found"}, status=HTTP_404_NOT_FOUND)
-    
+
     tasks = Task.objects.filter(group=group)
     response_data = []
     for task in tasks:
+        # Update the task's status before including it in the response
+        task.update_status()
+
         user_tasks = UserTask.objects.filter(task=task)
         members = [{"name": ut.user.username} for ut in user_tasks]
+        current_capacity = user_tasks.count()
 
         response_data.append({
             "id": task.id,
@@ -98,11 +102,12 @@ def get_tasks_by_group(request):
             "members": members,
             "groupId": group.id,
             "groupName": group.name,
-            "currentCapacity": len(members),
+            "currentCapacity": current_capacity,
             "ts_deadline": task.deadline
         })
-    
+
     return Response({"tasks": response_data}, status=HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # ili [IsAuthenticated], ovisno o vašim pravilima
