@@ -46,8 +46,8 @@ export class ProfileComponent implements OnInit {
     email: ''
   };
 
- 
-  
+
+
 
 
   editProfilePicture() {
@@ -95,25 +95,24 @@ export class ProfileComponent implements OnInit {
     this.previewPicture = 'images/previewPicture.png'; // Set the preview picture to the default profile picture
     this.fetchBasicUserInfo();
     this.fetchActiveTasks();
-
-    // Calculate time left for each active task
-    this.calculateTimeLeft();
   }
 
-  
+
   fetchActiveTasks(): void {
     this.http.get<{ tasks: Task[] }>(
       this.apiUrl + '/profile/get-active-tasks' // Adjust the endpoint if needed
     ).subscribe({
       next: (response) => {
         this.activeTasks = response.tasks || []; // Assign the tasks array
+        // Calculate time left for each active task
+        this.calculateTimeLeft();
       },
       error: (error) => {
         console.error('Error fetching active tasks:', error); // Updated error message
       }
     });
   }
-  
+
 
   fetchBasicUserInfo(): void {
     this.http.get<{ profilePicture: string | null; username: string; email: string }>(
@@ -127,7 +126,7 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-  
+
 
   private convertBase64ToImage(base64: string): string {
     return `data:image/jpg;base64,${base64}`;
@@ -165,7 +164,7 @@ export class ProfileComponent implements OnInit {
   calculateTimeLeft(): void {
     this.activeTasks.forEach(task => {
       const now = new Date();
-      const deadline = new Date(task.timeLeft);
+      const deadline = new Date(now.getTime() + task.timeLeft * 1000); // Convert timeLeft from seconds to milliseconds
       const timeDiff = deadline.getTime() - now.getTime();
 
       if (timeDiff > 0) {

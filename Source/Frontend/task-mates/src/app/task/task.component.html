@@ -24,18 +24,18 @@
         <!--      <span class="value-display timer w-4rem mt-2 ml-4">{{ adjustedPoints }}</span>
         <p-slider
           [(ngModel)]="adjustedPoints"
-          [step]="20" 
+          [step]="20"
           styleClass="w-8"
-          [min]="0" 
+          [min]="0"
           [max]="500"
-          [valueColor]="(task.status === 'failed' && isPerformingTask) ? '#e74c3c' : '#14b8a6'" 
+          [valueColor]="(task.status === 'failed' && isPerformingTask) ? '#e74c3c' : '#14b8a6'"
           [disabled]="true"
           [showTicks]="true"
           [ngClass]="{'error-points': (task.status === 'failed' && isPerformingTask)}"
           />
  -->
 
-        <div class="members flex gap-4 flex-col mt-3" > 
+        <div class="members flex gap-4 flex-col mt-3" >
           <div>
             <span class="font-medium block mb-2 flex">Team Members</span>
             <ul class="list-none p-0 m-0">
@@ -44,7 +44,7 @@
                 class="flex items-center gap-2 px-2 py-2 ml-2 hover:bg-emphasis cursor-pointer rounded-border"
               >
                 <img
-                  [src]="member?.picture"
+                  [src]="member?.picture || 'images/user.png'"
                   style="width: 32px; border-radius: 50%"
                   class="flex"
                 />
@@ -155,7 +155,7 @@
           </p-button>
         </div>
 
-       
+
       </div>
     </div>
 
