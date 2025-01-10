@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';  // Import FormsModule
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 
-
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -21,8 +20,7 @@ import { MessageService } from 'primeng/api';
 })
 
 export class ProfileComponent implements OnInit {
-  activeTasks: Task[] = []; // Store active tasks
-  user: User=new User();
+  activeTasks: any[] = []; // To hold the active tasks
   timeLeft: { [key: string]: { days: number, hours: number, minutes: number } } = {}; // Store time left for tasks
   profilePictureModalVisible = false;
   usernameModalVisible = false;
@@ -31,6 +29,11 @@ export class ProfileComponent implements OnInit {
   previewPicture: string | null = null;
   apiUrl = 'http://localhost:8000/api'; // Django API endpoints
 
+  userInfo: any = {
+    profilePicture: null,
+    username: '',
+    email: ''
+  };
 
 
   editProfilePicture() {
@@ -46,8 +49,8 @@ export class ProfileComponent implements OnInit {
   // Logic to save the new profile picture
   async saveProfilePicture() {
     if (this.selectedFile) {
-      this.user.profilePicture = await this.convertImageToBase64(this.selectedFile); // Update the image in the modal
-       await this.changeProfilePicture(this.user.profilePicture); // Save the new profile picture
+      this.userInfo.profilePicture = await this.convertImageToBase64(this.selectedFile); // Update the image in the modal
+       await this.changeProfilePicture(this.userInfo.profilePicture); // Save the new profile picture
       this.profilePictureModalVisible = false;
       // You can implement file upload logic here to save the image
     }
@@ -61,7 +64,7 @@ export class ProfileComponent implements OnInit {
   // Logic to save the new username
   async saveUsername() {
     if (this.newUsername) {
-      this.user.username = this.newUsername;  // Update username
+      this.userInfo.username = this.newUsername;  // Update username
       await this.changeUsername();
       this.usernameModalVisible = false;
       // You can save the new username to your backend here
@@ -75,51 +78,43 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.user.profilePicture = this.convertBase64ToImage(exampleProfilePicture);
-    this.previewPicture = this.user.profilePicture; // Set the preview picture to the default profile picture
-    this.user.username = 'JohnDoe';
-    this.user.email = 'johndoe@example.com';
-
-    // Fetch or initialize tasks
-    const exampleTasks: Task[] = this.getTasks();
-    const activeTaskClass = new ActiveTasks(exampleTasks); // Instantiate ActiveTasks with fetched tasks
-
-    // Filter only active tasks (you can customize this filtering logic)
-    this.activeTasks = activeTaskClass.tasks ;
+    this.previewPicture = 'images/previewPicture.png'; // Set the preview picture to the default profile picture
+    this.fetchBasicUserInfo();
+    this.fetchActiveTasks();
 
     // Calculate time left for each active task
     this.calculateTimeLeft();
   }
 
-  // Example method to get tasks (replace with actual data fetching)
-  getTasks(): Task[] {
-    return [
-      {
-        id: '1',
-        taskName: 'Complete Assignment',
-        groupName: 'Group A',
-        timeLeft: new Date('2024-06-30'),
-        icon: '📝',
-        points: 100,
+  
+  fetchActiveTasks(): void {
+    this.http.get<{ tasks: any[] }>(
+      this.apiUrl + '/profile/get-active-tasks' // Adjust the endpoint if needed
+    ).subscribe({
+      next: (response) => {
+        this.activeTasks = response.tasks || []; // Assign the tasks array
       },
-      {
-        id: '2',
-        taskName: 'Review PR',
-        groupName: 'Group B',
-        timeLeft: new Date('2024-07-01'),
-        icon: '🔍',
-        points: 50,
-      },
-      {
-        id: '3',
-        taskName: 'Write Blog Post',
-        groupName: 'Group C',
-        timeLeft: new Date('2024-07-05'),
-        icon: '✍️',
-        points: 80,
-      },
-    ];
+      error: (error) => {
+        console.error('Error fetching active tasks:', error); // Updated error message
+      }
+    });
   }
+  
+
+  fetchBasicUserInfo(): void {
+    this.http.get<{ profilePicture: string | null; username: string; email: string }>(
+      this.apiUrl + '/profile/get-basic-info'
+    ).subscribe({
+      next: (response) => {
+        this.userInfo = response; // Assign the entire response object
+      },
+      error: (error) => {
+        console.error('Error fetching user info:', error);
+      }
+    });
+  }
+  
+
   private convertBase64ToImage(base64: string): string {
     return `data:image/jpg;base64,${base64}`;
   }
@@ -193,7 +188,7 @@ export class ProfileComponent implements OnInit {
     this.http.post<any>(`${this.apiUrl}/profile/change-profile-picture`, body).subscribe({
       next: (response) => {
         // Handle success
-        this.user.profilePicture = base64Image; // Update the user profile picture
+        this.userInfo.profilePicture = base64Image; // Update the user profile picture
         this.profilePictureModalVisible = false; // Close the modal
         this.messageService.add({
           severity: 'success',

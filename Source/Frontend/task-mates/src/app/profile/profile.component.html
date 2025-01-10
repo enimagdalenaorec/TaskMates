@@ -43,7 +43,7 @@
           <button class="edit-icon" (click)="editProfilePicture()">
             <i class="pi pi-pencil"></i> <!-- Prime icon for editing -->
           </button>
-          <img [src]="user.profilePicture" alt="Profile Picture" class="profile-img ml-1" />
+          <img [src]="previewPicture" alt="Profile Picture" class="profile-img ml-1" />
         </div>
 
         <div class="profile-info">
@@ -51,9 +51,9 @@
             <button class="mr-1 edit-icon" (click)="editUsername()">
               <i class="pi pi-pencil"></i> <!-- Prime icon for editing -->
             </button>
-            {{ user.username }}
+            {{ userInfo.username }}
         </div>
-          <p class="email">{{ user.email }}</p>
+          <p class="email">{{ userInfo.email }}</p>
         </div>
 
         <div class="logout-container">

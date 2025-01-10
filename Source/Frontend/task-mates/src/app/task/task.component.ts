@@ -14,12 +14,26 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Rating, RatingModule } from 'primeng/rating';
 import { SliderModule } from 'primeng/slider';
+import { ActivatedRoute } from '@angular/router';
 
-// Define an interface for the task member
-interface TaskMember {
+interface Member {
   name: string;
-  picture: string;
+  picture: string | null;  // You can change this if you expect a URL or other data for the picture
 }
+
+interface Task {
+  groupName: string;
+  taskName: string;
+  members: Member[];
+  maxCapacity: number;
+  currentCapacity: number;
+  description: string;
+  points: number;
+  status: string;
+  timeLeft: string;  // Time in seconds
+  alreadyReviewed: boolean;
+}
+
 
 @Component({
   selector: 'app-task',
@@ -47,81 +61,98 @@ interface TaskMember {
 export class TaskComponent implements OnInit {
   constructor(
     private messageService: MessageService,
-    private http: HttpClient
+    private http: HttpClient,
+    private route: ActivatedRoute     // To access route parameters
+
   ) {}
 
-  // Define the task type with members typed as TaskMember[]
-  task: {
-    id: number;
-    name: string;
-    groupName: string;
-    members: TaskMember[];
-    maxCapacity: number;
-    currentCapacity: number;
-    description: string;
-    points: number;
-    status: string;
-    timeLeft: string;
-    alreadyReviewed: boolean;
-  } = {
-    id: 1,
-    name: 'Wash the dishes',
-    groupName: 'Team Alpha',
-    members: [
-      {
-        name: 'Alice',
-        picture: `data:image/jpg;base64,${exampleProfilePicture}`,
-      },
-      {
-        name: 'Bob',
-        picture: `data:image/jpg;base64,${exampleProfilePicture}`,
-      },
-      {
-        name: 'Alice',
-        picture: `data:image/jpg;base64,${exampleProfilePicture}`,
-      },
-      {
-        name: 'Bob',
-        picture: `data:image/jpg;base64,${exampleProfilePicture}`,
-      },
-    ],
-    maxCapacity: 5,
-    currentCapacity: 2,
-    description: 'Complete the Alpha project.',
-    points: 150,
-    status: 'available', // available | full | finished | failed
-    timeLeft: '10d 15h 20m',
-    alreadyReviewed: false,
-  };
+  
+  task: Task | null=null;  // Strongly typed task object
+  errorMessage: string = '';
+  taskId: number | null = null;  // Define taskId
+  timeLeftString : string | null=null;
+
 
   isPerformingTask = false; // Check if user is part of the task
   rating = 0; // User's rating of the task
   visible: boolean = false;
-  apiUrl = 'http://127.0.0.1:8000/api'; // Django API endpoints
+  apiUrl = 'http://localhost:8000/api'; // Django API endpoints
   selectedFile: File | null = null;
   base64Image: string | null = null;
 
   get adjustedPoints(): number {
-    if (this.task.status === 'failed' && this.isPerformingTask) {
-      return this.task.points * 0.75; // Apply -25% if failed and performing task
+    if (this.task?.status === 'failed' && this.isPerformingTask) {
+      return this.task?.points * 0.75; // Apply -25% if failed and performing task
     }
-    return this.task.points; // Return original points if not failed or performing task
+    return Number(this.task?.points); // Return original points if not failed or performing task
   }
 
   ngOnInit(): void {
     const loggedUser = 'Alic'; // Simulate logged-in user
-    this.isPerformingTask = this.task.members.some(
+    /* this.isPerformingTask = this.task.members.some(
       (member) => member.name === loggedUser
-    );
-    console.log(this.task.members);
+    ); */
+
+    this.route.paramMap.subscribe(params => {
+      const taskId = params.get('id');
+      this.taskId = Number(taskId)
+      if (taskId) {
+        this.fetchTaskById(Number(taskId));  // Fetch task by ID
+      } else {
+        console.error('No taskId found');
+      }
+    });
+    
+    
   }
 
+  fetchTaskById(taskId: number): void {
+    this.http.post<{ groupName: string, taskName: string, members: any[], maxCapacity: number, 
+                    currentCapacity: number, description: string, points: number, 
+                    status: string, timeLeft: number, alreadyReviewed: boolean }>(
+      this.apiUrl + '/tasks/getTasksById', { taskId })
+      .subscribe({
+        next: (response) => {
+          // Assuming response data has the structure of the task properties
+          this.task = {
+            groupName: response.groupName,
+            taskName: response.taskName,
+            members: response.members,
+            maxCapacity: response.maxCapacity,
+            currentCapacity: response.currentCapacity,
+            description: response.description,
+            points: response.points,
+            status: response.status,
+            timeLeft: this.convertTimeToHumanReadable(response.timeLeft),  // Time remaining in seconds
+            alreadyReviewed: response.alreadyReviewed
+          } ;
+        },
+        error: (error) => {
+          console.error('Error fetching task by ID:', error);
+          // You can further handle the error, e.g., display an error message to the user
+        }
+      });
+  }
+
+  convertTimeToHumanReadable(seconds: number): string {
+    const days = Math.floor(seconds / (3600 * 24));
+    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+
+    let result = '';
+    result += `${days}d `;
+     result += `${hours}h `;
+    result += `${mins}m `;
+
+    return result.trim(); // Trim any trailing spaces
+  }
+  
   showDialog() {
     this.visible = true;
   }
 
   saveReviewPicture() {
-    if (!this.base64Image || !this.task.id) {
+    if (!this.base64Image ) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -131,7 +162,7 @@ export class TaskComponent implements OnInit {
     }
 
     const body = {
-      taskId: this.task.id,
+      taskId: this.taskId,
       picture: this.base64Image.split(',')[1], // Remove the "data:image/png;base64," prefix
     };
 
@@ -139,7 +170,7 @@ export class TaskComponent implements OnInit {
       next: (response: any) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message });
         this.visible = false;
-        this.task.status = 'finished'; // Update task status
+        if (this.task)this.task.status = 'finished'; // Update task status
       },
       error: (error) => {
         console.error('Error uploading picture:', error);
@@ -184,20 +215,24 @@ export class TaskComponent implements OnInit {
 
   // Function to handle the Join button click
   joinTask() {
+    console.log('taskId before sending:', this.taskId); // Check value of taskId
+
     const body = {
-      taskId: this.task.id, // Pass the taskId as part of the request body
+      taskId: this.taskId, // Pass the taskId as part of the request body
     };
+  
 
     this.http.post<any>(this.apiUrl + '/tasks/join', body).subscribe({
       next: (response) => {
         // Handle success
+        if (this.task){
         this.task.currentCapacity++;
         this.isPerformingTask = true;
 
         if(this.task.currentCapacity >= this.task.maxCapacity){
           this.task.status = 'full';
         }
-        
+      }
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
@@ -217,14 +252,14 @@ export class TaskComponent implements OnInit {
 
   exitTask() {
     const body = {
-      taskId: this.task.id, // Pass the taskId as part of the request body
+      taskId: this.taskId, // Pass the taskId as part of the request body
     };
 
     this.http.post<any>(this.apiUrl + '/tasks/leave', body).subscribe({
       next: (response) => {
         // Handle success
-        this.task.currentCapacity--;
-        this.task.status = 'available';
+        if (this.task) {this.task.currentCapacity--;
+        this.task.status = 'available';}
         this.isPerformingTask = false;
 
         this.messageService.add({
@@ -250,7 +285,7 @@ export class TaskComponent implements OnInit {
     }
 
     const body = {
-      taskId: this.task.id, // Pass the taskId as part of the request body
+      taskId: this.taskId, // Pass the taskId as part of the request body
       value: this.rating, // Pass the rating value to the backend
     };
 
@@ -263,7 +298,8 @@ export class TaskComponent implements OnInit {
           detail: response.message, // Show success message
         });
         console.log('Review submitted successfully:', response);
-        this.task.alreadyReviewed = true; // Mark task as reviewed
+        
+        if (this.task) this.task.alreadyReviewed = true; // Mark task as reviewed
       },
       error: (error) => {
         // Handle error response
