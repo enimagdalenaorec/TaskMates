@@ -140,7 +140,7 @@
         >
           <!-- Exit Button -->
           <p-button
-            [disabled]="task?.status === 'full' || !isPerformingTask"
+            [disabled]="(task?.status === 'full' && !isPerformingTask) || !isPerformingTask"
             (onClick)="exitTask()"
           >
             Exit
@@ -148,7 +148,7 @@
 
           <!-- Finish Button -->
           <p-button
-            [disabled]="task?.status === 'full' || !isPerformingTask"
+            [disabled]="(task?.status === 'full' && !isPerformingTask) || !isPerformingTask"
             (click)="showDialog()"
           >
             Finish

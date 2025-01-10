@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { ActiveTasks, Task } from './../../models/activeTasks';
+import { ActiveTasks } from './../../models/activeTasks';
 import { Component , OnInit} from '@angular/core';
 import { User, exampleProfilePicture } from '../../models/user';
 import { Router } from '@angular/router';
@@ -8,6 +8,16 @@ import { DialogModule } from 'primeng/dialog';  // For PrimeNG Dialog
 import { FormsModule } from '@angular/forms';  // Import FormsModule
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+
+
+interface Task {
+  id: number;
+  taskName: string;
+  groupName: string;
+  timeLeft: { days: number; hours: number; minutes: number };
+  icon: string;
+  points: number;
+};
 
 @Component({
   selector: 'app-profile',
@@ -18,6 +28,7 @@ import { MessageService } from 'primeng/api';
   providers: [MessageService],
 
 })
+
 
 export class ProfileComponent implements OnInit {
   activeTasks: any[] = []; // To hold the active tasks
@@ -34,6 +45,9 @@ export class ProfileComponent implements OnInit {
     username: '',
     email: ''
   };
+
+ 
+  
 
 
   editProfilePicture() {
@@ -88,7 +102,7 @@ export class ProfileComponent implements OnInit {
 
   
   fetchActiveTasks(): void {
-    this.http.get<{ tasks: any[] }>(
+    this.http.get<{ tasks: Task[] }>(
       this.apiUrl + '/profile/get-active-tasks' // Adjust the endpoint if needed
     ).subscribe({
       next: (response) => {
@@ -130,7 +144,18 @@ export class ProfileComponent implements OnInit {
 
   // Check if the task is active (you can modify this to suit your status logic)
   isActiveTask(task: Task): boolean {
-    return task.timeLeft > new Date(); // Consider tasks with a future deadline as active
+    const timeLeft = task.timeLeft; // e.g., { days: 1, hours: 5, minutes: 30 }
+
+        // Convert timeLeft to milliseconds
+        const totalMilliseconds =
+          (timeLeft.days || 0) * 24 * 60 * 60 * 1000 + // Days to ms
+          (timeLeft.hours || 0) * 60 * 60 * 1000 + // Hours to ms
+          (timeLeft.minutes || 0) * 60 * 1000; // Minutes to ms
+
+        // Calculate the deadline as a Date
+        const date = new Date(Date.now() + totalMilliseconds);
+
+    return date > new Date(); // Consider tasks with a future deadline as active
   }
   navigateToTask(taskId: string): void {
     this.router.navigate(['/task', taskId]);
@@ -213,13 +238,14 @@ export class ProfileComponent implements OnInit {
     this.http.get<any>(`${this.apiUrl}/accounts/logout`).subscribe({
       next: () => {
         console.log('Logged out successfully');
+        this.router.navigate(['/login'])
       },
       error: (error) => {
         console.error('Logout failed', error);
       }
     });
     // Example: Navigate to login page
-    // this.router.navigate(['/login']);
+    // ;
   }
 
   // Handle task navigation (click)

@@ -72,6 +72,8 @@ export class TaskComponent implements OnInit {
   taskId: number | null = null;  // Define taskId
   timeLeftString : string | null=null;
 
+  loggedUsername: string | null=null;
+
 
   isPerformingTask = false; // Check if user is part of the task
   rating = 0; // User's rating of the task
@@ -87,23 +89,32 @@ export class TaskComponent implements OnInit {
     return Number(this.task?.points); // Return original points if not failed or performing task
   }
 
-  ngOnInit(): void {
-    const loggedUser = 'Alic'; // Simulate logged-in user
-    /* this.isPerformingTask = this.task.members.some(
-      (member) => member.name === loggedUser
-    ); */
+   ngOnInit(): void {
+  
+    this.fetchBasicUserInfo();
 
-    this.route.paramMap.subscribe(params => {
-      const taskId = params.get('id');
+      const taskId = this.route.snapshot.paramMap.get('id')!;
       this.taskId = Number(taskId)
       if (taskId) {
         this.fetchTaskById(Number(taskId));  // Fetch task by ID
       } else {
         console.error('No taskId found');
+      } 
+    
+
+  }
+
+  fetchBasicUserInfo(): void {
+    this.http.get<{ profilePicture: string | null; username: string; email: string }>(
+      this.apiUrl + '/profile/get-basic-info'
+    ).subscribe({
+      next: (response) => {
+        this.loggedUsername = response.username; // Assign the entire response object
+      },
+      error: (error) => {
+        console.error('Error fetching user info:', error);
       }
     });
-    
-    
   }
 
   fetchTaskById(taskId: number): void {
@@ -126,6 +137,10 @@ export class TaskComponent implements OnInit {
             timeLeft: this.convertTimeToHumanReadable(response.timeLeft),  // Time remaining in seconds
             alreadyReviewed: response.alreadyReviewed
           } ;
+          this.isPerformingTask =
+          this.task?.members?.some((member: any) => member.name === this.loggedUsername) || false;
+    
+          console.log(this.isPerformingTask)
         },
         error: (error) => {
           console.error('Error fetching task by ID:', error);
@@ -229,6 +244,8 @@ export class TaskComponent implements OnInit {
         this.task.currentCapacity++;
         this.isPerformingTask = true;
 
+        this.fetchTaskById(Number(this.taskId));
+
         if(this.task.currentCapacity >= this.task.maxCapacity){
           this.task.status = 'full';
         }
@@ -261,6 +278,8 @@ export class TaskComponent implements OnInit {
         if (this.task) {this.task.currentCapacity--;
         this.task.status = 'available';}
         this.isPerformingTask = false;
+        this.fetchTaskById(Number(this.taskId));
+
 
         this.messageService.add({
           severity: 'success',
