@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
   isHamburgerMenuVisible: boolean = false; // To control hamburger menu visibility
   isProfileIconClicked: boolean = false;
   tasksForCalendar: any[] = [];
+  markedDates: { [key: string]: { icon: string, id: number } } = {}; // Store dates with their corresponding icons and task IDs
 
 
   constructor(private router: Router,
@@ -60,11 +61,36 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.http.get('http://localhost:8000/api/calendar/get-all-tasks').subscribe((data) => {
-      this.tasksForCalendar = data as any[];
+    this.http.get<{ tasks: any[] }>('http://localhost:8000/api/calendar/get-all-tasks').subscribe((data) => {
+      this.tasksForCalendar = data.tasks;
+      this.parseDeadlines();
     }, (error) => {
       console.log(error);
     });
+  }
+
+  parseDeadlines(): void {
+    this.tasksForCalendar.forEach(task => {
+      const deadline = new Date(task.deadline);
+      const dateKey = `${deadline.getUTCFullYear()}-${deadline.getUTCMonth() + 1}-${deadline.getUTCDate()}`;
+      this.markedDates[dateKey] = { icon: task.icon, id: task.id };
+      console.log('Marked dates:', this.markedDates);
+    });
+  }
+
+  getIconForDate(date: any): string | null {
+    const adjustedDate = new Date(date.year, date.month, date.day);
+    const dateKey = `${adjustedDate.getFullYear()}-${adjustedDate.getMonth() + 1}-${adjustedDate.getDate()}`;
+    return this.markedDates[dateKey]?.icon || null;
+  }
+
+  onIconClick(date: any): void {
+    const adjustedDate = new Date(Date.UTC(date.year, date.month, date.day));
+    const dateKey = `${adjustedDate.getUTCFullYear()}-${adjustedDate.getUTCMonth() + 1}-${adjustedDate.getUTCDate()}`;
+    const taskId = this.markedDates[dateKey]?.id;
+    if (taskId) {
+      this.router.navigate(['/task', taskId]);
+    }
   }
 
   isHomeOrLoginOrRegisterRoute() {

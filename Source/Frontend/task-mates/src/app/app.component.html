@@ -20,19 +20,18 @@
           class="sidebar-item border-round-sm mt-2 pt-1 pb-1 pl-3"><i class="pi pi-user pr-3"></i>Profile</p>
       </div>
       <div class="sidebar-calendar">
+        <!-- <p-calendar [inline]="true">
+        </p-calendar> -->
         <p-calendar [inline]="true">
+          <ng-template pTemplate="date" #customDayTemplate let-date>
+            <span *ngIf="getIconForDate(date) as icon" class="highlight-day" (click)="onIconClick(date)">
+              {{ icon }}
+            </span>
+            <span *ngIf="!getIconForDate(date)">
+              {{ date.day }}
+            </span>
+          </ng-template>
         </p-calendar>
-        <!-- <p-calendar [inline]="true" [dayTemplate]="customDayTemplate">
-        </p-calendar>
-
-        <ng-template #customDayTemplate let-date>
-          <span [ngClass]="{
-            'highlight-day': markedDates.includes(date.day)
-            }">
-            {{ date.day }}
-          </span>
-        </ng-template> -->
-
       </div>
     </div>
 

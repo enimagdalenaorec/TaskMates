@@ -66,7 +66,7 @@ export class TaskComponent implements OnInit {
 
   ) {}
 
-  
+
   task: Task | null=null;  // Strongly typed task object
   errorMessage: string = '';
   taskId: number | null = null;  // Define taskId
@@ -90,18 +90,12 @@ export class TaskComponent implements OnInit {
   }
 
    ngOnInit(): void {
-  
+    this.route.params.subscribe(params => {
+      this.taskId = +params['id']; // The '+' converts the string to a number
+      this.fetchTaskById(this.taskId);
+    });
+
     this.fetchBasicUserInfo();
-
-      const taskId = this.route.snapshot.paramMap.get('id')!;
-      this.taskId = Number(taskId)
-      if (taskId) {
-        this.fetchTaskById(Number(taskId));  // Fetch task by ID
-      } else {
-        console.error('No taskId found');
-      } 
-    
-
   }
 
   fetchBasicUserInfo(): void {
@@ -118,8 +112,8 @@ export class TaskComponent implements OnInit {
   }
 
   fetchTaskById(taskId: number): void {
-    this.http.post<{ groupName: string, taskName: string, members: any[], maxCapacity: number, 
-                    currentCapacity: number, description: string, points: number, 
+    this.http.post<{ groupName: string, taskName: string, members: any[], maxCapacity: number,
+                    currentCapacity: number, description: string, points: number,
                     status: string, timeLeft: number, alreadyReviewed: boolean }>(
       this.apiUrl + '/tasks/getTasksById', { taskId })
       .subscribe({
@@ -139,7 +133,7 @@ export class TaskComponent implements OnInit {
           } ;
           this.isPerformingTask =
           this.task?.members?.some((member: any) => member.name === this.loggedUsername) || false;
-    
+
           console.log(this.isPerformingTask)
         },
         error: (error) => {
@@ -161,7 +155,7 @@ export class TaskComponent implements OnInit {
 
     return result.trim(); // Trim any trailing spaces
   }
-  
+
   showDialog() {
     this.visible = true;
   }
@@ -235,7 +229,7 @@ export class TaskComponent implements OnInit {
     const body = {
       taskId: this.taskId, // Pass the taskId as part of the request body
     };
-  
+
 
     this.http.post<any>(this.apiUrl + '/tasks/join', body).subscribe({
       next: (response) => {
@@ -317,7 +311,7 @@ export class TaskComponent implements OnInit {
           detail: response.message, // Show success message
         });
         console.log('Review submitted successfully:', response);
-        
+
         if (this.task) this.task.alreadyReviewed = true; // Mark task as reviewed
       },
       error: (error) => {
