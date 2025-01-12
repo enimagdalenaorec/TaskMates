@@ -8,6 +8,13 @@ import { BadgeModule } from 'primeng/badge';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+interface Group {
+  id: number;
+  name: string;
+  expiringSoonCount: number;
+  unreadMessagesCount: number;
+}
+
 @Component({
   selector: 'app-my-groups',
   standalone: true,
@@ -21,6 +28,8 @@ export class MyGroupsComponent {
   searchQuery = '';
   groups: any[] = [];
   apiUrl = 'http://localhost:8000/api/groups/'; // Django API endpoint
+  
+ 
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -29,7 +38,7 @@ export class MyGroupsComponent {
   }
 
   fetchGroups(): void {
-    this.http.get<{ groups: any[] }>(this.apiUrl).subscribe({
+    this.http.get<{  groups: Group[]}>(this.apiUrl).subscribe({
       next: (response) => {
         this.groups = response.groups || [];
       },

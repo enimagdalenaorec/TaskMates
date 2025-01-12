@@ -15,6 +15,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Rating, RatingModule } from 'primeng/rating';
 import { SliderModule } from 'primeng/slider';
 import { ActivatedRoute } from '@angular/router';
+import { TaskService } from '../Services/TaskService/task.service';
 
 interface Member {
   name: string;
@@ -62,7 +63,8 @@ export class TaskComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private http: HttpClient,
-    private route: ActivatedRoute     // To access route parameters
+    private route: ActivatedRoute,     // To access route parameters,
+    private taskService: TaskService
 
   ) {}
 
@@ -96,6 +98,7 @@ export class TaskComponent implements OnInit {
     });
 
     this.fetchBasicUserInfo();
+    
   }
 
   fetchBasicUserInfo(): void {
@@ -239,10 +242,12 @@ export class TaskComponent implements OnInit {
         this.isPerformingTask = true;
 
         this.fetchTaskById(Number(this.taskId));
+          this.taskService.fetchTasksForCalendar();
 
         if(this.task.currentCapacity >= this.task.maxCapacity){
           this.task.status = 'full';
         }
+
       }
         this.messageService.add({
           severity: 'success',
@@ -273,6 +278,8 @@ export class TaskComponent implements OnInit {
         this.task.status = 'available';}
         this.isPerformingTask = false;
         this.fetchTaskById(Number(this.taskId));
+        this.taskService.fetchTasksForCalendar();
+
 
 
         this.messageService.add({

@@ -11,12 +11,14 @@ import { ProfileComponent } from './profile/profile.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { CalendarModule } from 'primeng/calendar';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TaskService } from './Services/TaskService/task.service';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, NgIf, MenubarModule, ButtonModule, SidebarModule, NotificationsComponent, ProfileComponent, CommonModule, CalendarModule, HttpClientModule],
+  providers : [HttpClientModule, TaskService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -32,7 +34,7 @@ export class AppComponent implements OnInit {
   markedDates: { [key: string]: { icon: string, id: number } } = {}; // Store dates with their corresponding icons and task IDs
 
 
-  constructor(private router: Router,
+  constructor(private router: Router, private taskService: TaskService, 
     private breakpointObserver: BreakpointObserver, private http: HttpClient
   ) {
   }
@@ -61,12 +63,14 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.http.get<{ tasks: any[] }>('http://localhost:8000/api/calendar/get-all-tasks').subscribe((data) => {
-      this.tasksForCalendar = data.tasks;
-      this.parseDeadlines();
-    }, (error) => {
-      console.log(error);
+    this.taskService.tasks$.subscribe((tasks) => {
+      this.tasksForCalendar = tasks;
+      this.parseDeadlines();  // Call any additional functions to process the tasks
     });
+
+    this.taskService.fetchTasksForCalendar();
+
+    
   }
 
   parseDeadlines(): void {
