@@ -238,33 +238,44 @@ def finish_task(request):
     task.save()
     return Response({"message": "success"}, status=HTTP_200_OK)
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def review_task(request):
     # Expected fields: taskId, value (1-5)
     task_id = request.data.get('taskId')
     value = request.data.get('value')
-    if not (task_id and value is not None):
-        return Response({"error": "taskId and value are required."}, status=HTTP_400_BAD_REQUEST)
 
+    if not (task_id and value is not None):
+        return Response({"error": "taskId and value are required."}, 
+                        status=HTTP_400_BAD_REQUEST)
+
+    # Dohvatimo Task
     try:
         task = Task.objects.get(id=task_id)
     except Task.DoesNotExist:
         return Response({"error": "Task not found"}, status=HTTP_404_NOT_FOUND)
-    
-    # Check if user participated in the task before allowing rating
-    if not UserTask.objects.filter(user=request.user, task=task).exists():
-        return Response({"error": "You did not participate in this task."}, status=HTTP_403_FORBIDDEN)
 
+    # 1) Provjera: Ako je korisnik SUDJELOVAO u zadatku, zabrani ocjenu.
+    if UserTask.objects.filter(user=request.user, task=task).exists():
+        return Response({"error": "Cannot review because you participated in this task."},
+                        status=HTTP_403_FORBIDDEN)
+
+    # 2) Provjera: Ako je korisnik već ostavio ocjenu za ovaj task, zabrani ponovno ocjenjivanje.
+    if Rating.objects.filter(sender=request.user, task=task).exists():
+        return Response({"error": "You have already left a review for this task."},
+                        status=HTTP_403_FORBIDDEN)
+
+    # 3) Pretvorimo dobiveni value u integer
     try:
         value_int = int(value)
     except ValueError:
         return Response({"error": "Value must be an integer."}, status=HTTP_400_BAD_REQUEST)
 
-    # Validate the rating value
-    if value_int < 1 or value_int > 5:
-        return Response({"error": "Rating value must be between 1 and 5."}, status=HTTP_400_BAD_REQUEST)
+    # 4) Validacija da je rating u rasponu 1 - 5
+    if not (1 <= value_int <= 5):
+        return Response({"error": "Rating value must be between 1 and 5."}, 
+                        status=HTTP_400_BAD_REQUEST)
 
+    # 5) Kreiramo novi zapis u Rating jer su svi uvjeti zadovoljeni
     Rating.objects.create(sender=request.user, task=task, value=value_int)
     return Response({"message": "success"}, status=HTTP_200_OK)

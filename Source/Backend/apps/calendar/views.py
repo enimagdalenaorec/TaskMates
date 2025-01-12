@@ -6,19 +6,22 @@ from rest_framework.decorators import api_view, permission_classes
 from core.models import Task, UserTask
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])  # Korisnik mora biti autentificiran
+@permission_classes([IsAuthenticated])
 def get_all_tasks(request):
     user = request.user
-    active_tasks = UserTask.objects.filter(user=user).exclude(task__status__in=['finished', 'failed'])
+    
+    # Dohvatimo sve UserTask zapise koji nisu finished ili failed
+    user_tasks = UserTask.objects.filter(user=user).exclude(task__status__in=['finished', 'failed'])
+    
+    # Iz svakog UserTask objekta dohvatimo pripadajući Task i formiramo response
     response_data = [
         {
-            "id": task.id,
-            "name": task.name,
-            "icon": task.icon,
-            "deadline":task.deadline  
-                # Ovo može biti None ako ikona nije definirana
+            "id": user_task.task.id,
+            "name": user_task.task.name,
+            "icon": user_task.task.icon,
+            "deadline": user_task.task.deadline
         }
-        for task in active_tasks
+        for user_task in user_tasks
     ]
-
+    
     return Response({"tasks": response_data}, status=HTTP_200_OK)
