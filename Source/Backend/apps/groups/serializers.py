@@ -5,6 +5,7 @@ class JoinGroupSerializer(serializers.Serializer):
 
 class CreateGroupSerializer(serializers.Serializer):
     name = serializers.CharField(required=True)
+    image = serializers.CharField(required=False)
 
 class GetAllMembersSerializer(serializers.Serializer):
     group_id = serializers.IntegerField(required=True)

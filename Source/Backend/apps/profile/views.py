@@ -4,6 +4,17 @@ from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_400_B
 from rest_framework.permissions import IsAuthenticated
 from core.models import Task, UserTask
 from django.utils import timezone
+import cloudinary.uploader
+import base64
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.conf import settings
+
+cloudinary.config(
+    cloud_name=settings.CLOUDINARY['CLOUD_NAME'],
+    api_key=settings.CLOUDINARY['API_KEY'],
+    api_secret=settings.CLOUDINARY['API_SECRET']
+)
 
 # 1. Get Basic User Info
 @api_view(['GET'])
@@ -11,7 +22,7 @@ from django.utils import timezone
 def get_basic_info(request):
     user = request.user
     response = {
-        "profilePicture": None,  # Dodaj stvarnu logiku za sliku profila ako je implementirano
+        "profilePicture": user.profile_picture,  # Dodaj stvarnu logiku za sliku profila ako je implementirano
         "username": user.username,
         "email": user.email
     }
@@ -66,9 +77,19 @@ def change_profile_picture(request):
 
     profile_picture = serializer.validated_data["profilePicture"]
     user = request.user
-
+    try:
+        profile_picture64 = serializer.validated_data["profilePicture"] #'image' is 64bit image
+        image_data = profile_picture64[22:]
+        image_data = base64.b64decode(image_data)
+        image_content = ContentFile(image_data, name="pfp.png")
+        upload_result = cloudinary.uploader.upload(image_content)
+        profile_picture = upload_result['url']
     # Ovisno o načinu čuvanja slike, ovdje može biti logika za dekodiranje base64 -> file
     # ili izravno pohranjivanje u polje ako već imate rješenje za to
-    user.profilePicture = profile_picture
-    user.save()
-    return Response({"message": "Profile picture updated successfully"}, status=HTTP_200_OK)
+        user.profile_picture = profile_picture
+        user.save()
+        return Response({"message": "Profile picture updated successfully","url":profile_picture}, status=HTTP_200_OK)
+    except Exception as e:
+        return Response({
+            "error": str(e)
+        }, status=HTTP_400_BAD_REQUEST)

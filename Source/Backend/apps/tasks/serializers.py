@@ -23,7 +23,8 @@ class LeaveTaskSerializer(serializers.Serializer):
 
 class FinishTaskSerializer(serializers.Serializer):
     taskId = serializers.IntegerField(required=True)
-
+    picture = serializers.CharField(required=True)
+    
 class ReviewTaskSerializer(serializers.Serializer):
     taskId = serializers.IntegerField(required=True)
     value = serializers.IntegerField(required=True, min_value=1, max_value=5)

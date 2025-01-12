@@ -32,7 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
 
-    #profilePicture = models.ImageField(upload_to='profile_pics/', blank=True, null=True) 
+    profile_picture = models.URLField(null=True, blank=True)  
         #Treba postavit MEDIA_ROOT
     is_staff = models.BooleanField(default=False)  # Necessary for admin access
 
@@ -57,8 +57,7 @@ class Notification(models.Model):
     
 class Group(models.Model):
     name = models.CharField(max_length=100)  # Group name
-    #image = models.ImageField(upload_to='group_images/', blank=True, null=True)  # Optional image for the group
-          #Treba setupat Media Root
+    image = models.URLField(null=True, blank=True)   # Optional image for the group
     join_code = models.PositiveSmallIntegerField(unique=True)  # Unique short integer for joining
 
     def __str__(self):
@@ -87,7 +86,8 @@ class Group(models.Model):
 class GroupUser(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Reference to User
     group = models.ForeignKey(Group, on_delete=models.CASCADE)  # Reference to Group
-
+    points = models.IntegerField(default=0)
+    tasks_solved = models.IntegerField(default=0)
     class Meta:
         unique_together = ('user', 'group')  # Ensure a user can only join a group once
 
@@ -97,7 +97,7 @@ class GroupUser(models.Model):
 
 class Task(models.Model):
     name = models.CharField(max_length=100)
-    #picture = models.ImageField(upload_to='task_pics/', blank=True, null=True)  # Field for task image
+    picture = models.URLField(null=True, blank=True)  # Field for task image
       #setup media root
     deadline = models.DateTimeField(default=timezone.now)  # Deadline for task completion
     STATUS_CHOICES = [

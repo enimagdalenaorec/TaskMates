@@ -3,8 +3,18 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN
 from django.utils import timezone
-
 from core.models import Task, UserTask, Group, Rating, GroupUser
+import cloudinary.uploader
+import base64
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.conf import settings
+
+cloudinary.config(
+    cloud_name=settings.CLOUDINARY['CLOUD_NAME'],
+    api_key=settings.CLOUDINARY['API_KEY'],
+    api_secret=settings.CLOUDINARY['API_SECRET']
+)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # Korisnik mora biti prijavljen
@@ -30,7 +40,7 @@ def get_task_by_id(request):
     members = [
         {
             "name": ut.user.username,
-            "picture": None  # Dodajte logiku ako korisnik ima sliku
+            "picture": ut.user.profile_picture  # Dodajte logiku ako korisnik ima sliku
         }
         for ut in user_tasks
     ]
@@ -57,7 +67,8 @@ def get_task_by_id(request):
         "points": task.points,
         "status": task.status,
         "timeLeft": time_left,  # Vrijeme u sekundama do roka
-        "alreadyReviewed": already_reviewed
+        "alreadyReviewed": already_reviewed,
+        "picture":task.picture
     }
 
     return Response(response_data, status=HTTP_200_OK)
@@ -103,7 +114,8 @@ def get_tasks_by_group(request):
             "groupId": group.id,
             "groupName": group.name,
             "currentCapacity": current_capacity,
-            "ts_deadline": task.deadline
+            "ts_deadline": task.deadline,
+            "picture":task.picture
         })
 
     return Response({"tasks": response_data}, status=HTTP_200_OK)
@@ -148,7 +160,8 @@ def add_task(request):
             max_capacity=max_capacity,
             description=description,
             points=points,
-            group=group
+            group=group,
+            picture=None
         )
     except ValueError as e:
         return Response({"error": str(e)}, status=HTTP_400_BAD_REQUEST)
@@ -222,6 +235,8 @@ def leave_task(request):
 def finish_task(request):
     # Expected field: taskId
     task_id = request.data.get('taskId')
+    picture64=request.data.get('picture')
+
     if not task_id:
         return Response({"error": "taskId is required"}, status=HTTP_400_BAD_REQUEST)
 
@@ -233,7 +248,13 @@ def finish_task(request):
     # Optionally: Check if user has permission to finish the task (e.g., only members or admin)
     if not UserTask.objects.filter(user=request.user, task=task).exists():
         return Response({"error": "You are not a participant in this task."}, status=HTTP_403_FORBIDDEN)
+    
+    image_data = base64.b64decode(picture64)
+    image_content = ContentFile(image_data, name="finished_task_image.png")
+    upload_result = cloudinary.uploader.upload(image_content)
+    image_url = upload_result['url']
 
+    task.picture=image_url
     task.status = 'finished'
     task.save()
     return Response({"message": "success"}, status=HTTP_200_OK)

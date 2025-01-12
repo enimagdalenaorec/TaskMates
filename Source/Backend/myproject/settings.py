@@ -74,7 +74,9 @@ INSTALLED_APPS = [
     'core',
     'apps.accounts',
     'corsheaders',
-    'oauth2_provider'
+    'oauth2_provider',
+    'cloudinary', 
+    'cloudinary_storage'
 ]
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
@@ -132,6 +134,15 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 } 
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY = {
+    'CLOUD_NAME': 'djevedi2m',
+    'API_KEY': '397716242552879',
+    'API_SECRET': 'q1LekeTNsfPraq_u8WdRKdzNGDU',
+}
+MEDIA_URL = 'https://res.cloudinary.com/djevedi2m/'
 
 
 ROOT_URLCONF = 'myproject.urls'
