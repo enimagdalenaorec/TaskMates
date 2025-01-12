@@ -8,7 +8,8 @@ from core.models import Task
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])  # Korisnik mora biti autentificiran
 def get_all_tasks(request):
-    tasks = Task.objects.all()
+    user = request.user
+    active_tasks = UserTask.objects.filter(user=user).exclude(task__status__in=['finished', 'failed'])
     response_data = [
         {
             "id": task.id,
@@ -17,7 +18,7 @@ def get_all_tasks(request):
             "deadline":task.deadline  
                 # Ovo može biti None ako ikona nije definirana
         }
-        for task in tasks
+        for task in active_tasks
     ]
 
     return Response({"tasks": response_data}, status=HTTP_200_OK)
