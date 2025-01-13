@@ -33,6 +33,7 @@ interface Task {
   status: string;
   timeLeft: string;  // Time in seconds
   alreadyReviewed: boolean;
+  picture: string
 }
 
 
@@ -95,9 +96,10 @@ export class TaskComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.taskId = +params['id']; // The '+' converts the string to a number
       this.fetchTaskById(this.taskId);
+      this.fetchBasicUserInfo();
+
     });
 
-    this.fetchBasicUserInfo();
     
   }
 
@@ -117,7 +119,7 @@ export class TaskComponent implements OnInit {
   fetchTaskById(taskId: number): void {
     this.http.post<{ groupName: string, taskName: string, members: any[], maxCapacity: number,
                     currentCapacity: number, description: string, points: number,
-                    status: string, timeLeft: number, alreadyReviewed: boolean }>(
+                    status: string, timeLeft: number, alreadyReviewed: boolean, picture: string }>(
       this.apiUrl + '/tasks/getTasksById', { taskId })
       .subscribe({
         next: (response) => {
@@ -132,7 +134,8 @@ export class TaskComponent implements OnInit {
             points: response.points,
             status: response.status,
             timeLeft: this.convertTimeToHumanReadable(response.timeLeft),  // Time remaining in seconds
-            alreadyReviewed: response.alreadyReviewed
+            alreadyReviewed: response.alreadyReviewed,
+            picture: response.picture,
           } ;
           this.isPerformingTask =
           this.task?.members?.some((member: any) => member.name === this.loggedUsername) || false;
@@ -181,8 +184,12 @@ export class TaskComponent implements OnInit {
     this.http.post(this.apiUrl + '/tasks/finish', body).subscribe({
       next: (response: any) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message });
+        if(this.task){this.fetchTaskById(Number(this.taskId));
+          this.fetchBasicUserInfo();
+          this.task.status = 'finished';
+        }
         this.visible = false;
-        if (this.task)this.task.status = 'finished'; // Update task status
+       
       },
       error: (error) => {
         console.error('Error uploading picture:', error);

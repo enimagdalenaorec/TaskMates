@@ -134,9 +134,7 @@
     display: flex;
     flex-direction: row; /* Default for larger screens */
 }
-.task-picture-section{
-  margin-left: 5rem;
-}
+
 
    @media screen and (max-width: 800px) {
     .points-members{

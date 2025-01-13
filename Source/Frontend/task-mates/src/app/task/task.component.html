@@ -46,8 +46,8 @@
                 class="flex items-center gap-2 px-2 py-2 ml-2 hover:bg-emphasis cursor-pointer rounded-border"
               >
                 <img
-                  [src]="member?.picture || 'images/user.png'"
-                  style="width: 32px; border-radius: 50%"
+                  [src]="member?.picture || 'images/previewPicture.png'"
+                  style="width: 32px; border-radius: 50%; object-fit: cover;"
                   class="flex"
                 />
                 <span class="flex my-2">{{ member?.name }}</span>
@@ -56,48 +56,8 @@
           </div>
         </div>
          <!-- Picture and Rating Section -->
-         <div
-         class="task-picture-section flex flex-column justify-content-center align-items-center gap-3 "
-         *ngIf="task?.status === 'finished' || task?.status === 'failed'"
-       >
-         <!-- Image Preview -->
-         <img
-           *ngIf="base64Image"
-           [src]="base64Image"
-           alt="Preview"
-           class="border-round shadow-2"
-           style="
-             width: 100%;
-             max-height: 200px;
-             max-width: 400px;
-             object-fit: contain;
-           "
-         />
-
-         <!-- Rating Component -->
-         <p-rating
-           [readonly]="
-             isPerformingTask ||
-             task?.status === 'failed' ||
-             task?.alreadyReviewed
-           "
-           [(ngModel)]="rating"
-           [cancelIcon]="false"
-           [showValue]="false"
-         >
-         </p-rating>
-
-         <p-button
-           label="Submit Review"
-           (onClick)="submitReview()"
-           [disabled]="
-             task?.alreadyReviewed ||
-             isPerformingTask ||
-             task?.status === 'failed'
-           "
-         >
-         </p-button>
-       </div>
+        
+ 
       </div>
 
       <div class="descr-date mt-4">
@@ -114,7 +74,57 @@
         </div>
 
       </div>
+      
+
+<!-- Picture and Rating Section -->
+<div
+class="task-picture-section flex flex-column justify-content-center mt-6 align-items-start gap-3 "
+*ngIf="task?.status === 'finished' || task?.status === 'failed'"
+>
+<!-- Image Preview -->
+<img
+  *ngIf="task?.picture"
+  [src]="task?.picture"
+  alt="Preview"
+  class="border-round shadow-2"
+  style="
+    width: 100%;
+    max-height: 200px;
+    max-width: 400px;
+    object-fit: contain;
+  "
+/>
+
+<!-- Rating Component -->
+<p-rating
+  [readonly]="
+    isPerformingTask ||
+    task?.status === 'failed' ||
+    task?.alreadyReviewed
+  "
+  [(ngModel)]="rating"
+  [cancelIcon]="false"
+  [showValue]="false"
+>
+</p-rating>
+
+<p-button
+  label="Submit Review"
+  (onClick)="submitReview()"
+  [disabled]="
+    task?.alreadyReviewed ||
+    isPerformingTask ||
+    task?.status === 'failed'
+  "
+>
+</p-button>
+</div>
+
     </div>
+
+
+     
+  
 
     <div
       class="task-buttons p-1 flex-row gap-3 justify-content-between mt-2"

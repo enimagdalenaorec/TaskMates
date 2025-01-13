@@ -8,6 +8,7 @@ import { DialogModule } from 'primeng/dialog';  // For PrimeNG Dialog
 import { FormsModule } from '@angular/forms';  // Import FormsModule
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+import { profile } from 'node:console';
 
 
 interface Task {
@@ -41,14 +42,10 @@ export class ProfileComponent implements OnInit {
   apiUrl = 'http://localhost:8000/api'; // Django API endpoints
 
   userInfo: any = {
-    profilePicture: null,
+    profilePicture: 'images/previewPicture.png',
     username: '',
     email: ''
   };
-
-
-
-
 
   editProfilePicture() {
     this.profilePictureModalVisible = true;
@@ -212,7 +209,8 @@ export class ProfileComponent implements OnInit {
     this.http.post<any>(`${this.apiUrl}/profile/change-profile-picture`, body).subscribe({
       next: (response) => {
         // Handle success
-        this.userInfo.profilePicture = base64Image; // Update the user profile picture
+        
+        this.fetchBasicUserInfo();
         this.profilePictureModalVisible = false; // Close the modal
         this.messageService.add({
           severity: 'success',
