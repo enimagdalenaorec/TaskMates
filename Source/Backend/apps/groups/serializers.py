@@ -12,3 +12,6 @@ class GetAllMembersSerializer(serializers.Serializer):
 
 class GetGroupCodeSerializer(serializers.Serializer):
     group_id = serializers.IntegerField(required=True)
+
+class LeaveGroupSerializer(serializers.Serializer):
+    groupId = serializers.IntegerField()

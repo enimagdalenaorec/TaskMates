@@ -8,7 +8,11 @@ import base64
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.conf import settings
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.decorators import api_view, permission_classes
 
+
+ 
 cloudinary.config(
     cloud_name=settings.CLOUDINARY['CLOUD_NAME'],
     api_key=settings.CLOUDINARY['API_KEY'],
@@ -141,3 +145,27 @@ def get_group_code(request):
         return Response({"message": "Group not found."}, status=status.HTTP_404_NOT_FOUND)
 
     return Response({"code": str(group.join_code)}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def leave_group(request):
+    from .serializers import LeaveGroupSerializer
+
+    serializer = LeaveGroupSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    group_id = serializer.validated_data['groupId']
+
+    try:
+        group = Group.objects.get(id=group_id)
+    except Group.DoesNotExist:
+        return Response({"error": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    try:
+        group_user = GroupUser.objects.get(user=request.user, group=group)
+    except GroupUser.DoesNotExist:
+        return Response({"error": "You are not a member of this group."}, status=status.HTTP_400_BAD_REQUEST)
+
+    group_user.delete()  # Remove the user's membership from the group
+    return Response({"message": "success"}, status=status.HTTP_200_OK)
