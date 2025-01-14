@@ -112,10 +112,36 @@ p-menubar {
   }
 }
 
-:ng-host ::ng-deep .p-calendar .p-datepicker {
+:host ::ng-deep .p-calendar .p-datepicker-inline {
   max-width: 300px;
+  overflow-x: hidden !important;
+}
+
+:host ::ng-deep .p-datepicker-inline:hover{
+  overflow-x: auto !important;
 }
 
 .highlight-day {
   font-size: 1.5em; /* Adjust the size as needed */
+}
+
+:host ::ng-deep .p-datepicker-inline::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  height: 10px;
+  transition: all 0.3s ease; /* Smooth transition for visibility */
+}
+
+:host ::ng-deep .p-datepicker-inline::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Track color */
+  border-radius: 10px; /* Rounded corners */
+}
+
+:host ::ng-deep .p-datepicker-inline::-webkit-scrollbar-thumb {
+  background: #afafaf; /* Track color */
+  border-radius: 10px; /* Rounded corners */
+  border: 2px solid #f0f0f0; /* Adds space between thumb and track */
+}
+
+:host ::ng-deep .p-datepicker-inline::-webkit-scrollbar-thumb:hover {
+  background: #afafaf; /* Track color */
 }

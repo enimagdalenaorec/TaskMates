@@ -48,7 +48,8 @@ export class GroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.groupId = this.route.snapshot.paramMap.get('id')!;
-    this.groupName = this.route.snapshot.paramMap.get('groupName')!;
+    this.groupName = decodeURIComponent(this.route.snapshot.paramMap.get('groupName')!);
+    console.log(this.groupName)
     this.fetchGroupTasksInfo();
     this.startTimerUpdates();
     this.fetchGroupMembers();
@@ -68,7 +69,7 @@ export class GroupComponent implements OnInit {
       next: (response) => {
         this.tasks = response.tasks || [];
         //if not in url tak egroupName from first task
-        if (this.groupName === '' || this.groupName === null) {
+        if ( this.groupName === "null" || this.groupName === '' || this.groupName === "undefined") {
           this.groupName = this.tasks[0].groupName;
         }
         this.filteredTasks = this.tasks; // Display all tasks initially

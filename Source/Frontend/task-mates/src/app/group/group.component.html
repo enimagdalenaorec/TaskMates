@@ -7,7 +7,7 @@
           <!-- add task and filter task -->
           <div class="flex justify-content-end align-items-center mb-4">
             <i (click)="op.toggle($event)" pTooltip="Filter by task status" tooltipPosition="bottom"
-              class="pi pi-filter mr-3 align-self-start" style="margin-top: 0.7rem; font-size: 1.5rem; color:rgba(43, 139, 118, 0.5);;"></i>
+              class="pi pi-filter mt-2 mr-3 align-self-center" style="font-size: 1.5rem; color:rgba(43, 139, 118, 0.5);;"></i>
             <p-overlayPanel #op >
               <p class="mb-1 mt-2 filter-option" (click)="filterTasks('Available')">Available</p>
               <hr>
@@ -19,10 +19,8 @@
               <hr>
               <p class="mt-2 filter-option" (click)="filterTasks(null)">All</p>
             </p-overlayPanel>
-            <div class="flex flex-column">
             <p-button label="Add Task" class="mt-2 mr-2" (click)="navigateToAddTask()"></p-button>
             <p-button label="Exit group" class="mt-2 mr-2" (click)="leaveGroup()"></p-button>
-            </div>
 
           </div>
           <!-- display of tasks -->

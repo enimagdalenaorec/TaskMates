@@ -104,17 +104,14 @@ export class CreateGroupComponent {
     this.http.post<any>(this.apiUrl + '/groups/create', body).subscribe({
       next: (response) => {
         console.log('Group created successfully:', response);
-        alert('Group created successfully!');
 
         if (response.id) {
-          this.router.navigate(['/group', response.id]); // Navigate to the group's page
+          this.router.navigate(['/my-groups']); // Navigate to the group's page
         } else {
-          alert('Group ID not found in the response.');
         }
       },
       error: (error) => {
         console.error('Error creating group:', error);
-        alert('Failed to create group.');
       },
     });
 

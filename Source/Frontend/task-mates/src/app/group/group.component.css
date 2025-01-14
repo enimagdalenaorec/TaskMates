@@ -26,6 +26,7 @@
   height: auto;
   display: flex;
   flex-direction: column;
+  max-width: 30%;
 }
 
 @media (max-width: 787px) {

@@ -24,7 +24,6 @@ interface Group {
 })
 export class MyGroupsComponent {
 
-  cardImagePath = "images/group_images/picture1.jpg";
   searchQuery = '';
   groups: any[] = [];
   apiUrl = 'http://localhost:8000/api/groups/'; // Django API endpoint

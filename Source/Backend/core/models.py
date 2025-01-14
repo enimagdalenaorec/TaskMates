@@ -130,8 +130,8 @@ class Task(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
-        if self.max_capacity < 1 or self.max_capacity > 5:
-            raise ValueError("Max capacity must be between 1 and 5.")
+        if self.max_capacity < 1 :
+            raise ValueError("Max capacity must be 1 or more.")
         super().save(*args, **kwargs)
 
     def __str__(self):
