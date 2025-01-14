@@ -146,6 +146,23 @@ export class GroupComponent implements OnInit {
     });
   }
 
+  leaveGroup(): void {
+    this.http.post<{ members: any[] }>(`${this.apiUrl}/groups/leave`, { groupId: this.groupId }).subscribe({
+      next: (response) => {
+        console.log('Successfully left the group. Updated members:', response.members);
+        this.fetchGroupMembers;
+        this.router.navigate(['/my-groups']);
+
+      },
+      error: (error) => {
+        console.error('Error leaving the group:', error);
+      }
+    });
+  }
+  
+  
+
+
   showDialog() {
     this.visible = true;
 }

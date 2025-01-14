@@ -42,7 +42,7 @@ export class ProfileComponent implements OnInit {
   apiUrl = 'http://localhost:8000/api'; // Django API endpoints
 
   userInfo: any = {
-    profilePicture: 'images/previewPicture.png',
+    profilePicture: null,
     username: '',
     email: ''
   };

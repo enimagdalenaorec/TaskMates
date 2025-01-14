@@ -18,8 +18,8 @@
     </div>
 
     <!-- Group Cards Grid -->
-    <div class="grid gap-3">
-      <div *ngFor="let group of groups" class="sm:col-3 md:col-3 lg:col-3 p-p-2 ">
+    <div class=" gap-3 grid-container">
+      <div *ngFor="let group of groups" class="p-2">
         <p-card class="border-round-sm"
                 header="{{ group.name }}"
                 (click)="navigateToGroup(group.id, group.name)">
