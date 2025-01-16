@@ -71,18 +71,19 @@ def create_group(request):
     serializer = CreateGroupSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     name = serializer.validated_data['name']
-    if serializer.validated_data['image']:
-        imagebase64=serializer.validated_data['image'] #'image' is 64bit image
-        image_data = imagebase64[22:]
+    image_url = None  # Zadana vrijednost za slučaj da nema slike
+
+    if 'image' in serializer.validated_data and serializer.validated_data['image']:
+        image_base64 = serializer.validated_data['image']  # 'image' is base64 encoded
+        image_data = image_base64[22:]
         image_data = base64.b64decode(image_data)
         image_content = ContentFile(image_data, name="group_image.png")
         upload_result = cloudinary.uploader.upload(image_content)
         image_url = upload_result['url']
-    else:
-        image_url=None
-    try:
 
+    try:
         # Create the group
         group = Group.objects.create(name=name, image=image_url)
 
@@ -95,9 +96,7 @@ def create_group(request):
             "image_url": image_url  # Return the image URL in the response
         }, status=status.HTTP_201_CREATED)
     except Exception as e:
-        return Response({
-            "error": str(e)
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
