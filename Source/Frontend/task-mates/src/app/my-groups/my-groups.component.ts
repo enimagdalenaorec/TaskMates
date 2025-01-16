@@ -27,8 +27,8 @@ export class MyGroupsComponent {
   searchQuery = '';
   groups: any[] = [];
   apiUrl = 'http://localhost:8000/api/groups/'; // Django API endpoint
-  
- 
+
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -58,6 +58,7 @@ export class MyGroupsComponent {
           (response) => {
             console.log('Successfully joined group:', response);
             this.fetchGroups();
+            this.searchQuery = '';
             //this.router.navigate(['/group', response.id]);  // Navigacija na grupu (opcionalno)
           },
           (error) => {
