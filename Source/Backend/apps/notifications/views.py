@@ -14,7 +14,8 @@ def get_notifications(request):
     data = [
         {
             'message': n.message,
-            'sent_at': format(n.time_sent_at, 'Y-m-d H:i:s')  # Formatirano vrijeme
+            'sent_at': format(n.time_sent_at, 'Y-m-d H:i:s'),  # Formatirano vrijeme
+            'is_read': n.is_read
         }
         for n in notifications
     ]

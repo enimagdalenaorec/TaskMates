@@ -48,7 +48,14 @@ SECRET_KEY = 'django-insecure-kyd!0nh_+y+u8*g8s(ts7dm2*kbkb@h@#)j(9_wdt+g)&7sprv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '116.203.134.67', #cronjob ip
+    '116.203.129.16', #cronjob ip
+    '23.88.105.37',   #cronjob ip
+    '128.140.8.200'   #cronjob ip
+]
 
 SITE_ID=3
 # Application definition
@@ -76,8 +83,21 @@ INSTALLED_APPS = [
     'corsheaders',
     'oauth2_provider',
     'cloudinary', 
-    'cloudinary_storage'
+    'cloudinary_storage',
+    'django_q',
+    'apps'
 ]
+
+Q_CLUSTER = {
+    'name': 'DjangoQ2',
+    'workers': 4,
+    'retry': 60,
+    'timeout': 300,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'bulk': 10,
+    'orm': 'default',  # Uses Django's ORM
+}
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 

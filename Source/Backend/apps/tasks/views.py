@@ -3,12 +3,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN
 from django.utils import timezone
-from core.models import Task, UserTask, Group, Rating, GroupUser
+from core.models import Task, UserTask, Group, Rating, GroupUser, Notification
 import cloudinary.uploader
 import base64
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.conf import settings
+from myproject.utils.emailsender import send_email
 
 cloudinary.config(
     cloud_name=settings.CLOUDINARY['CLOUD_NAME'],
@@ -163,6 +164,14 @@ def add_task(request):
             group=group,
             picture=None
         )
+        group_members = GroupUser.objects.filter(group=task.group)
+        for member in group_members:
+            Notification.objects.create(
+                reciever=member.user,  # Send notification to each user in the group
+                message=f"A new task '{task.name}' in group '{task.group.name}' has been created.",
+            )
+            send_email(member.user.email,'New task created',f"A new task '{task.name}' in group '{task.group.name}' has been created.")
+
     except ValueError as e:
         return Response({"error": str(e)}, status=HTTP_400_BAD_REQUEST)
 
@@ -257,6 +266,14 @@ def finish_task(request):
     task.picture=image_url
     task.status = 'finished'
     task.save()
+
+    group_members = GroupUser.objects.filter(group=task.group)
+    for member in group_members:
+        Notification.objects.create(
+            reciever=member.user,  # Send notification to each user in the group
+            message=f"The task '{task.name}' in group '{task.group.name}' has been marked as finished.",
+        )
+        send_email(member.user.email,'Task finished',f"The task '{task.name}' in group '{task.group.name}' has been marked as finished.")
     return Response({"message": "success"}, status=HTTP_200_OK)
 
 @api_view(['POST'])
@@ -300,3 +317,6 @@ def review_task(request):
     # 5) Kreiramo novi zapis u Rating jer su svi uvjeti zadovoljeni
     Rating.objects.create(sender=request.user, task=task, value=value_int)
     return Response({"message": "success"}, status=HTTP_200_OK)
+
+
+

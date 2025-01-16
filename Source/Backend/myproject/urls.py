@@ -27,4 +27,5 @@ urlpatterns = [
     path('api/tasks/', include('apps.tasks.urls')), 
     path('accounts/',include("allauth.urls")), 
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('management/', include('apps.management.urls')),
 ]

@@ -46,6 +46,7 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     time_sent_at = models.DateTimeField(default=timezone.now)  # Automatically set to current time
     message = models.TextField()  # Field to store the notification message
+    unique_identifier = models.CharField(max_length=255, unique=True, null=True, blank=True)
     reciever = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # References your custom User model
         on_delete=models.CASCADE,  # Deletes notifications if the user is deleted
@@ -88,6 +89,7 @@ class GroupUser(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)  # Reference to Group
     points = models.IntegerField(default=0)
     tasks_solved = models.IntegerField(default=0)
+    
     class Meta:
         unique_together = ('user', 'group')  # Ensure a user can only join a group once
 
@@ -100,6 +102,7 @@ class Task(models.Model):
     picture = models.URLField(null=True, blank=True)  # Field for task image
       #setup media root
     deadline = models.DateTimeField(default=timezone.now)  # Deadline for task completion
+    created_at = models.DateTimeField(auto_now_add=True)
     STATUS_CHOICES = [
         ('full', 'Full'),
         ('available', 'Available'),

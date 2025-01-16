@@ -235,10 +235,11 @@ export class ProfileComponent implements OnInit {
     this.http.get<any>(`${this.apiUrl}/accounts/logout`).subscribe({
       next: () => {
         console.log('Logged out successfully');
-        this.router.navigate(['/login'])
+        this.router.navigate(['/home'])
       },
       error: (error) => {
         console.error('Logout failed', error);
+        this.router.navigate(['/home'])
       }
     });
     // Example: Navigate to login page
