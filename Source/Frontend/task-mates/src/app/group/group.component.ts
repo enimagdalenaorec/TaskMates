@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ApplicationRef, NgZone } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../models/tasks';
+import { Member } from '../../models/members';
+import { interval, Subscription, first, lastValueFrom } from 'rxjs';
+
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
-import { interval, Subscription } from 'rxjs';
-import { ApplicationRef } from '@angular/core';
-import { first } from 'rxjs/operators';
-import { NgZone } from '@angular/core';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Member } from '../../models/members';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+
+import { ChatClientService, ChannelService, StreamI18nService, StreamChatModule } from 'stream-chat-angular';
+import { TranslateModule } from '@ngx-translate/core';
+
+import { Secret } from '../../../secret';
 
 interface TimeLeft {
   days: number;
@@ -25,9 +27,20 @@ interface TimeLeft {
 @Component({
   selector: 'app-group',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, TabViewModule, ButtonModule, TooltipModule, OverlayPanelModule, DialogModule, InputTextModule],
+  imports: [
+    HttpClientModule,
+    CommonModule,
+    TabViewModule,
+    ButtonModule,
+    TooltipModule,
+    OverlayPanelModule,
+    DialogModule,
+    InputTextModule,
+    StreamChatModule,
+    TranslateModule
+  ],
   templateUrl: './group.component.html',
-  styleUrl: './group.component.css'
+  styleUrl: './group.component.css',
 })
 export class GroupComponent implements OnInit {
   groupId: string = '';
@@ -42,18 +55,70 @@ export class GroupComponent implements OnInit {
   visible: boolean = false;
   groupCode: string = '';
 
-  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, private applicationRef: ApplicationRef, private ngZone: NgZone  ) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private applicationRef: ApplicationRef,
+    private ngZone: NgZone,
+    private chatService: ChatClientService,
+    private channelService: ChannelService,
+    private streamI18nService: StreamI18nService
+  ) {
+    // Ako želite odmah učitati prijevode
+    this.streamI18nService.setTranslation();
   }
 
-
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // 1) Dohvat parametara iz URL-a
     this.groupId = this.route.snapshot.paramMap.get('id')!;
     this.groupName = decodeURIComponent(this.route.snapshot.paramMap.get('groupName')!);
-    console.log(this.groupName)
+    console.log('Group name:', this.groupName);
+
+    // 2) Fetch osnovnih podataka (tasks, members, link i sl.)
     this.fetchGroupTasksInfo();
     this.startTimerUpdates();
     this.fetchGroupMembers();
     this.fetchGroupLinkAndCode();
+
+    // 3) Dohvati chat token, pa inicijaliziraj klijenta
+    const apiKey = new Secret().apiKey;
+    const userId = '4'; // primjerice
+    // Napomena: za starije verzije stream-chat-angular potpis je (apiKey, user, userToken)
+    // pa user mora biti drugi parametar, a userToken treći.
+
+    try {
+      const tokenResponse = await lastValueFrom(
+        this.http.get<{ token: string }>('http://localhost:8000/api/groups/get_token')
+      );
+      const userToken = tokenResponse.token;
+      console.log('User token:', userToken);
+
+      // Pozivamo init asinkrono, s točnim redoslijedom parametara
+      // prema starijoj definiciji: init(apiKey, user, userToken)
+      await this.chatService.init(apiKey, { id: userId }, userToken);
+      console.log('Chat client init done.');
+
+      // 4) Tek sad možemo kreirati kanal (chatClient više nije undefined)
+      const channel = this.chatService.chatClient.channel('messaging', this.groupId, {
+        name: this.groupName,
+        members:
+            this.members.map((m) => m.userId.toString())
+        ,
+      });
+      await channel.create();
+      console.log('Channel created:', channel);
+
+      // 5) Podesimo channelService za <stream-channel-list> ili <stream-channel> da zna koje kanale pretražiti
+      this.channelService.init({
+        type: 'messaging',
+        id: { $eq: this.groupId },
+      });
+      console.log('ChannelService initialized with filter for group:', this.groupId);
+
+    } catch (error) {
+      console.error('Error fetching token or initializing chat client:', error);
+    }
   }
 
   ngOnDestroy(): void {
@@ -62,23 +127,67 @@ export class GroupComponent implements OnInit {
     }
   }
 
+  // ========== Fetch funkcije za tasks, members, itd. ==========
 
   fetchGroupTasksInfo(): void {
-    // Fetch group tasks info using the group ID
-    this.http.post<{ tasks: any[] }>(this.apiUrl + '/tasks/getTasksByGroupId', { groupId: this.groupId }).subscribe({
-      next: (response) => {
-        this.tasks = response.tasks || [];
-        //if not in url tak egroupName from first task
-        if ( this.groupName === "null" || this.groupName === '' || this.groupName === "undefined") {
-          this.groupName = this.tasks[0].groupName;
-        }
-        this.filteredTasks = this.tasks; // Display all tasks initially
-        this.initializeTimeLeft();
-        // console.log('Group tasks:', response.tasks);
-      },
-      error: (error) => {
-        console.error('Error fetching group tasks:', error);
-      }
+    this.http
+      .post<{ tasks: any[] }>(this.apiUrl + '/tasks/getTasksByGroupId', { groupId: this.groupId })
+      .subscribe({
+        next: (response) => {
+          this.tasks = response.tasks || [];
+          // Ako parametar u URL-u nije dobar, uzmemo ime iz prvog taska
+          if (
+            this.groupName === 'null' ||
+            this.groupName === '' ||
+            this.groupName === 'undefined'
+          ) {
+            this.groupName = this.tasks[0]?.groupName || '';
+          }
+          this.filteredTasks = this.tasks;
+          this.initializeTimeLeft();
+        },
+        error: (error) => {
+          console.error('Error fetching group tasks:', error);
+        },
+      });
+  }
+
+  fetchGroupMembers(): void {
+    this.http
+      .post<{ members: any[] }>(this.apiUrl + '/groups/getAllMembers', { group_id: this.groupId })
+      .subscribe({
+        next: (response) => {
+          this.members = response.members || [];
+          console.log('Group members:', this.members);
+        },
+        error: (error) => {
+          console.error('Error fetching group members:', error);
+        },
+      });
+  }
+
+  fetchGroupLinkAndCode(): void {
+    this.http
+      .post<{ code: string; link: string }>(this.apiUrl + '/groups/getGroupCodeLink', { group_id: this.groupId })
+      .subscribe({
+        next: (response) => {
+          this.groupCode = response.code;
+        },
+        error: (error) => {
+          console.error('Error fetching group link and code:', error);
+        },
+      });
+  }
+
+  // ========== Timer i deadline logika ==========
+
+  startTimerUpdates(): void {
+    this.applicationRef.isStable.pipe(first((isStable: boolean) => isStable)).subscribe(() => {
+      this.ngZone.run(() => {
+        setInterval(() => {
+          this.updateAllTimeLeft();
+        }, 60000);
+      });
     });
   }
 
@@ -88,37 +197,23 @@ export class GroupComponent implements OnInit {
     });
   }
 
+  updateAllTimeLeft(): void {
+    for (const task of this.tasks) {
+      this.timeLeft[task.id] = this.calculateTimeLeft(task.ts_deadline);
+    }
+  }
+
   calculateTimeLeft(deadline: string): TimeLeft {
     const deadlineDate = new Date(deadline);
     const now = new Date();
     const timeDiff = deadlineDate.getTime() - now.getTime();
 
     const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hours = Math.floor(
+      (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
     const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-
     return { days, hours, minutes };
-  }
-
-  startTimerUpdates(): void {
-    this.applicationRef.isStable.pipe(first((isStable: boolean) => isStable)).subscribe(() => {
-      // this.timeUpdateSubscription = interval(60000).subscribe(() => {
-      //      this.updateAllTimeLeft();
-      //      console.log('Timer updated');
-      //    });
-      this.ngZone.run(() => {
-        setInterval(() => {
-          this.updateAllTimeLeft();
-          // console.log('Timer triggered');
-        }, 60000);
-      });
-    });
-  }
-
-  updateAllTimeLeft(): void {
-    for (const task of this.tasks) {
-      this.timeLeft[task.id] = this.calculateTimeLeft(task.ts_deadline);
-    }
   }
 
   isDeadlinePassed(deadline: string): boolean {
@@ -129,61 +224,42 @@ export class GroupComponent implements OnInit {
 
   filterTasks(status: string | null): void {
     if (status) {
-      this.filteredTasks = this.tasks.filter((task) => task.status === status.toLowerCase());
+      this.filteredTasks = this.tasks.filter(
+        (task) => task.status === status.toLowerCase()
+      );
     } else {
       this.filteredTasks = [...this.tasks];
     }
   }
 
-  fetchGroupMembers(): void {
-    this.http.post<{ members: any[] }>(this.apiUrl + '/groups/getAllMembers', { group_id: this.groupId }).subscribe({
-      next: (response) => {
-        this.members = response.members || [];
-        // console.log('Group members:', response.members);
-      },
-      error: (error) => {
-        console.error('Error fetching group members:', error);
-      }
-    });
-  }
+  // ========== Ostale metode ==========
 
   leaveGroup(): void {
-    this.http.post<{ members: any[] }>(`${this.apiUrl}/groups/leave`, { groupId: this.groupId }).subscribe({
-      next: (response) => {
-        console.log('Successfully left the group. Updated members:', response.members);
-        this.fetchGroupMembers;
-        this.router.navigate(['/my-groups']);
-
-      },
-      error: (error) => {
-        console.error('Error leaving the group:', error);
-      }
-    });
+    this.http
+      .post<{ members: any[] }>(`${this.apiUrl}/groups/leave`, {
+        groupId: this.groupId,
+      })
+      .subscribe({
+        next: (response) => {
+          console.log('Successfully left the group. Updated members:', response.members);
+          this.fetchGroupMembers();
+          this.router.navigate(['/my-groups']);
+        },
+        error: (error) => {
+          console.error('Error leaving the group:', error);
+        },
+      });
   }
-  
-  
-
 
   showDialog() {
     this.visible = true;
-}
+  }
 
-copyToClipboard(text: string): void {
+  copyToClipboard(text: string): void {
     navigator.clipboard.writeText(text).then(() => {
-        // console.log('Group code copied to clipboard');
+      // console.log('Group code copied to clipboard');
     });
-}
-
-fetchGroupLinkAndCode(): void {
-    this.http.post<{ code: string, link: string }>(this.apiUrl + '/groups/getGroupCodeLink', { group_id: this.groupId }).subscribe({
-      next: (response) => {
-        this.groupCode = response.code;
-      },
-      error: (error) => {
-        console.error('Error fetching group link and code:', error);
-      }
-    });
-}
+  }
 
   navigate(location: string): void {
     this.router.navigate([location]);

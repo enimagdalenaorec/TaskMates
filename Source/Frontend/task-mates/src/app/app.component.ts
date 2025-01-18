@@ -13,7 +13,6 @@ import { CalendarModule } from 'primeng/calendar';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TaskService } from './Services/TaskService/task.service';
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -34,7 +33,7 @@ export class AppComponent implements OnInit {
   markedDates: { [key: string]: { icon: string, id: number } } = {}; // Store dates with their corresponding icons and task IDs
 
 
-  constructor(private router: Router, private taskService: TaskService, 
+  constructor(private router: Router, private taskService: TaskService,
     private breakpointObserver: BreakpointObserver, private http: HttpClient
   ) {
   }
@@ -70,7 +69,7 @@ export class AppComponent implements OnInit {
 
     this.taskService.fetchTasksForCalendar();
 
-    
+
   }
 
   parseDeadlines(): void {

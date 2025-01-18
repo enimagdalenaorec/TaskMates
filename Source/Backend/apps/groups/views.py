@@ -10,6 +10,8 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.decorators import api_view, permission_classes
+import stream_chat
+from secret import apiKey, apiSecret
 
 
  
@@ -168,3 +170,15 @@ def leave_group(request):
 
     group_user.delete()  # Remove the user's membership from the group
     return Response({"message": "success"}, status=status.HTTP_200_OK)
+
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_token(request):
+    server_client = stream_chat.StreamChat(
+    api_key= apiKey, api_secret= apiSecret
+    )
+    userId = str(request.user.id)
+    token = server_client.create_token(userId)
+
+    return Response({"token": token}, status=status.HTTP_200_OK)
