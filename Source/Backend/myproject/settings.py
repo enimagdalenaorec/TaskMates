@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from chat_secrets import ACCOUNT_SID, AUTH_TOKEN, API_KEY, API_SECRET, CHAT_SERVICE_SID
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -249,3 +250,10 @@ AUTHENTICATION_BACKENDS=("django.contrib.auth.backends.ModelBackend","allauth.ac
 
 LOGIN_REDIRECT_URL="http://localhost:4200/my-groups"
 LOGOUT_REDIRECT_URL="http://localhost:4200/my-groups"
+
+TWILIO_ACCOUNT_SID = ACCOUNT_SID
+TWILIO_AUTH_TOKEN = AUTH_TOKEN
+TWILIO_API_KEY = API_KEY
+TWILIO_API_SECRET = API_SECRET
+TWILIO_CHAT_SERVICE_SID = CHAT_SERVICE_SID
+

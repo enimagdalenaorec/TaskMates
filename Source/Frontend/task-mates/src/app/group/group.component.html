@@ -81,9 +81,18 @@
     </p-tabView>
   </div>
   <div class="right-content border-round-md flex">
-    <p class="p-3 text-4xl">{{this.groupName}}</p>
     <div class="mr-3 ml-3 mb-3 border-round-md groupchat">
-
+      <div class="messages">
+        <div *ngFor="let msg of messages">
+          <p>{{ msg.author }}: {{ msg.body }}</p>
+        </div>
+      </div>
+      <input
+        type="text"
+        [(ngModel)]="currentMessage"
+        placeholder="Type a message"
+      />
+      <button pButton (click)="sendMessage()">Send</button>
     </div>
   </div>
 </div>

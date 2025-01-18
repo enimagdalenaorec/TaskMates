@@ -15,6 +15,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { Member } from '../../models/members';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { ChatService } from '../Services/GroupChat/group-chat.service';
 
 interface TimeLeft {
   days: number;
@@ -41,12 +42,15 @@ export class GroupComponent implements OnInit {
   members: Member[] = [];
   visible: boolean = false;
   groupCode: string = '';
+  messages: any[] = [];
+  currentMessage = '';
+  conversation: any;
 
-  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, private applicationRef: ApplicationRef, private ngZone: NgZone  ) {
+  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient, private applicationRef: ApplicationRef, private ngZone: NgZone, private chatService: ChatService  ) {
   }
 
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.groupId = this.route.snapshot.paramMap.get('id')!;
     this.groupName = decodeURIComponent(this.route.snapshot.paramMap.get('groupName')!);
     console.log(this.groupName)
@@ -54,7 +58,24 @@ export class GroupComponent implements OnInit {
     this.startTimerUpdates();
     this.fetchGroupMembers();
     this.fetchGroupLinkAndCode();
+
+    await this.chatService.initialize('user1');
+
+    // Get or create a conversation (use group ID or unique name)
+    this.conversation = await this.chatService.getOrCreateConversation('group123');
+
+    // Subscribe to new messages
+    this.chatService.onNewMessage(this.conversation, (message: any) => {
+      this.messages.push(message);
+    });
   }
+
+  async sendMessage() {
+    if (this.currentMessage.trim() !== '') {
+      await this.chatService.sendMessage(this.conversation, this.currentMessage);
+      this.currentMessage = '';
+    }
+  }
 
   ngOnDestroy(): void {
     if (this.timeUpdateSubscription) {

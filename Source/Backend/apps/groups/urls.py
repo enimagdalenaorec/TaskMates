@@ -8,5 +8,5 @@ urlpatterns = [
     path('getAllMembers', views.get_all_members, name='get_all_members'),
     path('getGroupCodeLink', views.get_group_code, name='get_group_code'),
     path('leave', views.leave_group, name='leave_group'),  # Dodan URL za leave_group
-
+    path('twilio/token/', views.get_twilio_token, name='twilio_token')
 ]

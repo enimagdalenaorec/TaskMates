@@ -10,7 +10,8 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.decorators import api_view, permission_classes
-
+from django.http import JsonResponse
+from core.twilio_utils import generate_twilio_token
 
  
 cloudinary.config(
@@ -168,3 +169,11 @@ def leave_group(request):
 
     group_user.delete()  # Remove the user's membership from the group
     return Response({"message": "success"}, status=status.HTTP_200_OK)
+
+def get_twilio_token(request):
+    identity = request.GET.get("identity")  # Example: Get identity from query params
+    if not identity:
+        return JsonResponse({"error": "Identity is required"}, status=400)
+
+    token = generate_twilio_token(identity)
+    return JsonResponse({"token": token.decode("utf-8")})
