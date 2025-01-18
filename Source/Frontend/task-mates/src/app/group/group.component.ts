@@ -85,6 +85,14 @@ export class GroupComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
+    const refreshRequired = localStorage.getItem('chatReloadRequired') === 'true';
+     if (refreshRequired) {
+    // The flag doesn't exist, trigger reload and set flag to 'true'
+    localStorage.removeItem('chatReloadRequired');
+    window.location.reload(); // Trigger page reload
+    return; // Exit early to avoid the rest of the initialization
+  }
+
    this.fetchBasicUserInfo();
    await new Promise(resolve => setTimeout(resolve, 100));
     // 1) Dohvat parametara iz URL-a
@@ -135,6 +143,8 @@ export class GroupComponent implements OnInit {
         id: { $eq: this.groupId },
       });
       console.log('ChannelService initialized with filter for group:', this.groupId);
+
+      localStorage.setItem('chatReloadRequired', 'true');
 
     } catch (error) {
       console.error('Error fetching token or initializing chat client:', error);
