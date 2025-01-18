@@ -17,6 +17,9 @@ import { ChatClientService, ChannelService, StreamI18nService, StreamChatModule 
 import { TranslateModule } from '@ngx-translate/core';
 
 import { Secret } from '../../../secret';
+import { textareaInjectionToken } from 'stream-chat-angular';
+import { TextFieldModule } from '@angular/cdk/text-field';
+
 
 interface TimeLeft {
   days: number;
@@ -37,7 +40,11 @@ interface TimeLeft {
     DialogModule,
     InputTextModule,
     StreamChatModule,
-    TranslateModule
+    TranslateModule,
+    TextFieldModule
+  ],
+  providers: [
+    { provide: textareaInjectionToken, useValue: {} }
   ],
   templateUrl: './group.component.html',
   styleUrl: './group.component.css',
@@ -98,6 +105,14 @@ export class GroupComponent implements OnInit {
       // prema starijoj definiciji: init(apiKey, user, userToken)
       await this.chatService.init(apiKey, { id: userId }, userToken);
       console.log('Chat client init done.');
+
+      await this.chatService.chatClient.connectUser(
+        {
+          id: userId,
+          name: 'eni' // Replace with the actual user name
+        },
+        userToken
+      );
 
       // 4) Tek sad možemo kreirati kanal (chatClient više nije undefined)
       const channel = this.chatService.chatClient.channel('messaging', this.groupId, {

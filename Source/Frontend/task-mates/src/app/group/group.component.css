@@ -145,3 +145,32 @@
 :host ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon {
   color: white;
 }
+
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  height: 100%;
+
+  stream-channel {
+    width: 100%;
+  }
+
+  stream-thread {
+    width: 45%;
+  }
+}
+
+:host ::ng-deep .stream-chat__paginated-list {
+  display: none;
+  height: 0;
+  width: 0;
+}
