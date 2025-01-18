@@ -62,6 +62,12 @@ export class GroupComponent implements OnInit {
   members: Member[] = [];
   visible: boolean = false;
   groupCode: string = '';
+  userInfo: any = {
+    profilePicture: null,
+    username: '',
+    email: '',
+    id: ''
+  };
 
   constructor(
     private router: Router,
@@ -78,6 +84,9 @@ export class GroupComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+
+   this.fetchBasicUserInfo();
+   await new Promise(resolve => setTimeout(resolve, 100));
     // 1) Dohvat parametara iz URL-a
     this.groupId = this.route.snapshot.paramMap.get('id')!;
     this.groupName = decodeURIComponent(this.route.snapshot.paramMap.get('groupName')!);
@@ -91,10 +100,7 @@ export class GroupComponent implements OnInit {
 
     // 3) Dohvati chat token, pa inicijaliziraj klijenta
     const apiKey = new Secret().apiKey;
-    const userId = '4'; // primjerice
-    // Napomena: za starije verzije stream-chat-angular potpis je (apiKey, user, userToken)
-    // pa user mora biti drugi parametar, a userToken treći.
-
+    const userId = this.userInfo.id.toString();
     try {
       const tokenResponse = await lastValueFrom(
         this.http.get<{ token: string }>('http://localhost:8000/api/groups/get_token')
@@ -102,15 +108,13 @@ export class GroupComponent implements OnInit {
       const userToken = tokenResponse.token;
       console.log('User token:', userToken);
 
-      // Pozivamo init asinkrono, s točnim redoslijedom parametara
-      // prema starijoj definiciji: init(apiKey, user, userToken)
       await this.chatService.init(apiKey, { id: userId }, userToken);
       console.log('Chat client init done.');
 
       await this.chatService.chatClient.connectUser(
         {
           id: userId,
-          name: 'eni' // Replace with the actual user name
+          name: this.userInfo.username
         },
         userToken
       );
@@ -143,7 +147,6 @@ export class GroupComponent implements OnInit {
     }
   }
 
-  // ========== Fetch funkcije za tasks, members, itd. ==========
 
   fetchGroupTasksInfo(): void {
     this.http
@@ -287,5 +290,18 @@ export class GroupComponent implements OnInit {
 
   navigateToAddTask(): void {
     this.router.navigate(['/add-task', this.groupId]);
+  }
+
+  fetchBasicUserInfo(): void {
+    this.http.get<{ profilePicture: string | null; username: string; email: string }>(
+      this.apiUrl + '/profile/get-basic-info'
+    ).subscribe({
+      next: (response) => {
+        this.userInfo = response; // Assign the entire response object
+      },
+      error: (error) => {
+        console.error('Error fetching user info:', error);
+      }
+    });
   }
 }

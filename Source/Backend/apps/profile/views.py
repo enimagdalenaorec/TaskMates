@@ -24,7 +24,8 @@ def get_basic_info(request):
     response = {
         "profilePicture": user.profile_picture,  # Dodaj stvarnu logiku za sliku profila ako je implementirano
         "username": user.username,
-        "email": user.email
+        "email": user.email,
+        "id": user.id
     }
     return Response(response, status=HTTP_200_OK)
 
