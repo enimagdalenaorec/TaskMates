@@ -11,6 +11,7 @@ import { MyHttpInterceptor } from './Services/Interceptor/http-interceptor.inter
 import { InjectionToken } from '@angular/core';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatInputModule } from '@angular/material/input';
+import { CustomMessageInputComponent } from './custom-message-input/custom-message-input.component';
 
 
 export function httpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -44,6 +45,6 @@ export const appConfig: ApplicationConfig = {
         },
       }),
     ),
-    { provide: textareaInjectionToken, useValue: {} },
+    { provide: textareaInjectionToken, useValue: CustomMessageInputComponent },
   ],
 };

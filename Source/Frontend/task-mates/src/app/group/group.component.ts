@@ -19,6 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Secret } from '../../../secret';
 import { textareaInjectionToken } from 'stream-chat-angular';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { CustomMessageInputComponent } from '../custom-message-input/custom-message-input.component';
 
 
 interface TimeLeft {
@@ -44,7 +45,7 @@ interface TimeLeft {
     TextFieldModule
   ],
   providers: [
-    { provide: textareaInjectionToken, useValue: {} }
+    { provide: textareaInjectionToken, useValue: CustomMessageInputComponent }
   ],
   templateUrl: './group.component.html',
   styleUrl: './group.component.css',

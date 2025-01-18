@@ -176,3 +176,18 @@ body {
   height: 0;
   width: 0;
 }
+
+:host ::ng-deep .str-chat__message-input .str-chat__message-input-inner .str-chat__file-input-container {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+:host ::ng-deep .str-chat__message-input .str-chat__send-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+:host ::ng-deep .str-chat__message-input .str-chat__message-input-inner .str-chat__message-textarea-container .str-chat__message-textarea-with-emoji-picker{
+display: block;}
