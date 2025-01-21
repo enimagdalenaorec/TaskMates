@@ -128,7 +128,7 @@ export class GroupComponent implements OnInit {
       );
 
       // 4) Tek sad možemo kreirati kanal (chatClient više nije undefined)
-      const channel = this.chatService.chatClient.channel('messaging', this.groupId, {
+      const channel = this.chatService.chatClient.channel('team', this.groupId, {
         name: this.groupName,
         members:
             this.members.map((m) => m.userId.toString())
@@ -139,7 +139,7 @@ export class GroupComponent implements OnInit {
 
       // 5) Podesimo channelService za <stream-channel-list> ili <stream-channel> da zna koje kanale pretražiti
       this.channelService.init({
-        type: 'messaging',
+        type: 'team',
         id: { $eq: this.groupId },
       });
       console.log('ChannelService initialized with filter for group:', this.groupId);
