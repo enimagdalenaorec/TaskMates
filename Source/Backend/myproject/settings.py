@@ -74,18 +74,19 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'core',
     'apps.calendar',
     'apps.groups',
     'apps.notifications',
+    'apps.management',
     'apps.tasks',
-    'core',
     'apps.accounts',
     'corsheaders',
     'oauth2_provider',
     'cloudinary', 
     'cloudinary_storage',
     'django_q',
-    'apps'
+    'apps',
 ]
 
 Q_CLUSTER = {

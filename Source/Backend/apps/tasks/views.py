@@ -10,6 +10,7 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from django.conf import settings
 from myproject.utils.emailsender import send_email
+from myproject.utils.taskupdate import update_status
 from threading import Thread
 
 cloudinary.config(
@@ -35,7 +36,7 @@ def get_task_by_id(request):
     except Task.DoesNotExist:
         return Response({"error": "Task not found"}, status=HTTP_404_NOT_FOUND)
 
-    task.update_status()
+    update_status(task)
 
     # 2. Dohvatiti članove koji sudjeluju
     user_tasks = UserTask.objects.filter(task=task)
@@ -97,7 +98,7 @@ def get_tasks_by_group(request):
     response_data = []
     for task in tasks:
         # Update the task's status before including it in the response
-        task.update_status()
+        update_status(task)
 
         user_tasks = UserTask.objects.filter(task=task)
         members = [{"name": ut.user.username} for ut in user_tasks]
@@ -218,7 +219,7 @@ def join_task(request):
         return Response({"error": "You are already participating in this task."}, status=HTTP_400_BAD_REQUEST)
 
     UserTask.objects.create(user=request.user, task=task)
-    task.update_status()
+    update_status(task)
     return Response({"message": "success"}, status=HTTP_200_OK)
 
 
@@ -244,7 +245,7 @@ def leave_task(request):
         return Response({"error": "You are not participating in this task."}, status=HTTP_400_BAD_REQUEST)
 
     user_task.delete()
-    task.update_status()
+    update_status(task)
     return Response({"message": "success"}, status=HTTP_200_OK)
 
 
@@ -276,6 +277,16 @@ def finish_task(request):
     task.status = 'finished'
     task.save()
 
+    user_tasks = UserTask.objects.filter(task=task)
+    for user_task in user_tasks:
+        user = user_task.user
+        group_user = GroupUser.objects.get(user=user, group=task.group)  # Find GroupUser for the task's group
+        
+        # Update the GroupUser with tasks_solved and points
+        group_user.tasks_solved += 1
+        group_user.points += task.points  # Assuming 'points' is a field on Task model
+        group_user.save()
+
     group_members = GroupUser.objects.filter(group=task.group)
     def send_emails():
         for member in group_members:
@@ -288,7 +299,7 @@ def finish_task(request):
                 'Task finished',
                 f"The task '{task.name}' in group '{task.group.name}' has been marked as finished.",
             )
-
+    
     # Start the email-sending task in a separate thread
     Thread(target=send_emails).start()
     return Response({"message": "success"}, status=HTTP_200_OK)

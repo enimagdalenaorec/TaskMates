@@ -116,21 +116,6 @@ class Task(models.Model):
     points = models.IntegerField(default=100)  # Points associated with the task (can be negative)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, default=1) 
     
-    def update_status(self):
-        current_capacity = UserTask.objects.filter(task=self).count()
-        if self.status == 'finished' or self.status == 'failed':
-            return  # Ne mijenjamo status ako je završen ili neuspješan
-
-        if current_capacity >= self.max_capacity:
-            self.status = 'full'
-        elif current_capacity < self.max_capacity:
-            self.status = 'available'
-
-        now = timezone.now()
-        if self.deadline < now:
-            self.status = 'failed'
-
-        self.save()
 
     def save(self, *args, **kwargs):
         if self.max_capacity < 1 :
