@@ -149,6 +149,8 @@ export class GroupComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching token or initializing chat client:', error);
     }
+
+    this.fetchLeaderboardUrl();
   }
 
   ngOnDestroy(): void {
@@ -157,6 +159,18 @@ export class GroupComponent implements OnInit {
     }
   }
 
+  fetchLeaderboardUrl(): void {
+    this.http
+      .post<{ url: string }>(this.apiUrl + '/groups/show_scoreboards', { group_id: this.groupId })
+      .subscribe({
+        next: (response) => {
+          console.log('Leaderboard URL:', response.url);
+        },
+        error: (error) => {
+          console.error('Error fetching leaderboard URL:', error);
+        },
+      });
+  }
 
   fetchGroupTasksInfo(): void {
     this.http
