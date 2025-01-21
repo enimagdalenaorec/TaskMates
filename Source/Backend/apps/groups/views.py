@@ -12,8 +12,10 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 import stream_chat
 from secret import apiKey, apiSecret
-
-
+from myproject.utils.pushtogeckoboard import push_to_geckoboard
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
  
 cloudinary.config(
     cloud_name=settings.CLOUDINARY['CLOUD_NAME'],
@@ -182,3 +184,22 @@ def get_token(request):
     token = server_client.create_token(userId)
 
     return Response({"token": token}, status=status.HTTP_200_OK)
+
+@csrf_exempt
+def show_scoreboards(request):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON body to extract group_id
+            data = json.loads(request.body)
+            group_id = data.get('group_id')
+
+            if not group_id:
+                return JsonResponse({"message": "group_id is required."}, status=400)
+
+            # Call the push_to_geckoboard function
+            response = push_to_geckoboard(group_id)
+            return response
+        except Exception as e:
+            return JsonResponse({"message": "An error occurred.", "error": str(e)}, status=500)
+    else:
+        return JsonResponse({"message": "Invalid request method. Use POST."}, status=405)
