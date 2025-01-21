@@ -87,7 +87,7 @@ export class TaskComponent implements OnInit {
 
   get adjustedPoints(): number {
     if (this.task?.status === 'failed' && this.isPerformingTask) {
-      return this.task?.points * 0.75; // Apply -25% if failed and performing task
+      return this.task?.points * 0.25; // Apply -25% if failed and performing task
     }
     return Number(this.task?.points); // Return original points if not failed or performing task
   }
@@ -100,7 +100,7 @@ export class TaskComponent implements OnInit {
 
     });
 
-    
+
   }
 
   fetchBasicUserInfo(): void {
@@ -189,7 +189,7 @@ export class TaskComponent implements OnInit {
           this.task.status = 'finished';
         }
         this.visible = false;
-       
+
       },
       error: (error) => {
         console.error('Error uploading picture:', error);
