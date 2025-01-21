@@ -134,7 +134,7 @@ export class GroupComponent implements OnInit {
       const channel = this.chatService.chatClient.channel('team', this.groupId, {
         name: this.groupName,
         members:
-            this.members.map((m) => m.userId.toString()),         
+            this.members.map((m) => m.userId.toString()),
       });
       await channel.create();
       console.log('Channel created:', channel);

@@ -19,8 +19,8 @@ export const routes: Routes = [
   {path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuardService]},
   {path: 'create-group', component: CreateGroupComponent, canActivate: [AuthGuardService]},
   {path: 'add-task/:group-id', component: AddTaskComponent, canActivate: [AuthGuardService]},
-  { path: 'group/:id/:groupName', component: GroupComponent, canActivate: [AuthGuardService] },
-  {path: 'group/:id', component: GroupComponent, canActivate: [AuthGuardService]},
+  { path: 'group/:id/:groupName', component: GroupComponent },
+  {path: 'group/:id', component: GroupComponent},
   {path: 'task/:id', component: TaskComponent, canActivate: [AuthGuardService]},
   {path: '**', redirectTo: ''},
 ];

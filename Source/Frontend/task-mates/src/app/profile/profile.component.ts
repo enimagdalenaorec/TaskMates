@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';  // Import FormsModule
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { profile } from 'node:console';
+import { AuthGuardService } from '../Services/AuthGuard/auth-guard.service';
 
 
 interface Task {
@@ -85,7 +86,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authGuardService: AuthGuardService
   ) { }
 
   ngOnInit(): void {
@@ -209,7 +211,7 @@ export class ProfileComponent implements OnInit {
     this.http.post<any>(`${this.apiUrl}/profile/change-profile-picture`, body).subscribe({
       next: (response) => {
         // Handle success
-        
+
         this.fetchBasicUserInfo();
         this.profilePictureModalVisible = false; // Close the modal
         this.messageService.add({
@@ -231,6 +233,7 @@ export class ProfileComponent implements OnInit {
 
 
   logout(): void {
+    this.authGuardService.logout();
     // Clear user session or navigate to login page
     this.http.get<any>(`${this.apiUrl}/accounts/logout`).subscribe({
       next: () => {
