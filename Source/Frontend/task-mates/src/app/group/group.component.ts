@@ -116,13 +116,16 @@ export class GroupComponent implements OnInit {
       const userToken = tokenResponse.token;
       console.log('User token:', userToken);
 
-      await this.chatService.init(apiKey, { id: userId }, userToken);
+      await this.chatService.init(apiKey, { id: userId ,image: this.members.find((m) => m.userId===userId)?.picture}, userToken);
       console.log('Chat client init done.');
+
 
       await this.chatService.chatClient.connectUser(
         {
+          image: this.members.find((m) => m.userId===userId)?.picture,
+         username:this.userInfo.username,
+          name: this.userInfo.username,
           id: userId,
-          name: this.userInfo.username
         },
         userToken
       );
@@ -131,8 +134,7 @@ export class GroupComponent implements OnInit {
       const channel = this.chatService.chatClient.channel('team', this.groupId, {
         name: this.groupName,
         members:
-            this.members.map((m) => m.userId.toString())
-        ,
+            this.members.map((m) => m.userId.toString()),         
       });
       await channel.create();
       console.log('Channel created:', channel);
