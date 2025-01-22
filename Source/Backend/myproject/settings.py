@@ -145,7 +145,7 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse('postgresql://taskmatesbaza_user:jEVvayAf0WpjNptEJCvvRx1rzou7pG6O@dpg-csqv74aj1k6c73c3savg-a.frankfurt-postgres.render.com/taskmatesbaza')                        # Port
+    'default': dj_database_url.parse('postgresql://taskmatesbaza_ctl9_user:XabwyUYFAhsWAdtFKgbMjK3kqIiQhdT3@dpg-cu8htn3tq21c73etln30-a.oregon-postgres.render.com/taskmatesbaza_ctl9')                        # Port
     }
 
 
