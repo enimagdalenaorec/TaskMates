@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 import mimetypes
@@ -21,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
-CSRF_TRUSTED_ORIGINS = ['https://taskmatesbackend-pd5h.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://taskmatesbackend.onrender.com']
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
 
@@ -67,8 +70,21 @@ INSTALLED_APPS = [
     'apps.tasks',
     'core',
     'apps.accounts',
-    'corsheaders'
+    'corsheaders',
+    'cloudinary',
+    'cloudinary_storage',
 ]
+
+Q_CLUSTER = {
+    'name': 'DjangoQ2',  # Naziv klastera za lakše praćenje i identifikaciju.
+    'workers': 4,        # Broj paralelnih radnika (workers) koji će izvršavati zadatke.
+    'retry': 60,         # Vrijeme (u sekundama) nakon kojeg se zadatak ponovno pokušava izvršiti u slučaju neuspjeha.
+    'timeout': 300,      # Maksimalno vrijeme (u sekundama) koje zadatak može trajati prije nego što istekne.
+    'save_limit': 250,   # Maksimalan broj zadataka čija se povijest čuva u bazi podataka.
+    'queue_limit': 500,  # Maksimalan broj zadataka u redu prije nego što se odbijaju novi.
+    'bulk': 10,          # Broj zadataka koje radnici mogu dohvatiti u jednom potezu.
+    'orm': 'default',    # Naziv ORM-a (Object-Relational Mapper) koji će se koristiti, obično `default`.
+}
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
@@ -113,12 +129,29 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-STORAGES = {
-    # ...
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
+# STORAGES = {
+#     # ...
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',  # Prva
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+} 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY = {
+    'CLOUD_NAME': 'djevedi2m',
+    'API_KEY': '397716242552879',
+    'API_SECRET': 'q1LekeTNsfPraq_u8WdRKdzNGDU',
 }
+MEDIA_URL="https://res.cloudinary.com/djevedi2m/"
 
 ROOT_URLCONF = 'myproject.urls'
 
@@ -199,5 +232,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS=("django.contrib.auth.backends.ModelBackend","allauth.account.auth_backends.AuthenticationBackend")
 
-LOGIN_REDIRECT_URL="https://taskmates-gjhi.onrender.com/my-groups"
-LOGOUT_REDIRECT_URL="https://taskmates-gjhi.onrender.com/my-groups"
+LOGIN_REDIRECT_URL="https://taskmates.onrender.com/my-groups"
+LOGOUT_REDIRECT_URL="https://taskmates.onrender.com/my-groups"
