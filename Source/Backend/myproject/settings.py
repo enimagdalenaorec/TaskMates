@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'oauth2.provider',
+    'oauth2_provider',
     'apps.calendar',
     'apps.groups',
     'apps.notifications',
