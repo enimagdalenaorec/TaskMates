@@ -42,7 +42,7 @@ export class AuthGuardService implements CanActivate {
 
   private isLoggedIn(): Observable<boolean> {
     return this.http
-      .post<{ is_authenticated: boolean }>('https://taskmatesbackend-pd5h.onrender.com/api/accounts/check_authentication', {}, { withCredentials: true } )
+      .post<{ is_authenticated: boolean }>('https://taskmatesbackend-pd5h.onrender.com/api/accounts/check_authentication', {})
       .pipe(
         map((response) => response.is_authenticated),
         catchError((error) => {
