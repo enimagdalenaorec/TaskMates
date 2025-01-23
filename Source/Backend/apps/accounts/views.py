@@ -7,14 +7,14 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import logout
 import uuid
 from rest_framework.permissions import AllowAny
-
+import sys
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def check_authentication(request):
     # Log the user and their authentication status
     #if request.user.is_authenticated:
-    print('request je ',request.user,request)
+    sys.stdout.write('request je ',request.user,request)
     return Response({'is_authenticated': True}, status=200)
     #else:
         #return Response({'is_authenticated': False}, status=200)
