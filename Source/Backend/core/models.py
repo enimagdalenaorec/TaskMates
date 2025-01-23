@@ -59,7 +59,7 @@ class Notification(models.Model):
 class Group(models.Model):
     name = models.CharField(max_length=100)  # Group name
     image = models.URLField(null=True, blank=True)   # Optional image for the group
-    join_code = models.PositiveSmallIntegerField(unique=True)  # Unique short integer for joining
+    join_code = models.PositiveIntegerField(unique=True)  # Unique short integer for joining
 
     def __str__(self):
         return self.name
