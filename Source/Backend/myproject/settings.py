@@ -14,8 +14,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Session konfiguracija (ako je potrebno)
-SESSION_COOKIE_SECURE = False  # Postavi na True u produkciji
-CSRF_COOKIE_SECURE = False   # Postavi na True u produkciji
+SESSION_COOKIE_SECURE = True  # Postavi na True u produkciji
+CSRF_COOKIE_SECURE = True     # Postavi na True u produkciji
 
 
 
@@ -232,33 +232,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-
-# settings.py
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'simple': {
-            'format': '{levelname} [{asctime}] {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',  # Using the custom simple formatter
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
 
 
 # Static files (CSS, JavaScript, Images)
