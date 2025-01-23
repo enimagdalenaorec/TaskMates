@@ -14,10 +14,10 @@ from django.views.decorators.csrf import csrf_exempt
 @permission_classes([AllowAny])
 def check_authentication(request):
     # Log the user and their authentication status
-    #if request.user.is_authenticated:
-    return Response({'is_authenticated': True}, status=200)
-    #else:
-        #return Response({'is_authenticated': False}, status=200)
+    if request.user.is_authenticated:
+        return Response({'is_authenticated': True}, status=200)
+    else:
+        return Response({'is_authenticated': True}, status=200)
 
 def home(request):
     return render(request, "home.html")
