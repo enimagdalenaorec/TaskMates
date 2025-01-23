@@ -14,8 +14,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Session konfiguracija (ako je potrebno)
-SESSION_COOKIE_SECURE = True  # Postavi na True u produkciji
-CSRF_COOKIE_SECURE = True   # Postavi na True u produkciji
+SESSION_COOKIE_SECURE = False  # Postavi na True u produkciji
+CSRF_COOKIE_SECURE = False   # Postavi na True u produkciji
 
 
 
@@ -34,8 +34,8 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_HEADERS = [
     "Authorization",
