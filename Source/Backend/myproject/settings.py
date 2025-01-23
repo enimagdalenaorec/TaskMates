@@ -17,6 +17,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SESSION_COOKIE_SECURE = True  # Postavi na True u produkciji
 CSRF_COOKIE_SECURE = True     # Postavi na True u produkciji
 
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+
 import mimetypes
 mimetypes.add_type("text/css", ".css", True)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +30,9 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:4200",
     "https://taskmatesbackend-pd5h.onrender.com",
     "https://taskmates-gjhi.onrender.com",
+    "https://www.taskmates-gjhi.onrender.com",
     "https://taskmatesbackend-pd5h.onrender.com"
+    "https://www.taskmatesbackend-pd5h.onrender.com"
 ]
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
@@ -59,8 +65,10 @@ ALLOWED_HOSTS = [
     '23.88.105.37',   #cronjob ip
     '128.140.8.200',   #cronjob ip
     'taskmatesbackend-pd5h.onrender.com',
+    'www.taskmatesbackend-pd5h.onrender.com',
     'angulartaskmates.onrender.com',
-    'taskmates-gjhi.onrender.com'
+    'taskmates-gjhi.onrender.com',
+    'www.taskmates-gjhi.onrender.com'
 ]
 
 SITE_ID=3
