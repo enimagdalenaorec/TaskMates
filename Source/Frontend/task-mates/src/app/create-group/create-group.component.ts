@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
   styleUrl: './create-group.component.css'
 })
 export class CreateGroupComponent {
-  apiUrl = 'http://localhost:8000/api'; // Django API endpoints
+  apiUrl = 'https://taskmatesbackend-pd5h.onrender.com/api'; // Django API endpoints
   selectedImage: any | null = null;
   group: any;
   images: any[] = [];

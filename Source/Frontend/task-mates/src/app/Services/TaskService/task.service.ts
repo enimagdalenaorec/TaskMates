@@ -9,7 +9,7 @@ export class TaskService {
   private tasksSubject = new BehaviorSubject<any[]>([]);
   public tasks$ = this.tasksSubject.asObservable();  // Observable to subscribe to
 
-  private apiUrl = 'http://localhost:8000/api/calendar';
+  private apiUrl = 'https://taskmatesbackend-pd5h.onrender.com/api/calendar';
 
   constructor(private http: HttpClient) {}
 

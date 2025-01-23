@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './notifications.component.css'
 })
 export class NotificationsComponent implements OnInit {
-  apiUrl = 'http://localhost:8000/api'; // Django API endpoints
+  apiUrl = 'https://taskmatesbackend-pd5h.onrender.com/api'; // Django API endpoints
   notifications: Notification[] = [];
 
   constructor(private http: HttpClient) {}

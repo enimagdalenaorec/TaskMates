@@ -21,7 +21,7 @@ def red(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def homere(request):
-    return redirect("http://localhost:8000/api/accounts/redirect") 
+    return redirect("https://taskmatesbackend-pd5h.onrender.com/api/accounts/redirect") 
 def logout_view(request):
     logout(request)
     return redirect("/")
