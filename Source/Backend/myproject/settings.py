@@ -69,6 +69,9 @@ ALLOWED_HOSTS = [
     'www.taskmates-gjhi.onrender.com'
 ]
 
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
+
 SITE_ID=3
 # Application definition
 
@@ -137,7 +140,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    'allauth.socialaccount.models.SocialApp'
 ]
 
 
