@@ -69,7 +69,7 @@ ALLOWED_HOSTS = [
     '116.203.134.67', #cronjob ip
     '116.203.129.16', #cronjob ip
     '23.88.105.37',   #cronjob ip
-    '128.140.8.200'   #cronjob ip
+    '128.140.8.200',   #cronjob ip
     'taskmatesbackend-pd5h.onrender.com',
     'angulartaskmates.onrender.com',
     'taskmates-gjhi.onrender.com'
