@@ -1,1 +1,37 @@
-<p>create-group works!</p>
+<div class="p-5 pt-2">
+    <p class="mb-3 text-3xl">Create Group</p>
+    <form class="border-round-md group-form w-8 p-4 flex flex-column" [formGroup]="groupForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label class="text-sm" for="name">Name</label><br>
+        <input pInputText type="text" class="mt-1 mb-3 task-name" id="name" formControlName="name">
+      </div>
+  
+      <label class="text-sm">Image</label><br>
+    
+      <div class="card">
+        <p-galleria [value]="images" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '640px' }">
+            <ng-template pTemplate="item" let-item>
+                <img 
+                    [src]="item.previewImageSrc" 
+                    (click)="onImageSelect(item)" 
+                    [ngClass]="{'selected-image': selectedImage === item.previewImageSrc}" 
+                    class="selectable-image" 
+                    style="width: 100%; cursor: pointer; display: block;" />
+            </ng-template>
+            <ng-template pTemplate="thumbnail" let-item>
+                <img 
+                    [src]="item.thumbnailImageSrc" 
+                    (click)="onImageSelect(item)" 
+                    [ngClass]="{'selected-thumbnail': selectedImage === item.previewImageSrc}" 
+                    class="selectable-thumbnail" 
+                    style="cursor: pointer; display: block;" />
+            </ng-template>
+        </p-galleria>
+    </div>
+    
+      <div class="mt-5 mr-3 align-self-end">
+        <p-button type="submit" label="Submit" class="w-13"></p-button>
+      </div>
+    </form>
+  </div>
+  

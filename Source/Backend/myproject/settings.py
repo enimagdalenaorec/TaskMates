@@ -19,11 +19,20 @@ import mimetypes
 mimetypes.add_type("text/css", ".css", True)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+#CORS_ALLOW_ALL_ORIGINS = True
 
-CSRF_TRUSTED_ORIGINS = ['https://taskmatesbackend-pd5h.onrender.com']
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
+
+
+# Session konfiguracija (ako je potrebno)
+SESSION_COOKIE_SECURE = False  # Postavi na True u produkciji
+CSRF_COOKIE_SECURE = False     # Postavi na True u produkciji
+
+# CSRF TRUSTED ORIGINS (ako koristiš HTTPS u produkciji)
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200",
+    "http://localhost:8000",
+]
+
 
 CORS_ALLOW_HEADERS = [
     "Authorization",
@@ -44,14 +53,23 @@ SECRET_KEY = "7944f252bbee40c82023495a8a899d48"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','taskmatesbackend-pd5h.onrender.com','angulartaskmates.onrender.com','taskmates-gjhi.onrender.com']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '116.203.134.67', #cronjob ip
+    '116.203.129.16', #cronjob ip
+    '23.88.105.37',   #cronjob ip
+    '128.140.8.200'   #cronjob ip
+]
 
 SITE_ID=4
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'rest_framework',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -61,14 +79,31 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'core',
     'apps.calendar',
     'apps.groups',
     'apps.notifications',
+    'apps.management',
     'apps.tasks',
-    'core',
     'apps.accounts',
-    'corsheaders'
+    'corsheaders',
+    'oauth2_provider',
+    'cloudinary', 
+    'cloudinary_storage',
+    'django_q',
+    'apps',
 ]
+
+Q_CLUSTER = {
+    'name': 'DjangoQ2',
+    'workers': 4,
+    'retry': 60,
+    'timeout': 300,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'bulk': 10,
+    'orm': 'default',  # Uses Django's ORM
+}
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
@@ -110,15 +145,48 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
-STORAGES = {
-    # ...
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200"
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    "http://localhost:8000",
+]
+
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "authorization",
+    "x-csrftoken",
+    "accept",
+    "origin",
+    "x-requested-with"
+]
+
+CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',  # Prva
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+} 
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY = {
+    'CLOUD_NAME': 'djevedi2m',
+    'API_KEY': '397716242552879',
+    'API_SECRET': 'q1LekeTNsfPraq_u8WdRKdzNGDU',
 }
+MEDIA_URL = 'https://res.cloudinary.com/djevedi2m/'
+
 
 ROOT_URLCONF = 'myproject.urls'
 

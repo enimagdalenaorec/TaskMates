@@ -32,7 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
 
-    #profilePicture = models.ImageField(upload_to='profile_pics/', blank=True, null=True) 
+    profile_picture = models.URLField(null=True, blank=True)  
         #Treba postavit MEDIA_ROOT
     is_staff = models.BooleanField(default=False)  # Necessary for admin access
 
@@ -46,6 +46,7 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     time_sent_at = models.DateTimeField(default=timezone.now)  # Automatically set to current time
     message = models.TextField()  # Field to store the notification message
+    unique_identifier = models.CharField(max_length=255, unique=True, null=True, blank=True)
     reciever = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # References your custom User model
         on_delete=models.CASCADE,  # Deletes notifications if the user is deleted
@@ -57,8 +58,7 @@ class Notification(models.Model):
     
 class Group(models.Model):
     name = models.CharField(max_length=100)  # Group name
-    #image = models.ImageField(upload_to='group_images/', blank=True, null=True)  # Optional image for the group
-          #Treba setupat Media Root
+    image = models.URLField(null=True, blank=True)   # Optional image for the group
     join_code = models.PositiveSmallIntegerField(unique=True)  # Unique short integer for joining
 
     def __str__(self):
@@ -87,7 +87,9 @@ class Group(models.Model):
 class GroupUser(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Reference to User
     group = models.ForeignKey(Group, on_delete=models.CASCADE)  # Reference to Group
-
+    points = models.IntegerField(default=0)
+    tasks_solved = models.IntegerField(default=0)
+    
     class Meta:
         unique_together = ('user', 'group')  # Ensure a user can only join a group once
 
@@ -97,24 +99,27 @@ class GroupUser(models.Model):
 
 class Task(models.Model):
     name = models.CharField(max_length=100)
-    #picture = models.ImageField(upload_to='task_pics/', blank=True, null=True)  # Field for task image
+    picture = models.URLField(null=True, blank=True)  # Field for task image
       #setup media root
     deadline = models.DateTimeField(default=timezone.now)  # Deadline for task completion
+    created_at = models.DateTimeField(auto_now_add=True)
     STATUS_CHOICES = [
-        ('not_finished', 'Not Finished'),
+        ('full', 'Full'),
+        ('available', 'Available'),
         ('finished', 'Finished'),
+        ('failed', 'Failed'),
     ]
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_finished')  # Task status
-      #ikone su WIP
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='available')
     icon = models.CharField(max_length=50, blank=True, null=True)  # Icon representation of the task
     max_capacity = models.PositiveIntegerField(default=1)  # Maximum number of users for the task
     description = models.TextField(blank=True, null=True)  # Task description
     points = models.IntegerField(default=100)  # Points associated with the task (can be negative)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, default=1) 
     
+
     def save(self, *args, **kwargs):
-        if self.max_capacity < 1 or self.max_capacity > 5:
-            raise ValueError("Max capacity must be between 1 and 5.")
+        if self.max_capacity < 1 :
+            raise ValueError("Max capacity must be 1 or more.")
         super().save(*args, **kwargs)
 
     def __str__(self):

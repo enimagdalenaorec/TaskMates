@@ -1,0 +1,25 @@
+.custom-message-input {
+  display: flex;
+  align-items: center; /* Vertically center the items */
+  gap: 10px; /* Adds space between the input and the button */
+}
+
+.send-button {
+  border-radius: 20px;
+  padding: 10px;
+  background-color: #2b8b7680;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.send-button:disabled {
+  background-color: #d6d6d6;
+  cursor: not-allowed;
+}
+
+.stream-textarea {
+  flex-grow: 1; /* Makes the textarea take the remaining space */
+  height: 40px; /* Ensure both button and textarea have the same height */
+  resize: none; /* Prevent resizing of the textarea */
+}

@@ -6,23 +6,29 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { BadgeModule } from 'primeng/badge';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
+interface Group {
+  id: number;
+  name: string;
+  expiringSoonCount: number;
+  unreadMessagesCount: number;
+}
 
 @Component({
   selector: 'app-my-groups',
   standalone: true,
   imports: [CommonModule, FormsModule, InputTextModule, ButtonModule, CardModule, BadgeModule, HttpClientModule],
   templateUrl: './my-groups.component.html',
-  styleUrl: './my-groups.component.css'
+  styleUrls: ['./my-groups.component.css']
 })
 export class MyGroupsComponent {
 
-  cardImagePath = "images/group_images/picture1.jpg";
-  searchQuery='';
-  groups: any[] = [];  
-  apiUrl = 'https://taskmatesbackend-pd5h.onrender.com/api/groups/'; //TT Django API endpoint za render
+  searchQuery = '';
+  groups: any[] = [];
+  apiUrl = 'http://localhost:8000/api/groups/'; // Django API endpoint
+
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -31,9 +37,9 @@ export class MyGroupsComponent {
   }
 
   fetchGroups(): void {
-    this.http.get<{ groups: any[] }>(this.apiUrl).subscribe({
+    this.http.get<{  groups: Group[]}>(this.apiUrl).subscribe({
       next: (response) => {
-        this.groups = response.groups || []; 
+        this.groups = response.groups || [];
       },
       error: (error) => {
         console.error('Error fetching groups:', error);
@@ -47,12 +53,13 @@ export class MyGroupsComponent {
 
   joinGroup() {
     if (this.searchQuery.trim()) {
-      this.http.post(this.apiUrl + "join", { code: this.searchQuery })
+      this.http.post(this.apiUrl + "join", { code: this.searchQuery }, { withCredentials: true })
         .subscribe(
           (response) => {
             console.log('Successfully joined group:', response);
             this.fetchGroups();
-            //this.router.navigate(['/group', response.id]);  Navigate to the group page (optional)
+            this.searchQuery = '';
+            //this.router.navigate(['/group', response.id]);  // Navigacija na grupu (opcionalno)
           },
           (error) => {
             console.error('Error joining group:', error);
@@ -63,9 +70,8 @@ export class MyGroupsComponent {
     }
   }
 
-  navigateToGroup(groupId: string) {
-    // Navigate to the group page, passing in the group ID
-    this.router.navigate(['/group', groupId]);
+  navigateToGroup(groupId: string, groupName: string) {
+    const encodedGroupName = encodeURIComponent(groupName);
+    this.router.navigate(['/group', groupId, encodedGroupName]);
   }
-  
 }

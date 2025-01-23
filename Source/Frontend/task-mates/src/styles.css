@@ -3,3 +3,8 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
+@import "@ctrl/ngx-emoji-mart/picker";
+@import "stream-chat-angular/src/assets/styles/css/index.css";
+
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

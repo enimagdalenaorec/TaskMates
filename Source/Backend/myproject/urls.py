@@ -19,10 +19,13 @@ from django.contrib import admin
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
+    path('api/profile/', include('apps.profile.urls')), 
     path('api/accounts/', include('apps.accounts.urls')), 
     path('api/calendar/', include('apps.calendar.urls')), 
     path('api/groups/', include('apps.groups.urls')), 
     path('api/notifications/', include('apps.notifications.urls')), 
     path('api/tasks/', include('apps.tasks.urls')), 
     path('accounts/',include("allauth.urls")), 
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('management/', include('apps.management.urls')),
 ]

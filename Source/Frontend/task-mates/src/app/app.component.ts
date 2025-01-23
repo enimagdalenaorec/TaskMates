@@ -9,12 +9,15 @@ import { SidebarModule } from 'primeng/sidebar';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-
+import { CalendarModule } from 'primeng/calendar';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TaskService } from './Services/TaskService/task.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgIf, MenubarModule, ButtonModule, SidebarModule, NotificationsComponent, ProfileComponent, CommonModule],
+  imports: [RouterOutlet, NgIf, MenubarModule, ButtonModule, SidebarModule, NotificationsComponent, ProfileComponent, CommonModule, CalendarModule, HttpClientModule],
+  providers : [HttpClientModule, TaskService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -26,10 +29,12 @@ export class AppComponent implements OnInit {
   isMobileOrTablet: boolean = false; // To track mobile or tablet screen size
   isHamburgerMenuVisible: boolean = false; // To control hamburger menu visibility
   isProfileIconClicked: boolean = false;
+  tasksForCalendar: any[] = [];
+  markedDates: { [key: string]: { icon: string, id: number } } = {}; // Store dates with their corresponding icons and task IDs
 
 
-  constructor(private router: Router, 
-    private breakpointObserver: BreakpointObserver 
+  constructor(private router: Router, private taskService: TaskService,
+    private breakpointObserver: BreakpointObserver, private http: HttpClient
   ) {
   }
 
@@ -46,7 +51,7 @@ export class AppComponent implements OnInit {
     ]).subscribe(result => {
       // Update the flag based on screen size (mobile or tablet = true)
       this.isMobileOrTablet = result.breakpoints[Breakpoints.XSmall] || result.breakpoints[Breakpoints.Small] || result.breakpoints[Breakpoints.Medium];
-      
+
       // If on mobile or tablet, switch to hamburger menu
       if (this.isMobileOrTablet) {
         this.sidebarVisible = false;
@@ -56,6 +61,39 @@ export class AppComponent implements OnInit {
         this.isHamburgerMenuVisible = false;
       }
     });
+
+    this.taskService.tasks$.subscribe((tasks) => {
+      this.tasksForCalendar = tasks;
+      this.parseDeadlines();  // Call any additional functions to process the tasks
+    });
+
+    this.taskService.fetchTasksForCalendar();
+
+
+  }
+
+  parseDeadlines(): void {
+    this.tasksForCalendar.forEach(task => {
+      const deadline = new Date(task.deadline);
+      const dateKey = `${deadline.getUTCFullYear()}-${deadline.getUTCMonth() + 1}-${deadline.getUTCDate()}`;
+      this.markedDates[dateKey] = { icon: task.icon, id: task.id };
+      console.log('Marked dates:', this.markedDates);
+    });
+  }
+
+  getIconForDate(date: any): string | null {
+    const adjustedDate = new Date(date.year, date.month, date.day);
+    const dateKey = `${adjustedDate.getFullYear()}-${adjustedDate.getMonth() + 1}-${adjustedDate.getDate()}`;
+    return this.markedDates[dateKey]?.icon || null;
+  }
+
+  onIconClick(date: any): void {
+    const adjustedDate = new Date(Date.UTC(date.year, date.month, date.day));
+    const dateKey = `${adjustedDate.getUTCFullYear()}-${adjustedDate.getUTCMonth() + 1}-${adjustedDate.getUTCDate()}`;
+    const taskId = this.markedDates[dateKey]?.id;
+    if (taskId) {
+      this.router.navigate(['/task', taskId]);
+    }
   }
 
   isHomeOrLoginOrRegisterRoute() {
@@ -72,7 +110,7 @@ export class AppComponent implements OnInit {
   isActive(path: string): boolean {
     return this.router.url.includes(path);
   }
-  
+
 
     // Toggle the sidebar on mobile view
   toggleSidebar() {

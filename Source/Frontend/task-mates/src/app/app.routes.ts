@@ -7,16 +7,20 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { CreateGroupComponent } from './create-group/create-group.component';
 import { AddTaskComponent } from './add-task/add-task.component';
 import { GroupComponent } from './group/group.component';
+import { TaskComponent } from './task/task.component';
+import { AuthGuardService } from './Services/AuthGuard/auth-guard.service';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'home', component: HomeComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'my-groups', component: MyGroupsComponent},
-  {path: 'profile', component: ProfileComponent},
-  {path: 'notifications', component: NotificationsComponent},
-  {path: 'create-group', component: CreateGroupComponent},
-  {path: 'add-task', component: AddTaskComponent},
+  {path: 'my-groups', component: MyGroupsComponent, canActivate: [AuthGuardService]},
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService]},
+  {path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuardService]},
+  {path: 'create-group', component: CreateGroupComponent, canActivate: [AuthGuardService]},
+  {path: 'add-task/:group-id', component: AddTaskComponent, canActivate: [AuthGuardService]},
+  { path: 'group/:id/:groupName', component: GroupComponent },
   {path: 'group/:id', component: GroupComponent},
+  {path: 'task/:id', component: TaskComponent, canActivate: [AuthGuardService]},
   {path: '**', redirectTo: ''},
 ];

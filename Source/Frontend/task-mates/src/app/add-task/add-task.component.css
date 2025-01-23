@@ -1,0 +1,24 @@
+.add-task-form {
+  border: 2px solid rgba(164, 172, 182, 0.5);
+  background-color: #f6f8f8;
+}
+
+.points {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+:host ::ng-deep .p-inputnumber.p-inputnumber-buttons-horizontal .p-inputnumber-button {
+  color: white !important;
+}
+
+@media screen and (max-width: 631px) {
+  .task-name, .task-description {
+    max-width: 9rem !important;
+  }
+
+  input.task-capacity {
+    max-width: 9rem !important;
+  }
+}

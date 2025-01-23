@@ -1,13 +1,27 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from core.models import Task, UserTask
 
-# Mock endpoint za dohvat svih zadataka korisnika za kalendar
 @api_view(['GET'])
-def mock_get_all_tasks(request):
-    return Response({
-        "tasks": [
-            {"icon": None, "name": "Task1", "id": "1"},
-            {"icon": None, "name": "Task2", "id": "2"},
-        ]
-    }, status=HTTP_200_OK)
+@permission_classes([IsAuthenticated])
+def get_all_tasks(request):
+    user = request.user
+    
+    # Dohvatimo sve UserTask zapise koji nisu finished ili failed
+    user_tasks = UserTask.objects.filter(user=user).exclude(task__status__in=['finished', 'failed'])
+    
+    # Iz svakog UserTask objekta dohvatimo pripadajući Task i formiramo response
+    response_data = [
+        {
+            "id": user_task.task.id,
+            "name": user_task.task.name,
+            "icon": user_task.task.icon,
+            "deadline": user_task.task.deadline
+        }
+        for user_task in user_tasks
+    ]
+    
+    return Response({"tasks": response_data}, status=HTTP_200_OK)

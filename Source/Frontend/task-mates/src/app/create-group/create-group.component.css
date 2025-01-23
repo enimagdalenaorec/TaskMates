@@ -1,0 +1,21 @@
+img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+/* Highlight selected image */
+.selected-image, .selected-thumbnail {
+  border: 3px solid #007bff; /* Blue border */
+  box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.5); /* Glow effect */
+  border-radius: 5px; /* Optional rounded corners */
+}
+
+.group-form{
+border: 2px solid rgba(164, 172, 182, 0.5);
+background-color: #f6f8f8;
+}
+
+.card {
+  width: 20rem; /* Set the width */
+  height: auto; /* Set the height */
+}

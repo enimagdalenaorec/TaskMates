@@ -1,53 +1,34 @@
 from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.decorators import permission_classes
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import logout
 import uuid
+from rest_framework.permissions import AllowAny
 
-# Mock endpoint za registraciju
 @api_view(['POST'])
-def mock_register(request):
-    return Response({
-        "refresh": "sample_refresh_token",
-        "access": "sample_access_token",
-        "user": {
-            "id": 1,
-            "username": "newuser",
-            "email": "newuser@example.com",
-            "nickname": "NewUser",
-        }
-    }, status=status.HTTP_200_OK)
-
-# Mock endpoint za prijavu
-@api_view(['POST'])
-def mock_login(request):
-    return Response({
-        "refresh": "sample_refresh_token",
-        "access": "sample_access_token",
-        "user": {
-            "id": 1,
-            "username": "testuser",
-            "email": "testuser@example.com",
-            "nickname": "Tester",
-            "profile_image": "https://example.com/path/to/profile_image.jpg",
-            "points": 150
-        }
-    }, status=status.HTTP_200_OK)
+@permission_classes([AllowAny])
+def check_authentication(request):
+    if request.user.is_authenticated:
+        return Response({'is_authenticated': True}, status=200)
+    else:
+        return Response({'is_authenticated': False}, status=200)
 
 def home(request):
     return render(request, "home.html")
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def red(request):
     return redirect('/accounts/google/login/')
 
 
 @api_view(['GET'])
-def homere(request):  #samo za deploy
-    return redirect("https://taskmatesbackend-pd5h.onrender.com/api/accounts/redirect")
-
+@permission_classes([AllowAny])
+def homere(request):
+    return redirect("http://localhost:8000/api/accounts/redirect") 
 def logout_view(request):
     logout(request)
     return redirect("/")

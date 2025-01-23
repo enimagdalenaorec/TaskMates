@@ -2,6 +2,7 @@
   ::ng-deep .p-card{
     cursor: pointer;
     position: relative;
+   
   }
 
   .badge-icon {
@@ -26,4 +27,15 @@
 
   :host ::ng-deep .white-text {
     color: white;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: 300px 300px 300px;
+
+  }
+ 
+  @media (max-width: 980px) {
+    .grid-container {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
   }
