@@ -11,12 +11,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def check_authentication(request):
-    # Log the request and authentication details
-    logger.debug("Request User: %s", request.user)
-    logger.debug("Is User Authenticated: %s", request.user.is_authenticated)
+    # Log the user and their authentication status
+    logger.debug(f"Request User: {request.user}")
+    logger.debug(f"Is User Authenticated: {request.user.is_authenticated}")
     
     if request.user.is_authenticated:
         return Response({'is_authenticated': True}, status=200)

@@ -234,13 +234,21 @@ USE_I18N = True
 USE_TZ = True
 
 
+# settings.py
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '{levelname} [{asctime}] {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'formatter': 'simple',  # Using the custom simple formatter
         },
     },
     'loggers': {
@@ -251,6 +259,7 @@ LOGGING = {
         },
     },
 }
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
