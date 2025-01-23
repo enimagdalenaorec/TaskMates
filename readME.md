@@ -9,6 +9,11 @@ TaskMates je web aplikacija koja korisnicima omogućuje organizaciju i praćenje
 ## **Link na deploy aplikacije:**
  https://taskmates-gjhi.onrender.com/home
 
+ **VAŽNO**
+ Pri zestiranje aplikacija slobodno se pridružite već postojećim grupama,
+ 'Ekipa za trčanje' : 882239 (join code),
+ 'Ferovke': 831350 (join code)
+
 ## **Pokretanje frontenda (Angulara)**
 - Prvo pokretanje:
     1. Ukoliko nemate instaliran Angular treba ga globalno instalirati s naredbom: npm install -g @angular/cli
