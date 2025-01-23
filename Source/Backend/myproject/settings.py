@@ -61,7 +61,7 @@ CORS_ALLOW_HEADERS = [
 SECRET_KEY = 'django-insecure-kyd!0nh_+y+u8*g8s(ts7dm2*kbkb@h@#)j(9_wdt+g)&7sprv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
