@@ -17,8 +17,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SESSION_COOKIE_SECURE = True  # Postavi na True u produkciji
 CSRF_COOKIE_SECURE = True     # Postavi na True u produkciji
 
-CSRF_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SAMESITE = 'Lax'
 
 
 import mimetypes
