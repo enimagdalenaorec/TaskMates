@@ -14,7 +14,7 @@ import sys
 def check_authentication(request):
     # Log the user and their authentication status
     #if request.user.is_authenticated:
-    sys.stdout.write('request je ',request.user,request)
+    sys.stdout.write(request.user)
     return Response({'is_authenticated': True}, status=200)
     #else:
         #return Response({'is_authenticated': False}, status=200)
