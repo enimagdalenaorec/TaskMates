@@ -11,24 +11,22 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
+import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-#CORS_ALLOW_ALL_ORIGINS = True
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
-
-
-# Session konfiguracija (ako je potrebno)
-SESSION_COOKIE_SECURE = False  # Postavi na True u produkciji
-CSRF_COOKIE_SECURE = False     # Postavi na True u produkciji
-
-# CSRF TRUSTED ORIGINS (ako koristiš HTTPS u produkciji)
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:4200",
-    "http://localhost:8000",
-]
-
+CSRF_TRUSTED_ORIGINS = ['https://taskmatesbackend.onrender.com']
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
 
 CORS_ALLOW_HEADERS = [
     "Authorization",
@@ -43,28 +41,20 @@ CORS_ALLOW_HEADERS = [
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kyd!0nh_+y+u8*g8s(ts7dm2*kbkb@h@#)j(9_wdt+g)&7sprv'
+
+SECRET_KEY = "7944f252bbee40c82023495a8a899d48"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    '116.203.134.67', #cronjob ip
-    '116.203.129.16', #cronjob ip
-    '23.88.105.37',   #cronjob ip
-    '128.140.8.200'   #cronjob ip
-]
+ALLOWED_HOSTS = ['localhost','taskmatesbackend-pd5h.onrender.com','angulartaskmates.onrender.com','taskmates-gjhi.onrender.com',"taskmates.onrender.com"]
 
-SITE_ID=3
+SITE_ID=4
 # Application definition
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
-    'rest_framework',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -74,30 +64,26 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'core',
     'apps.calendar',
     'apps.groups',
     'apps.notifications',
-    'apps.management',
     'apps.tasks',
+    'core',
     'apps.accounts',
     'corsheaders',
-    'oauth2_provider',
-    'cloudinary', 
+    'cloudinary',
     'cloudinary_storage',
-    'django_q',
-    'apps',
 ]
 
 Q_CLUSTER = {
-    'name': 'DjangoQ2',
-    'workers': 4,
-    'retry': 60,
-    'timeout': 300,
-    'save_limit': 250,
-    'queue_limit': 500,
-    'bulk': 10,
-    'orm': 'default',  # Uses Django's ORM
+    'name': 'DjangoQ2',  # Naziv klastera za lakše praćenje i identifikaciju.
+    'workers': 4,        # Broj paralelnih radnika (workers) koji će izvršavati zadatke.
+    'retry': 60,         # Vrijeme (u sekundama) nakon kojeg se zadatak ponovno pokušava izvršiti u slučaju neuspjeha.
+    'timeout': 300,      # Maksimalno vrijeme (u sekundama) koje zadatak može trajati prije nego što istekne.
+    'save_limit': 250,   # Maksimalan broj zadataka čija se povijest čuva u bazi podataka.
+    'queue_limit': 500,  # Maksimalan broj zadataka u redu prije nego što se odbijaju novi.
+    'bulk': 10,          # Broj zadataka koje radnici mogu dohvatiti u jednom potezu.
+    'orm': 'default',    # Naziv ORM-a (Object-Relational Mapper) koji će se koristiti, obično `default`.
 }
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
@@ -112,40 +98,43 @@ SOCIALACCOUNT_PROVIDERS={
         "AUTH_PARAMS":{"access_type":"online"}
     }
 }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'allauth': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:4200"
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
-    "http://localhost:8000",
-]
-
-CORS_ALLOW_HEADERS = [
-    "content-type",
-    "authorization",
-    "x-csrftoken",
-    "accept",
-    "origin",
-    "x-requested-with"
-]
-
-CORS_ALLOW_CREDENTIALS = True  # Omogućuje slanje kolačića s drugih domena
-
+# STORAGES = {
+#     # ...
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',  # Prva
@@ -155,7 +144,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 } 
-
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY = {
@@ -163,8 +151,7 @@ CLOUDINARY = {
     'API_KEY': '397716242552879',
     'API_SECRET': 'q1LekeTNsfPraq_u8WdRKdzNGDU',
 }
-MEDIA_URL = 'https://res.cloudinary.com/djevedi2m/'
-
+MEDIA_URL="https://res.cloudinary.com/djevedi2m/"
 
 ROOT_URLCONF = 'myproject.urls'
 
@@ -191,18 +178,13 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        #za postgre:
-        #'ENGINE': 'django.db.backends.postgresql',
-        #'NAME': ,
-        #'USER': ,
-        #'PASSWORD': ,
-        #'HOST': 'localhost',
-        #'PORT': '5432',
+    'default': dj_database_url.parse('postgresql://taskmatesbaza_ctl9_user:XabwyUYFAhsWAdtFKgbMjK3kqIiQhdT3@dpg-cu8htn3tq21c73etln30-a.oregon-postgres.render.com/taskmatesbaza_ctl9')                        # Port
     }
-}
+
+
+
+#za postgre na renderu
+
 
 
 # Password validation
@@ -241,6 +223,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -248,5 +232,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS=("django.contrib.auth.backends.ModelBackend","allauth.account.auth_backends.AuthenticationBackend")
 
-LOGIN_REDIRECT_URL="http://localhost:4200/my-groups"
-LOGOUT_REDIRECT_URL="http://localhost:4200/my-groups"
+LOGIN_REDIRECT_URL="https://taskmates.onrender.com/my-groups"
+LOGOUT_REDIRECT_URL="https://taskmates.onrender.com/my-groups"
