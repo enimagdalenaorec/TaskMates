@@ -69,8 +69,8 @@ ALLOWED_HOSTS = [
     'www.taskmates-gjhi.onrender.com'
 ]
 
-CSRF_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
 
 SITE_ID=3
 # Application definition
