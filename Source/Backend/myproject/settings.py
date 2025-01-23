@@ -45,7 +45,7 @@ CORS_ALLOW_HEADERS = [
 SECRET_KEY = "7944f252bbee40c82023495a8a899d48"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost','taskmatesbackend-pd5h.onrender.com','angulartaskmates.onrender.com','taskmates-gjhi.onrender.com',"taskmates.onrender.com"]
 
