@@ -6,14 +6,6 @@ Ovaj projekt rezultat je timskog rada razvijenog u sklopu projektnog zadatka kol
 
 TaskMates je web aplikacija koja korisnicima omogućuje organizaciju i praćenje kućanskih poslova unutar zajednica poput cimerstva, obitelji ili prijateljskih grupa. Aplikacija omogućuje kreiranje grupa, dodavanje zadataka, definiranje težine i rokova te praćenje izvršavanja zadataka putem Leaderboarda i raznih statistika.
 
-## **Link na deploy aplikacije:**
- https://taskmates-gjhi.onrender.com/home
-
- **VAŽNO**
- Pri zestiranje aplikacija slobodno se pridružite već postojećim grupama,
- 'Ekipa za trčanje' : 882239 (join code),
- 'Ferovke': 831350 (join code)
-
  
 ## **Pokretanje frontenda (Angulara)**
 - Prvo pokretanje:
