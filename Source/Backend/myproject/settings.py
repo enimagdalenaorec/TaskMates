@@ -14,8 +14,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Session konfiguracija (ako je potrebno)
-SESSION_COOKIE_SECURE = False  # Postavi na True u produkciji
-CSRF_COOKIE_SECURE = False     # Postavi na True u produkciji
+SESSION_COOKIE_SECURE = True# Postavi na True u produkciji
+CSRF_COOKIE_SECURE = True     # Postavi na True u produkciji
 
 CSRF_COOKIE_DOMAIN = ".onrender.com"  # For Render
 SESSION_COOKIE_DOMAIN = ".onrender.com"
@@ -70,8 +70,6 @@ ALLOWED_HOSTS = [
     'www.taskmates-gjhi.onrender.com'
 ]
 
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
 
 SITE_ID=3
 # Application definition
