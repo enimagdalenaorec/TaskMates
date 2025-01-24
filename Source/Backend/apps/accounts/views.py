@@ -15,7 +15,7 @@ from django.middleware.csrf import get_token
 @permission_classes([AllowAny])
 def check_authentication(request):
     generated_token = get_token(request)
-    received_token = request.headers.get('csrftoken')
+    received_token = request.headers
 
     print(f"Generated CSRF Token: {generated_token}")
     print(f"Received CSRF Token: {received_token}")
