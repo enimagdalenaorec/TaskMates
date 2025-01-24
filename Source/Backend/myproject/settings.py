@@ -17,7 +17,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SESSION_COOKIE_SECURE = True  # Postavi na True u produkciji
 CSRF_COOKIE_SECURE = True     # Postavi na True u produkciji
 
-
+CSRF_COOKIE_DOMAIN = ".onrender.com"  # For Render
+SESSION_COOKIE_DOMAIN = ".onrender.com"
 
 import mimetypes
 mimetypes.add_type("text/css", ".css", True)
