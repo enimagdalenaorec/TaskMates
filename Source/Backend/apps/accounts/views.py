@@ -8,13 +8,22 @@ from django.contrib.auth import logout
 import uuid
 from rest_framework.permissions import AllowAny
 
+
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def check_authentication(request):
-    if request.user.is_authenticated:
-        return Response({'is_authenticated': True}, status=200)
+    generated_token = get_token(request)
+    received_token = request.headers.get('X-CSRFToken')
+
+    print(f"Generated CSRF Token: {generated_token}")
+    print(f"Received CSRF Token: {received_token}")
+
+    if generated_token == received_token:
+        return JsonResponse({'is_authenticated': True})
     else:
-        return Response({'is_authenticated': False}, status=200)
+        return JsonResponse({'detail': 'CSRF tokens do not match'}, status=403)
 
 def home(request):
     return render(request, "home.html")
