@@ -8,6 +8,8 @@ from django.contrib.auth import logout
 import uuid
 from rest_framework.permissions import AllowAny
 
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def check_authentication(request):
