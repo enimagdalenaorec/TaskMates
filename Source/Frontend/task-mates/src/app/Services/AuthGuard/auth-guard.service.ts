@@ -41,12 +41,20 @@ export class AuthGuardService implements CanActivate {
   }
 
   private isLoggedIn(): Observable<boolean> {
+    console.log('Making POST request to check authentication');
+  
     return this.http
       .post<{ is_authenticated: boolean }>('https://taskmatesbackend-pd5h.onrender.com/api/accounts/check_authentication', {}, {withCredentials: true})
       .pipe(
-        map((response) => response.is_authenticated),
+        tap(request => {
+          console.log('Request made with:', request);  // Log the request object (headers, body, etc.)
+        }),
+        map((response) => {
+          console.log('Response received:', response); // Log the response from the backend
+          return response.is_authenticated;
+        }),
         catchError((error) => {
-          console.error('Authentication check failed:', error);
+          console.error('Authentication check failed:', error);  // Log any errors during the request
           return of(false);
         })
       );
