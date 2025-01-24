@@ -142,6 +142,8 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
+CSRF_COOKIE_DOMAIN = ".onrender.com"  # idk if needed
+SESSION_COOKIE_DOMAIN = ".onrender.com" 
 
 CORS_ALLOW_HEADERS = [
     "content-type",
