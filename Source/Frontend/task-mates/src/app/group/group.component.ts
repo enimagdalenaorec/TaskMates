@@ -52,7 +52,7 @@ interface TimeLeft {
 })
 export class GroupComponent implements OnInit {
   groupId: string = '';
-  apiUrl = 'https://taskmatesbackend-pd5h.onrender.com/api'; // Django API endpoints
+  apiUrl = 'http://localhost:8000/api'; // Django API endpoints
   tasks: Task[] = [];
   groupName: string = '';
   private timerInterval: any;
@@ -111,7 +111,7 @@ export class GroupComponent implements OnInit {
     const userId = this.userInfo.id.toString();
     try {
       const tokenResponse = await lastValueFrom(
-        this.http.get<{ token: string }>('https://taskmatesbackend-pd5h.onrender.com/api/groups/get_token')
+        this.http.get<{ token: string }>('http://localhost:8000/api/groups/get_token')
       );
       const userToken = tokenResponse.token;
       console.log('User token:', userToken);

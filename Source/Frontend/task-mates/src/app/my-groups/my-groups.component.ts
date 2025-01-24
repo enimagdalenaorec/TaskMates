@@ -26,7 +26,7 @@ export class MyGroupsComponent {
 
   searchQuery = '';
   groups: any[] = [];
-  apiUrl = 'https://taskmatesbackend-pd5h.onrender.com/api/groups/'; // Django API endpoint
+  apiUrl = 'http://localhost:8000/api/groups/'; // Django API endpoint
 
 
 

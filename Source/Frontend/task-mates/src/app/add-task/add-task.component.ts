@@ -25,7 +25,7 @@ export class AddTaskComponent implements OnInit {
   showEmojiPicker = false;
   message = '';
   icon = '';
-  apiUrl = 'https://taskmatesbackend-pd5h.onrender.com/api'; // Django API endpoints
+  apiUrl = 'http://localhost:8000/api'; // Django API endpoints
   today: Date = new Date();
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {

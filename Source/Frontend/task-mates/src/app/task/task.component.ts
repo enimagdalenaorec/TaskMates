@@ -81,7 +81,7 @@ export class TaskComponent implements OnInit {
   isPerformingTask = false; // Check if user is part of the task
   rating = 0; // User's rating of the task
   visible: boolean = false;
-  apiUrl = 'https://taskmatesbackend-pd5h.onrender.com/api'; // Django API endpoints
+  apiUrl = 'http://localhost:8000/api'; // Django API endpoints
   selectedFile: File | null = null;
   base64Image: string | null = null;
 
