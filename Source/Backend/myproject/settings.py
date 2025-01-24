@@ -192,15 +192,12 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        #za postgre:
-        #'ENGINE': 'django.db.backends.postgresql',
-        #'NAME': ,
-        #'USER': ,
-        #'PASSWORD': ,
-        #'HOST': 'localhost',
-        #'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'taskmatesbaza_ctl9',
+        'USER': 'taskmatesbaza_ctl9_user',
+        'PASSWORD': 'XabwyUYFAhsWAdtFKgbMjK3kqIiQhdT3',
+        'HOST': 'dpg-cu8htn3tq21c73etln30-a.oregon-postgres.render.com',
+        'PORT': '5432',
     }
 }
 

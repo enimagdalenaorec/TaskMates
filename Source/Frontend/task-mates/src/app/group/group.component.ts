@@ -106,6 +106,11 @@ export class GroupComponent implements OnInit {
     this.fetchGroupMembers();
     this.fetchGroupLinkAndCode();
 
+
+    this.fetchLeaderboardUrl();
+  }
+
+  async chatInit() {
     // 3) Dohvati chat token, pa inicijaliziraj klijenta
     const apiKey = new Secret().apiKey;
     const userId = this.userInfo.id.toString();
@@ -152,7 +157,6 @@ export class GroupComponent implements OnInit {
       console.error('Error fetching token or initializing chat client:', error);
     }
 
-    this.fetchLeaderboardUrl();
   }
 
   ngOnDestroy(): void {
@@ -324,6 +328,7 @@ export class GroupComponent implements OnInit {
     ).subscribe({
       next: (response) => {
         this.userInfo = response; // Assign the entire response object
+        this.chatInit();
       },
       error: (error) => {
         console.error('Error fetching user info:', error);
