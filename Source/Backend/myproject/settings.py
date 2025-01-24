@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,7 +58,7 @@ ALLOWED_HOSTS = [
     '128.140.8.200'   #cronjob ip
 ]
 
-SITE_ID=3
+SITE_ID=4
 # Application definition
 
 
@@ -190,17 +191,13 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'taskmatesbaza_ctl9',
-        'USER': 'taskmatesbaza_ctl9_user',
-        'PASSWORD': 'XabwyUYFAhsWAdtFKgbMjK3kqIiQhdT3',
-        'HOST': 'dpg-cu8htn3tq21c73etln30-a.oregon-postgres.render.com',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse('postgresql://taskmatesbaza_onat_user:8LrpJY4nzKhhKIu8pZurDKSABzFd7Hx8@dpg-cua15bdsvqrc73dlg7g0-a.frankfurt-postgres.render.com/taskmatesbaza_onat')
 }
 
+SECURE_SSL_REDIRECT = False
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
