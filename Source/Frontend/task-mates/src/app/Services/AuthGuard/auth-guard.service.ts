@@ -44,7 +44,7 @@ export class AuthGuardService implements CanActivate {
     console.log('Making POST request to check authentication');
   
     return this.http
-      .post<{ is_authenticated: boolean }>('https://taskmatesbackend-pd5h.onrender.com/api/accounts/check_authentication', {}, {withCredentials: true})
+      .post<{ is_authenticated: boolean }>('http://localhost:8000/api/accounts/check_authentication', {}, {withCredentials: true})
       .pipe(
         tap(request => {
           console.log('Request made with:', request);  // Log the request object (headers, body, etc.)
