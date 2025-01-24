@@ -130,7 +130,7 @@ SOCIALACCOUNT_PROVIDERS={
 
 
 MIDDLEWARE = [
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
