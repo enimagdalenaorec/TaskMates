@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 import uuid
 from rest_framework.permissions import AllowAny
 
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def check_authentication(request):

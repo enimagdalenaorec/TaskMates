@@ -14,11 +14,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Session konfiguracija (ako je potrebno)
-SESSION_COOKIE_SECURE = True# Postavi na True u produkciji
-CSRF_COOKIE_SECURE = True     # Postavi na True u produkciji
-
-CSRF_COOKIE_DOMAIN = ".onrender.com"  # For Render
-SESSION_COOKIE_DOMAIN = ".onrender.com"
+SESSION_COOKIE_SECURE = False # Postavi na True u produkciji
+CSRF_COOKIE_SECURE = False # Postavi na True u produkciji
 
 import mimetypes
 mimetypes.add_type("text/css", ".css", True)
@@ -134,7 +131,7 @@ SOCIALACCOUNT_PROVIDERS={
 
 
 MIDDLEWARE = [
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
