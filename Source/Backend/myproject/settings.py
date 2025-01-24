@@ -29,7 +29,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://taskmatesbackend-pd5h.onrender.com",
     "https://taskmates-gjhi.onrender.com",
     "https://www.taskmates-gjhi.onrender.com",
-    "https://taskmatesbackend-pd5h.onrender.com"
+    "https://taskmatesbackend-pd5h.onrender.com",
     "https://www.taskmatesbackend-pd5h.onrender.com"
 ]
 
