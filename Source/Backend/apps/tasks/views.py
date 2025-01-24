@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN
 from django.utils import timezone
@@ -20,7 +20,7 @@ cloudinary.config(
 )
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # Korisnik mora biti prijavljen
+@permission_classes([AllowAny])  # Korisnik mora biti prijavljen
 def get_task_by_id(request):
     from .serializers import GetTaskByIdSerializer
 
@@ -79,7 +79,7 @@ def get_task_by_id(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def get_tasks_by_group(request):
     from .serializers import GetTasksByGroupSerializer
 
@@ -125,7 +125,7 @@ def get_tasks_by_group(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # ili [IsAuthenticated], ovisno o vašim pravilima
+@permission_classes([AllowAny])  # ili [AllowAny], ovisno o vašim pravilima
 def add_task(request):
     from .serializers import AddTaskSerializer
 
@@ -190,7 +190,7 @@ def add_task(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def join_task(request):
     from .serializers import JoinTaskSerializer
 
@@ -224,7 +224,7 @@ def join_task(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def leave_task(request):
     from .serializers import LeaveTaskSerializer
 
@@ -250,7 +250,7 @@ def leave_task(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def finish_task(request):
     # Expected field: taskId
     task_id = request.data.get('taskId')
@@ -305,7 +305,7 @@ def finish_task(request):
     return Response({"message": "success"}, status=HTTP_200_OK)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def review_task(request):
     # Expected fields: taskId, value (1-5)
     task_id = request.data.get('taskId')

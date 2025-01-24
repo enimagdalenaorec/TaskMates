@@ -8,7 +8,7 @@ import base64
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.conf import settings
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 import stream_chat
 from secret import apiKey, apiSecret
@@ -150,7 +150,7 @@ def get_group_code(request):
     return Response({"code": str(group.join_code)}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def leave_group(request):
     from .serializers import LeaveGroupSerializer
 
@@ -174,7 +174,7 @@ def leave_group(request):
     return Response({"message": "success"}, status=status.HTTP_200_OK)
 
 
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 @api_view(['GET'])
 def get_token(request):
     server_client = stream_chat.StreamChat(

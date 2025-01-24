@@ -8,21 +8,21 @@ import { map, catchError, tap  } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthGuardService implements CanActivate {
-  private isAuthenticated: boolean | null = null; // Cache authentication status
+  private AllowAny: boolean | null = null; // Cache authentication status
 
   constructor(private router: Router, private http: HttpClient) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
 
-    if (this.isAuthenticated !== null) { 
+    if (this.AllowAny !== null) { 
       // If authentication status is cached, use it
-      return of(this.isAuthenticated);
+      return of(this.AllowAny);
     }
 
     // Otherwise, make an API call to check authentication
     return this.isLoggedIn().pipe(
       tap((authStatus) => {
-        this.isAuthenticated = authStatus; // Cache authentication status
+        this.AllowAny = authStatus; // Cache authentication status
       }),
       map((authStatus) => {
         if (authStatus) {
@@ -54,6 +54,6 @@ export class AuthGuardService implements CanActivate {
 
   // Add a logout method to clear the cache when needed
   public logout(): void {
-    this.isAuthenticated = null;
+    this.AllowAny = null;
   }
 }

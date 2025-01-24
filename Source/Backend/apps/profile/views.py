@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from core.models import Task, UserTask
 from django.utils import timezone
 import cloudinary.uploader
@@ -18,7 +18,7 @@ cloudinary.config(
 
 # 1. Get Basic User Info
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def get_basic_info(request):
     user = request.user
     response = {
@@ -30,7 +30,7 @@ def get_basic_info(request):
     return Response(response, status=HTTP_200_OK)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def get_active_tasks(request):
     user = request.user
     active_tasks = UserTask.objects.filter(user=user).exclude(task__status__in=['finished', 'failed'])
@@ -49,7 +49,7 @@ def get_active_tasks(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def change_username(request):
     from .serializers import ChangeUsernameSerializer  # Uvezite serializer
 
@@ -68,7 +68,7 @@ def change_username(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def change_profile_picture(request):
     from .serializers import ChangeProfilePictureSerializer
 
