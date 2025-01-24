@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Session konfiguracija (ako je potrebno)
 SESSION_COOKIE_SECURE = True  # Postavi na True u produkciji
-CSRF_COOKIE_SECURE = True     # Postavi na True u produkciji
+CSRF_COOKIE_SECURE = True   # Postavi na True u produkciji
 
 
 
@@ -125,7 +125,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    'core.middleware.dummy_middleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
