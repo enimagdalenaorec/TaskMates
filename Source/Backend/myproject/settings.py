@@ -29,7 +29,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://taskmatesbackend-pd5h.onrender.com",
     "https://taskmates-gjhi.onrender.com",
     "https://www.taskmates-gjhi.onrender.com",
-    "https://taskmatesbackend-pd5h.onrender.com"
+    "https://taskmatesbackend-pd5h.onrender.com",
     "https://www.taskmatesbackend-pd5h.onrender.com"
 ]
 
@@ -69,8 +69,8 @@ ALLOWED_HOSTS = [
     'www.taskmates-gjhi.onrender.com'
 ]
 
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = None
+SESSION_COOKIE_SAMESITE = None
 
 SITE_ID=3
 # Application definition
