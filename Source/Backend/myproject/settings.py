@@ -31,7 +31,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://taskmates-gjhi.onrender.com",
     "https://www.taskmates-gjhi.onrender.com",
     "https://taskmatesbackend-pd5h.onrender.com",
-    "https://www.taskmatesbackend-pd5h.onrender.com"
+    "https://www.taskmatesbackend-pd5h.onrender.com",
+    "https://*.onrender.com"
 ]
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
@@ -47,6 +48,10 @@ CORS_ALLOW_HEADERS = [
     "Access-Control-Allow-Methods",
 ]
 
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+
+SECURE_SSL_REDIRECT = False
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -134,7 +139,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
