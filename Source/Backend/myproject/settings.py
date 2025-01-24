@@ -37,14 +37,6 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = [
-    "Authorization",
-    "Content-Type",
-    "X-CSRFToken",
-    "Access-Control-Allow-Origin",
-    "Access-Control-Allow-Headers",
-    "Access-Control-Allow-Methods",
-]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
