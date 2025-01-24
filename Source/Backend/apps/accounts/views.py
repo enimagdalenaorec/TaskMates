@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def check_authentication(request):
+    print(request.COOKIES)
     print('user je ',request.user)
     print('request ',request)
     if request.user.is_authenticated:
