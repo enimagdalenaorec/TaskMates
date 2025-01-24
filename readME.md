@@ -14,6 +14,7 @@ TaskMates je web aplikacija koja korisnicima omogućuje organizaciju i praćenje
  'Ekipa za trčanje' : 882239 (join code),
  'Ferovke': 831350 (join code)
 
+ 
 ## **Pokretanje frontenda (Angulara)**
 - Prvo pokretanje:
     1. Ukoliko nemate instaliran Angular treba ga globalno instalirati s naredbom: npm install -g @angular/cli
@@ -118,7 +119,7 @@ Aplikacija koristi **OAuth 2.0** za autentifikaciju i autorizaciju korisnika, pr
 - **Frontend**: Angular
 - **Baza podataka**: SQL
 
-## Članovi tima
+## Članovi tima i doprinosi
 
 - Eni Magdalena Oreč
 - Ana Gašperov
@@ -127,3 +128,17 @@ Aplikacija koristi **OAuth 2.0** za autentifikaciju i autorizaciju korisnika, pr
 - Antonio Vito Šprljan
 - Sven Đukić
 - Tomislav Kušek
+
+## Funkcijski zahtjevi
+
+| ID zahtjeva | Opis                                                                                          | Prioritet | Izvor                     | Kriteriji prihvaćanja                                                                                         |
+|-------------|-----------------------------------------------------------------------------------------------|-----------|---------------------------|---------------------------------------------------------------------------------------------------------------|
+| F-001       | Kreiranje i upravljanje grupama                       | Visok     | Zahtjev dionika          | Korisnik se može registrirati e-mailom, primiti e-mail za potvrdu i uspješno se prijaviti.                  |
+| F-002       | Registracija i autentifikacija korisnika                       | Visok     | Zahtjev dionika          | Korisnik može kreirati grupu i unijeti naziv grupe, sustav generira kod za pristup grupi i opciju dijeljenja linka, novi članovi mogu koristiti kod ili link za pridruživanje grupi.                   |
+| F-003       | Dodavanje i praćenje zadataka                      | Visok     | Zahtjev dionika, povratne informacije korisnika          | Korisnik može unijeti naziv, težinu i rok zadatka, zadaci su prikazani prema statusu, korisnik može vidjeti tko je preuzeo zadatak i status svakog zadatka u grupi.                 |
+| F-004       | Slanje notifikacija putem e-maila                       | Srednji     | Povratne informacije korisnika          | E-mail notifikacija se šalje kada zadatak nije izvršen u predviđenom roku, kad je zadatak preuzet, korisnici primaju e-mail podsjetnike prije roka zadatka.                  |
+| F-005       | Gamifikacija aplikacije (Leaderboard, bodovanje i bedževi)                       | Srednji     | Povratne informacije korisnika          | Korisnici vide bodove u leaderboardu, korisnik prima bedževe pri dosegu određenog broja bodova ili recenzija, leaderboard prikazuje rang članova grupe na temelju bodova.          |
+| F-006       | Kalendar zadataka                       | Srednji     | Zahtjev dionika, postojeći sustavi          | Korisnik može pregledati kalendar u svakom trenutku, kalendar prikazuje sve preuzete zadatke s rokovima, klikom na zadatak u kalendaru korisnik se preusmjerava na pojedinosti zadatka.                  |
+| F-007       | Uređivanje korisničkog profila                       | Srednji     | Zahtjev dionika, povratne informacije korisnika          | Korisnik može uređivati ime, e-mail i profilnu sliku, korisnik može vidjeti aktivne zadatke unutar profila, korisnik može otkazati preuzete zadatke i pristupiti kalendaru s rokovima zadataka.                  |
+| F-008       | Administratorski panel za upravljanje grupama i zadacima                       | Nizak     | Zahtjev dionika          | Admin tim (developeri) može pristupiti panelu s prikazom svih grupa, podataka o grupama i bazom podataka za administraciju, administrator može pregledati sve grupe i podatke o članovima i zadacima, može ukloniti grupe ili zadatke prema potrebi, panel omogućuje pregled i uređivanje baze podataka unutar administrativnog sučelja.                  |
+| F-009       | Ocjenjivanje zadataka - nakon izvršenja zadatka, članovi grupe mogu ocijeniti zadatak bodovima i napisati recenziju                     | Srednji     | Zahtjev dionika          | Korisnik može ocijeniti zadatak od 1 do 5, ocjene se bilježe i spremaju u statistike, članovi mogu dodati pisanu recenziju na završeni zadatak.                  |
