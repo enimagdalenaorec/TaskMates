@@ -5,8 +5,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from core.models import Task, UserTask
 
-from django.views.decorators.csrf import csrf_exempt
-@csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_all_tasks(request):
